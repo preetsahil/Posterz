@@ -1,6 +1,6 @@
 .Navbar {
   background-color: var(--primary-text-color);
-  height: 80px;
+  height: 70px;
   z-index: 99;
   color: white;
   text-transform: uppercase;
@@ -38,6 +38,20 @@
         .icon {
           font-size: 1.4rem;
         }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .Navbar {
+    .nav-container {
+      .nav-left {
+        display: none;
+      }
+      .nav-center {
+        position: static;
+        transform: translateX(0);
       }
     }
   }

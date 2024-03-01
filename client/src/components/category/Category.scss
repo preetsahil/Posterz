@@ -1,0 +1,36 @@
+.Category {
+  width: 32%;
+  aspect-ratio: 16/10;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  cursor: pointer;
+
+  .category-content {
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    transition: 0.2s ease;
+
+    .heading {
+      color: white;
+      font-weight: bolder;
+    }
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+    .Category {
+        width: 48%;
+    }
+    
+}
+
+@media screen and (max-width: 480px) {
+    .Category {
+        width: 100%;
+    }
+    
+}
