@@ -6,7 +6,7 @@ const isAdmin = async (req, res, next) => {
     !req.headers.authorization ||
     !req.headers.authorization.startsWith("Bearer")
   ) {
-    return res.send(error(401, "Authorization header is required"));
+    return res.status(401).send("Authorization header is required");
   }
 
   const adminToken = req.headers.authorization.split(" ")[1];
@@ -20,7 +20,7 @@ const isAdmin = async (req, res, next) => {
     next();
   } catch (e) {
     console.log(e);
-    return res.send(error(401, "Invalid admin key"));
+    return res.status(401).send("Invalid admin key");
   }
 };
 module.exports = isAdmin;

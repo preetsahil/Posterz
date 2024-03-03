@@ -3,8 +3,7 @@ const dotenv = require("dotenv");
 const connectdb = require("./dbconnect");
 const authRouter = require("./routes/authRouter");
 const adminRouter=require("./routes/adminRouter");
-// const productRouter=require("./routes/ProductRouter")
-// const categoryRouter=require("./routes/CategoryRouter")
+const getRouter=require("./routes/getRouter")
 
 var cloudinary = require("cloudinary").v2;
 const app = express();
@@ -18,6 +17,7 @@ cloudinary.config({
 app.use(express.json({ limit: "10mb" }));
 app.use("/auth", authRouter);
 app.use("/admin", adminRouter);
+app.use("/api",getRouter);
 
 app.get("/", (req, res) => {
   res.json({ server: "started" });
