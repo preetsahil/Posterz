@@ -21,21 +21,23 @@ const productSchema = mongoose.Schema(
       type: Number,
       required: true,
     },
-    image:{
-        publicId:{
-            type:String,
-            // required:true,
-        },
-        url:{
-            type:String,
-            // required:true,
-        }
+    image: {
+      publicId: {
+        type: String,
+        // required:true,
+      },
+      url: {
+        type: String,
+        // required:true,
+      },
     },
 
-    category: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Category",
-    },
+    category: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Category",
+      },
+    ],
     isTopPick: {
       type: Boolean,
     },
@@ -45,4 +47,4 @@ const productSchema = mongoose.Schema(
   }
 );
 
-module.exports=mongoose.model('Product',productSchema)
+module.exports = mongoose.model("Product", productSchema);

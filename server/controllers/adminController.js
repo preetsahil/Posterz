@@ -54,7 +54,7 @@ const addCategoryController = async (req, res) => {
     // if (!image) {
     //   return res.status(400).send("image is required");
     // }
-
+    //upload image
     const category = await Category.create({
       title,
       key,
@@ -72,7 +72,7 @@ const addCategoryController = async (req, res) => {
 
 const addProductController = async (req, res) => {
   try {
-    const { title, key, desc, price, image, category, isTopPick } = req.body;
+    const { title, key, desc, price, image, categories, isTopPick } = req.body;
     if (!title) {
       return res.status(400).send("title is required");
     }
@@ -85,21 +85,6 @@ const addProductController = async (req, res) => {
     if (!price) {
       return res.status(400).send("price not set");
     }
-    if (!category) {
-      return res.status(400).send("category not selected ");
-    }
-
-    const ctgy = await Category.findOne({ title: category });
-
-    if (!ctgy) {
-      return res
-        .status(400)
-        .send(
-          "Their is no such category,please create category for this first! "
-        );
-    }
-
-    const ctgyId = ctgy._id;
 
     const product = await Product.create({
       title,
@@ -107,15 +92,28 @@ const addProductController = async (req, res) => {
       desc,
       price,
       isTopPick,
+      //upload image
+
       // image:{
       //   publicId:
       //   url:
       // }
-      category: ctgyId,
     });
 
-    ctgy.product.push(product._id);
-    await ctgy.save();
+    for (const ctgy of categories) {
+      const category = await Category.findOne({ title: ctgy });
+
+      if (!category) {
+        //problem here
+        return res.status(400).send("Category not found: " + ctgy);
+      }
+
+      product.category.push(category._id);
+      category.product.push(product._id);
+      await category.save();
+    }
+
+    await product.save();
 
     return res.status(200).send({ product });
   } catch (error) {
@@ -158,7 +156,58 @@ const deleteProductController = async (req, res) => {
 };
 const updateCategoryController = async (req, res) => {
   try {
-    return res.status(200).send("update category");
+    const { id, title, key, image, products } = req.body;
+    const ctgy = await Category.findOne({ _id: id });
+    if (!ctgy) {
+      return res.status(400).send("this category doesn't exist");
+    }
+    ctgy.title = title;
+    ctgy.key = key;
+    //upload image
+    //  ctgy.image.publicId=
+    //  ctgy.image.url=
+    if (products.length < ctgy.product.length) {
+      let productToRemove = [];
+
+      productToRemove = ctgy.product.filter(
+        (item) => !products.includes(item._id.toString())
+      );
+      await Product.updateMany(
+        {
+          _id: { $in: productToRemove },
+        },
+        { $pull: { category: ctgy._id } }
+      );
+      ctgy.product = products;
+
+      await ctgy.save();
+      return res.status(200).send({ ctgy });
+    }
+
+    if (ctgy.product && ctgy.product.length > 0) {
+      let productToAdd = [];
+
+      productToAdd = products.filter(
+        (item) => !ctgy.product.map((cat) => cat._id.toString()).includes(item)
+      );
+      await Product.updateMany(
+        {
+          _id: { $in: productToAdd },
+        },
+        { $addToSet: { category: ctgy._id } }
+      );
+      ctgy.product = products;
+    } else {
+      await Product.updateMany(
+        {
+          _id: { $in: products },
+        },
+        { $addToSet: { category: ctgy._id } }
+      );
+      ctgy.product = products;
+    }
+    await ctgy.save();
+    return res.status(200).send({ ctgy });
   } catch (error) {
     return res.status(500).send(error.message);
   }
@@ -166,7 +215,63 @@ const updateCategoryController = async (req, res) => {
 
 const updateProductController = async (req, res) => {
   try {
-    return res.status(200).send("update products");
+    const { id, title, key, desc, price, image, isTopPick, categories } =
+      req.body;
+
+    const prod = await Product.findOne({ _id: id });
+    prod.title = title;
+    prod.key = key;
+    prod.desc = desc;
+    prod.price = price;
+    //upload image
+    //  prod.image.publicId=
+    //  prod.image.url=
+    prod.isTopPick = isTopPick;
+
+    if (categories.length < prod.category.length) {
+      let categoryToRemove = [];
+
+      categoryToRemove = prod.category.filter(
+        (item) => !categories.includes(item._id.toString())
+      );
+      await Category.updateMany(
+        {
+          _id: { $in: categoryToRemove },
+        },
+        { $pull: { product: prod._id } }
+      );
+      prod.category = categories;
+
+      await prod.save();
+      return res.status(200).send({ prod });
+    }
+
+    if (prod.category && prod.category.length > 0) {
+      let categoryToAdd = [];
+
+      categoryToAdd = categories.filter(
+        (item) => !prod.category.map((cat) => cat._id.toString()).includes(item)
+      );
+      await Category.updateMany(
+        {
+          _id: { $in: categoryToAdd },
+        },
+        { $addToSet: { product: prod._id } }
+      );
+      prod.category = categories;
+    } else {
+      await Category.updateMany(
+        {
+          _id: { $in: categories },
+        },
+        { $addToSet: { product: prod._id } }
+      );
+      prod.category = categories;
+    }
+
+    await prod.save();
+
+    return res.status(200).send({ prod });
   } catch (error) {
     return res.status(500).send(error.message);
   }
