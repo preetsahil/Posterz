@@ -4,6 +4,7 @@ import Hero from "../../components/hero/Hero";
 import Category from "../../components/category/Category";
 import Naruto from "../../assets/naruto.jpeg";
 import Product from "../../components/product/Product";
+
 function Home() {
   return (
     <div className="Home">
