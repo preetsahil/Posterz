@@ -7,7 +7,7 @@ const userSchema = mongoose.Schema(
       required: true,
       unique: true,
       lowercase: true,
-      match:[/^[^\s@]+@[^\s@]+\.[^\s@]+$/]
+      match: [/^[^\s@]+@[^\s@]+\.[^\s@]+$/],
     },
     avatar: {
       publicId: String,
@@ -27,7 +27,7 @@ const userSchema = mongoose.Schema(
     },
   },
   {
-    timestamps: true,          
+    timestamps: true,
   }
 );
 
