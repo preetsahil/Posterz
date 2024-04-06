@@ -9,6 +9,12 @@ import AdminDashBoard from "./pages/admindashboard/AdminDashBoard";
 import RequireAdmin from "./components/RequireAdmin";
 import AdminLogin from "./components/adminLogin/AdminLogin";
 import OnlyIfNotLoggedIn from "./components/OnlyIfNotLoggedIn";
+import Category from "./components/admindashboard/category/Category";
+import CreateCategory from "./components/admindashboard/createCategory/CreateCategory";
+
+import Order from "./components/admindashboard/order/Order";
+import Product from "./components/admindashboard/product/Product";
+
 function App() {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith("/admin");
@@ -18,8 +24,17 @@ function App() {
         <div>
           <Routes>
             <Route element={<RequireAdmin />}>
-              <Route path="/admin" element={<AdminDashBoard />} />
+              <Route path="/admin" element={<AdminDashBoard />}>
+                <Route path="category" element={<Category />}>
+                <Route path="create" element={<CreateCategory />} />
+              </Route>
+
+
+                <Route path="product" element={<Product />} />
+                <Route path="order" element={<Order />} />
+              </Route>
             </Route>
+
             <Route element={<OnlyIfNotLoggedIn />}>
               <Route path="/adminlogin" element={<AdminLogin />} />
             </Route>

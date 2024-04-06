@@ -2,8 +2,9 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
-  max-width: 200px;
-  background-color: #474f7a;
+  width: 250px;
+  background-color: #0d122f;
+  border-right: 1px solid #474F7A;
 
   .sidebar-content {
     display: flex;
@@ -18,8 +19,9 @@
       align-items: center;
       gap: 15px;
       margin-top: 10px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid #1f2544;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #474F7A;
+      padding-right: 10px;
       .heading {
         color: rgb(244, 244, 244);
         font-size: 1.2rem;
@@ -43,13 +45,9 @@
         font-size: 1.1rem;
         margin-block: 5px;
         font-weight: 500;
-
-        &:hover {
-          color: #ffd0ec;
-        }
       }
       .active {
-        color: #1f2544;
+        color: #435fff;
         font-size: 1.1rem;
         margin-block: 5px;
         font-weight: 500;

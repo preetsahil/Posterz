@@ -1,20 +1,17 @@
 import React, { useState } from "react";
 import "./AdminDashBoard.scss";
 import Sidebar from "../../components/sidebar/Sidebar";
-import Content from "../../components/content/Content";
+import { Outlet, useLocation } from "react-router-dom";
+import Detail from "../../components/admindashboard/detail/Detail";
 
 function AdminDashBoard() {
-  const [selectedContent, setSelectedContent] = useState('Home'); 
+  const location = useLocation();
 
-  const handleSidebarClick = (content) => {
-    setSelectedContent(content);
-  };
- 
   return (
     <div className="AdminDashBoard">
-      <Sidebar onSidebarClick={handleSidebarClick} selectedContent={selectedContent}/>
-      <Content content={selectedContent}/>
-      </div>   
+      <Sidebar />
+      {location.pathname === "/admin" ? <Detail /> : <Outlet />}
+    </div>
   );
 }
 
