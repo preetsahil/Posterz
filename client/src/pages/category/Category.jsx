@@ -8,7 +8,7 @@ function Category() {
   const navigate = useNavigate();
   const location = useLocation();
   return (
-    <div>
+    <div className="cat">
       {location.pathname === "/admin/category" ? (
         <div className="Cat">
           <div className="content">

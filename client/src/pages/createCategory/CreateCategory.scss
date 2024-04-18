@@ -1,0 +1,247 @@
+.createcat {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  flex: 1;
+  background-color: #0d122f;
+  .content {
+    margin-top: 20px;
+    margin-left: 40px;
+    width: 850px;
+
+    .backButton {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #5143d0;
+      .icon {
+        font-size: 1.3rem;
+      }
+    }
+    .banner {
+      display: flex;
+      align-items: center;
+      margin-top: 10px;
+      margin-bottom: 40px;
+      justify-content: space-between;
+      .heading {
+        .title {
+          color: rgb(244, 244, 244);
+        }
+        .entry {
+          margin-top: 5px;
+          color: rgb(244, 244, 244);
+        }
+      }
+      .ctr-btn {
+        display: flex;
+        align-items: center;
+        color: rgb(244, 244, 244);
+        gap: 5px;
+        cursor: pointer;
+        background-color: #435fff;
+        padding: 8px 14px;
+        border-radius: 4px;
+        p {
+          color: rgb(244, 244, 244);
+        }
+      }
+    }
+    .input-div {
+      display: flex;
+      flex-direction: column;
+      background-color: #0b0f26;
+      width: 650px;
+      padding: 20px 40px;
+
+      .cont1 {
+        display: flex;
+        align-items: center;
+        gap: 50px;
+        .col {
+          display: flex;
+          flex-direction: column;
+          margin-bottom: 5px;
+          label {
+            margin-bottom: 5px;
+            font-weight: bolder;
+            color: rgb(244, 244, 244);
+            span {
+              color: rgb(234, 17, 17);
+              padding-left: 2px;
+            }
+          }
+          input {
+            background-color: #0b0f26;
+            color: rgb(244, 244, 244);
+            border: 0.1em solid #474f7a;
+            border-radius: 5px;
+            width: 250px;
+            padding: 12px 20px;
+            font-size: 0.875rem;
+            &:focus {
+              outline: 0.1em solid #435fff;
+            }
+          }
+        }
+      }
+      .cont2 {
+        display: flex;
+        gap: 50px;
+        margin-top: 50px;
+        position: relative;
+        .for-image {
+          display: flex;
+          flex-direction: column;
+          .text {
+            color: rgb(244, 244, 244);
+            font-weight: bolder;
+            margin-bottom: 5px;
+          }
+          .del {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            width: 250px;
+            background-color: #0d122f;
+            height: 140px;
+            border-radius: 5px;
+            border: 1px solid #474f7a;
+            .del-icon {
+              background-color: #0b0f26;
+              color: rgb(165, 165, 186);
+              font-size: 1.2rem;
+              padding: 4px;
+              display: flex;              
+              margin-top: 10px;
+              border: 1px solid #474f7a;
+              margin-bottom: 10px;
+            }
+          }
+          .input-ct-img {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 250px;
+            background-color: #0d122f;
+            height: 140px;
+            border-radius: 5px;
+            border: 1px solid #474f7a;
+
+            .labelImg {
+              text-align: center;
+              p {
+                font-weight: bolder;
+              }
+              .icon {
+                color: #435fff;
+                font-size: 2rem;
+              }
+            }
+            .inputImg {
+              display: none;
+            }
+          }
+        }
+        .for-select {
+          .text {
+            color: rgb(244, 244, 244);
+            font-weight: bolder;
+            margin-bottom: 5px;
+          }
+          .dropdown {
+            background-color: #0b0f26;
+            border: 0.1em solid #474f7a;
+            border-radius: 5px;
+            width: 250px;
+            padding: 12px 20px;
+            font-size: 0.875rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            .icon-1 {
+              color: #435fff;
+              font-size: 1.4rem;
+            }
+          }
+          .dropdown-border {
+            background-color: #0b0f26;
+            border: 0.2em solid #435fff;
+            border-radius: 5px;
+            width: 250px;
+            padding: 12px 20px;
+            font-size: 0.875rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            .icon-1 {
+              color: #435fff;
+              font-size: 1.4rem;
+            }
+            .text-1 {
+              font-size: 0.978rem;
+            }
+          }
+          .dropdown-content {
+            background-color: #0b0f26;
+            position: absolute;
+            border: 0.1em solid #474f7a;
+            border-radius: 5px;
+            margin-top: 4px;
+            width: 250px;
+            font-size: 0.875rem;
+            z-index: 99;
+            .product {
+              margin-top: 5px;
+              .product-item {
+                display: flex;
+                align-items: center;
+                padding: 10px 2px;
+                margin-inline: 5px;
+                border-radius: 5px;
+                gap: 10px;
+                span {
+                  font-size: 0.8rem;
+                  color: greenyellow;
+                }
+                p {
+                  color: rgb(244, 244, 244);
+                  font-size: 1rem;
+                }
+                &:hover {
+                  background-color: #0d122f;
+                }
+              }
+            }
+          }
+          .selected-prod {
+            margin-top: 7px;
+            .sel-prod {
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              border: 0.1em solid #474f7a;
+              border-radius: 5px;
+              padding: 10px 10px;
+              margin-bottom: 4px;
+              p {
+                color: #5143d0;
+                font-size: 1.2rem;
+              }
+              .dots {
+                color: rgb(244, 244, 244);
+                font-size: 1.2rem;
+              }
+              .cross {
+                color: rgb(244, 244, 244);
+                font-size: 1.2rem;
+                cursor: pointer;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

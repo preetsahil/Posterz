@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
-  width: 1030px;
+  flex: 1;
   background-color: #0d122f;
 
   .left-content {
@@ -51,20 +51,20 @@
           margin-bottom: 10px;
         }
         .linkedin {
-            display: flex;
-            gap: 5px;
+          display: flex;
+          gap: 5px;
           margin-bottom: 10px;
 
           color: rgb(244, 244, 244);
         }
         .twitter {
-            display: flex;
-            gap: 5px;
+          display: flex;
+          gap: 5px;
           color: rgb(244, 244, 244);
         }
         .instagram {
-            display: flex;
-            gap: 5px;
+          display: flex;
+          gap: 5px;
           color: rgb(244, 244, 244);
         }
       }

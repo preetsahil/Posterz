@@ -1,8 +1,11 @@
+.cat{
+  flex-direction: column;
+  display: flex;
+  flex: 1;
 .Cat {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  width: 1030px;
   background-color: #0d122f;
   .content {
     margin-top: 20px;
@@ -38,7 +41,7 @@
         color: rgb(244, 244, 244);
         gap: 5px;
         background-color: #435fff;
-        padding:8px 14px;
+        padding: 8px 14px;
         border-radius: 4px;
         p {
           color: rgb(244, 244, 244);
@@ -46,4 +49,5 @@
       }
     }
   }
+}
 }

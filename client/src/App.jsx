@@ -9,15 +9,25 @@ import AdminDashBoard from "./pages/admindashboard/AdminDashBoard";
 import RequireAdmin from "./components/RequireAdmin";
 import AdminLogin from "./components/adminLogin/AdminLogin";
 import OnlyIfNotLoggedIn from "./components/OnlyIfNotLoggedIn";
-import Category from "./components/admindashboard/category/Category";
-import CreateCategory from "./components/admindashboard/createCategory/CreateCategory";
-
+import Category from "./pages/category/Category";
+import CreateCategory from "./pages/createCategory/CreateCategory";
 import Order from "./components/admindashboard/order/Order";
 import Product from "./components/admindashboard/product/Product";
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { fetchCategories } from "./redux/slices/categorySlice";
+import { fetchProducts } from "./redux/slices/productSlice";
 
 function App() {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith("/admin");
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchCategories());
+    dispatch(fetchProducts());
+  }, []);
+
   return (
     <div>
       {isAdminRoute ? (
@@ -26,15 +36,12 @@ function App() {
             <Route element={<RequireAdmin />}>
               <Route path="/admin" element={<AdminDashBoard />}>
                 <Route path="category" element={<Category />}>
-                <Route path="create" element={<CreateCategory />} />
-              </Route>
-
-
+                  <Route path="create" element={<CreateCategory />} />
+                </Route>
                 <Route path="product" element={<Product />} />
                 <Route path="order" element={<Order />} />
               </Route>
             </Route>
-
             <Route element={<OnlyIfNotLoggedIn />}>
               <Route path="/adminlogin" element={<AdminLogin />} />
             </Route>

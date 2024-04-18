@@ -5,7 +5,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 function Sidebar({ onSidebarClick }) {
   const navigate = useNavigate();
   const location = useLocation();
-  const [activeKey,setActiveKey]=useState(null);
+  const [activeKey, setActiveKey] = useState(null);
   let collection = [
     { key: "category", name: "Category", path: "/admin/category" },
     {
@@ -21,6 +21,7 @@ function Sidebar({ onSidebarClick }) {
         <div
           className="title"
           onClick={() => {
+            setActiveKey(null);
             navigate("/admin");
           }}
         >
@@ -34,11 +35,15 @@ function Sidebar({ onSidebarClick }) {
           </div>
           {collection.map((list) => (
             <li
-              className={location.pathname === list.path || list.key===activeKey ? "active" : "list"}
+              className={
+                location.pathname === list.path || list.key === activeKey
+                  ? "active"
+                  : "list"
+              }
               key={list.key}
               onClick={() => {
-                navigate(list.path)
-                setActiveKey(list.key)
+                navigate(list.path);
+                setActiveKey(list.key);
               }}
             >
               {list.name}

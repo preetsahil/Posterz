@@ -6,6 +6,7 @@ import Detail from "../../components/admindashboard/detail/Detail";
 
 function AdminDashBoard() {
   const location = useLocation();
+  console.log()
 
   return (
     <div className="AdminDashBoard">

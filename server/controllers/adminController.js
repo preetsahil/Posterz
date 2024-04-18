@@ -3,6 +3,8 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const Category = require("../models/Category");
 const Product = require("../models/Product");
+const cloudinary = require("cloudinary").v2;
+
 const loginController = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -43,7 +45,7 @@ const loginController = async (req, res) => {
 };
 const addCategoryController = async (req, res) => {
   try {
-    const { title, key, image } = req.body;
+    const { title, key, image, selectedProd } = req.body;
 
     if (!title) {
       return res.status(400).send("title is required");
@@ -51,18 +53,35 @@ const addCategoryController = async (req, res) => {
     if (!key) {
       return res.status(400).send("key is required");
     }
-    // if (!image) {
-    //   return res.status(400).send("image is required");
-    // }
+
     //upload image
+    let cloudImg;
+    if (image) {
+      cloudImg = await cloudinary.uploader.upload(image, {
+        folder: "category",
+      });
+    }
+
     const category = await Category.create({
       title,
       key,
-      // image:{
-      //   publicId:
-      //   url:
-      // }
+      image: {
+        publicId: cloudImg?.public_id,
+        url: cloudImg?.url,
+      },
     });
+    if (selectedProd) {
+      selectedProd.map(async (prod) => {
+        const product = await Product.findOne({ _id: prod._id });
+        if (!product) {
+          return res.status(400).send("Product not found: " + product);
+        }
+        product.categories.push(category._id);
+        category.products.push(product._id);
+        await product.save();
+        await category.save();
+      });
+    }
 
     return res.status(200).send(category);
   } catch (error) {
@@ -79,41 +98,41 @@ const addProductController = async (req, res) => {
     if (!key) {
       return res.status(400).send("key is required");
     }
-    // if (!image) {
-    //   return res.status(400).send("image is required");
-    // }
+
     if (!price) {
       return res.status(400).send("price not set");
     }
 
+    let cloudImg;
+    if (image) {
+      cloudImg = await cloudinary.uploader.upload(image, {
+        folder: "product",
+      });
+    }
     const product = await Product.create({
       title,
       key,
       desc,
       price,
       isTopPick,
-      //upload image
-
-      // image:{
-      //   publicId:
-      //   url:
-      // }
+      image: {
+        publicId: cloudImg?.public_id,
+        url: cloudImg?.url,
+      },
     });
 
-    for (const ctgy of categories) {
-      const category = await Category.findOne({ title: ctgy });
-
-      if (!category) {
-        //problem here
-        return res.status(400).send("Category not found: " + ctgy);
-      }
-
-      product.category.push(category._id);
-      category.product.push(product._id);
-      await category.save();
+    if (categories) {
+      categories.map(async (cat) => {
+        const category = await Category.findOne({ _id: cat._id });
+        if (!category) {
+          return res.status(400).send("Category not found: " + category);
+        }
+        category.products.push(product._id);
+        product.categories.push(category._id);
+        await category.save();
+      });
+      await product.save();
     }
-
-    await product.save();
 
     return res.status(200).send({ product });
   } catch (error) {

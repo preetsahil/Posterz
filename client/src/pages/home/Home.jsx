@@ -4,8 +4,10 @@ import Hero from "../../components/hero/Hero";
 import Category from "../../components/category/Category";
 import Naruto from "../../assets/naruto.jpeg";
 import Product from "../../components/product/Product";
+import { useSelector } from "react-redux";
 
 function Home() {
+  const categories = useSelector((state) => state.categoryReducer.categories);
   return (
     <div className="Home">
       <Hero />
@@ -17,9 +19,9 @@ function Home() {
           </p>
         </div>
         <div className="content">
-          <Category image={Naruto} />
-          <Category image={Naruto} />
-          <Category image={Naruto} />
+          {categories?.map((category) => (
+            <Category key={category.id} category={category} />
+          ))}
         </div>
       </section>
       <section className="collection container">

@@ -1,17 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { BsCart2 } from "react-icons/bs";
 import "./Navbar.scss";
+import { useSelector } from "react-redux";
 function Navbar() {
   const [openCart, setOpenCart] = useState(false);
+  const categories = useSelector((state) => state.categoryReducer.categories);
+
   return (
     <div className="Navbar">
       <div className="container nav-container">
         <div className="nav-left">
           <ul className="link-group">
-            <li className="hover-link">Anime</li>
-            <li className="hover-link">Sports</li>
-            <li className="hover-link">TV Shows</li>
+            {categories?.map((category) => (
+              <li className="hover-link" key={category.id}>
+                {category.title}
+              </li>
+            ))}
           </ul>
         </div>
         <div className="nav-center">
