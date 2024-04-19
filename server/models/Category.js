@@ -17,11 +17,11 @@ const categorySchema = mongoose.Schema(
     image:{
         publicId:{
             type:String,
-            // required:true,
+            required:true,
         },
         url:{
             type:String,
-            // required:true,
+            required:true,
         }
     },
     products: [

@@ -54,6 +54,10 @@ const addCategoryController = async (req, res) => {
       return res.status(400).send("key is required");
     }
 
+    if (!image) {
+      return res.status(400).send("image is required");
+    }
+
     //upload image
     let cloudImg;
     if (image) {
@@ -130,8 +134,8 @@ const addProductController = async (req, res) => {
         category.products.push(product._id);
         product.categories.push(category._id);
         await category.save();
+        await product.save();
       });
-      await product.save();
     }
 
     return res.status(200).send({ product });

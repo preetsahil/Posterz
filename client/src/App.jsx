@@ -13,25 +13,63 @@ import Category from "./pages/category/Category";
 import CreateCategory from "./pages/createCategory/CreateCategory";
 import Order from "./components/admindashboard/order/Order";
 import Product from "./components/admindashboard/product/Product";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { fetchCategories } from "./redux/slices/categorySlice";
 import { fetchProducts } from "./redux/slices/productSlice";
+import toast, { Toaster } from "react-hot-toast";
+
+export const TOAST_SUCCESS = "toast_success";
+export const TOAST_FAILURE = "toast_failure";
 
 function App() {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith("/admin");
+  const toastData = useSelector((state) => state.appConfigReducer.toastData);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(fetchCategories());
     dispatch(fetchProducts());
   }, []);
+  useEffect(() => {
+    switch (toastData?.type) {
+      case TOAST_SUCCESS:
+        toast.success(toastData.message);
+        break;
+      case TOAST_FAILURE:
+        toast.error(toastData.message);
+        console.log(toastData);
+        break;
+    }
+  }, [toastData]);
 
   return (
     <div>
       {isAdminRoute ? (
         <div>
+          <div>
+            <Toaster
+              toastOptions={{
+                success: {
+                  style: {
+                    marginTop: "10px",
+                    background: "#0d122f",
+                    border: "0.1em solid #474f7a",
+                  },
+                },
+                error: {
+                  style: {
+                    marginTop: "10px",
+                    background: "#0d122f",
+                    border: "0.1em solid #474f7a",
+
+                  },
+                },
+              }}
+            />
+          </div>
+
           <Routes>
             <Route element={<RequireAdmin />}>
               <Route path="/admin" element={<AdminDashBoard />}>

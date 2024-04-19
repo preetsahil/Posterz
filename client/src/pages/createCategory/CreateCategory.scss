@@ -56,7 +56,7 @@
 
       .cont1 {
         display: flex;
-        align-items: center;
+        // align-items: center;
         gap: 50px;
         .col {
           display: flex;
@@ -71,7 +71,7 @@
               padding-left: 2px;
             }
           }
-          input {
+          .input-cont1 {
             background-color: #0b0f26;
             color: rgb(244, 244, 244);
             border: 0.1em solid #474f7a;
@@ -82,6 +82,20 @@
             &:focus {
               outline: 0.1em solid #435fff;
             }
+          }
+          .input-req {
+            border: 0.1em solid rgb(191, 2, 2);
+            background-color: #0b0f26;
+            color: rgb(244, 244, 244);
+            border-radius: 5px;
+            width: 250px;
+            padding: 12px 20px;
+            font-size: 0.875rem;
+          }
+          .error {
+            margin-top: 2px;
+            color: rgb(191, 2, 2);
+            padding-left: 2px;
           }
         }
       }
@@ -97,6 +111,15 @@
             color: rgb(244, 244, 244);
             font-weight: bolder;
             margin-bottom: 5px;
+            span {
+              color: rgb(234, 17, 17);
+              padding-left: 2px;
+            }
+          }
+          .error {
+            margin-top: 2px;
+            color: rgb(191, 2, 2);
+            padding-left: 2px;
           }
           .del {
             display: flex;
@@ -113,10 +136,35 @@
               color: rgb(165, 165, 186);
               font-size: 1.2rem;
               padding: 4px;
-              display: flex;              
+              display: flex;
               margin-top: 10px;
               border: 1px solid #474f7a;
               margin-bottom: 10px;
+              cursor: pointer;
+            }
+          }
+          .req-image{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 250px;
+            background-color: #0d122f;
+            height: 140px;
+            border-radius: 5px;
+            border: 0.1em solid rgb(191, 2, 2);
+
+            .labelImg {
+              text-align: center;
+              p {
+                font-weight: bolder;
+              }
+              .icon {
+                color: #435fff;
+                font-size: 2rem;
+              }
+            }
+            .inputImg {
+              display: none;
             }
           }
           .input-ct-img {

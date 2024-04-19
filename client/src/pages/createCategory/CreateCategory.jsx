@@ -7,15 +7,22 @@ import "./CreateCategory.scss";
 import { TbGridDots } from "react-icons/tb";
 import { RxCross2 } from "react-icons/rx";
 import { useNavigate } from "react-router-dom";
-import { MdCategory, MdDelete } from "react-icons/md";
+import { MdDelete } from "react-icons/md";
 import { axiosClient } from "../../utils/axiosClient";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { showToast } from "../../redux/slices/appConfigSlice";
+import { TOAST_FAILURE } from "../../App";
 
 function CreateCategory() {
   const navigate = useNavigate();
   const [image, setImage] = useState("");
   const [title, setTitle] = useState("");
+  const dispatch = useDispatch();
   const [key, setKey] = useState("");
+  const [reqTitle, setTitleReq] = useState(false);
+  const [reqKey, setKeyReq] = useState(false);
+  const [reqImage, setImageReq] = useState(false);
+
   const [fileName, setFileName] = useState("");
   const [showProd, setShowProd] = useState("");
   const products = useSelector((state) => state.productReducer.products);
@@ -24,7 +31,6 @@ function CreateCategory() {
   const [productsCopy, setProductsCopy] = useState([]);
 
   useEffect(() => {
-    console.log("jasfn");
     if (selectedProd.length === 0) {
       setProductsCopy([...products]);
     } else {
@@ -67,19 +73,128 @@ function CreateCategory() {
   };
 
   const saveCategory = async () => {
-    // if (title === "" || key === "") {
-    //   alert("Please fill all the required fields");
-    // } else {
-    //   const category = {
-    //     title: title,
-    //     key: key,
-    //     image: ctimg,
-    //     product: selectedProd,
-    //   };
-    //   console.log(category);
-    // }
-
+    // || key === "" || image === "" || selectedProd.length === 0
     try {
+      if (title === "" && key === "" && image === "") {
+        dispatch(
+          showToast({
+            type: TOAST_FAILURE,
+            message: (
+              <p style={{ color: "rgb(244, 244, 244)" }}>
+                <strong style={{ marginRight: "10px" }}>Warning:</strong>These
+                attributes is required!
+              </p>
+            ),
+          })
+        );
+        setTitleReq(true);
+        setKeyReq(true);
+        setImageReq(true);
+        return;
+      }
+      if (title === "" && image === "") {
+        dispatch(
+          showToast({
+            type: TOAST_FAILURE,
+            message: (
+              <p style={{ color: "rgb(244, 244, 244)" }}>
+                <strong style={{ marginRight: "10px" }}>Warning:</strong>These
+                attributes is required!
+              </p>
+            ),
+          })
+        );
+        setTitleReq(true);
+        setImageReq(true);
+        return;
+      }
+      if (title === "" && key === "") {
+        dispatch(
+          showToast({
+            type: TOAST_FAILURE,
+            message: (
+              <p style={{ color: "rgb(244, 244, 244)" }}>
+                <strong style={{ marginRight: "10px" }}>Warning:</strong>These
+                attributes is required!
+              </p>
+            ),
+          })
+        );
+        setTitleReq(true);
+        setKeyReq(true);
+        return;
+      }
+      if (key === "" && image === "") {
+        dispatch(
+          showToast({
+            type: TOAST_FAILURE,
+            message: (
+              <p style={{ color: "rgb(244, 244, 244)" }}>
+                <strong style={{ marginRight: "10px" }}>Warning:</strong>These
+                attributes is required!
+              </p>
+            ),
+          })
+        );
+        setKeyReq(true);
+        setImageReq(true);
+        return;
+      }
+
+      if (title === "") {
+        dispatch(
+          showToast({
+            type: TOAST_FAILURE,
+            message: (
+              <p style={{ color: "rgb(244, 244, 244)" }}>
+                <strong style={{ marginRight: "10px" }}>Warning:</strong>This
+                attribute is required!
+              </p>
+            ),
+          })
+        );
+        setTitleReq(true);
+        return;
+      }
+      if (image === "") {
+        dispatch(
+          showToast({
+            type: TOAST_FAILURE,
+            message: (
+              <p style={{ color: "rgb(244, 244, 244)" }}>
+                <strong style={{ marginRight: "10px" }}>Warning:</strong>This
+                attribute is required!
+              </p>
+            ),
+          })
+        );
+        setImageReq(true);
+        return;
+      }
+
+      if (key === "") {
+        dispatch(
+          showToast({
+            type: TOAST_FAILURE,
+            message: (
+              <p style={{ color: "rgb(244, 244, 244)" }}>
+                <strong style={{ marginRight: "10px" }}>Warning:</strong>This
+                attribute is required!
+              </p>
+            ),
+          })
+        );
+        setKeyReq(true);
+        return;
+      }
+
+      const category = {
+        title: title,
+        key: key,
+        image: ctimg,
+        product: selectedProd,
+      };
+
       await axiosClient.post("/admin/category", {
         title: title.toUpperCase(),
         key: key.toLowerCase(),
@@ -87,14 +202,13 @@ function CreateCategory() {
         selectedProd,
       });
       alert("category added");
-    } catch (error) {
-      alert(error);
-    } finally {
       setImage("");
       setTitle("");
       setKey("");
       setFileName("");
       setSelectedProd([]);
+    } catch (error) {
+      dispatch(showToast({ type: TOAST_FAILURE, message: error.message }));
     }
   };
 
@@ -128,11 +242,18 @@ function CreateCategory() {
               <input
                 type="text"
                 id="title"
+                className={reqTitle ? "input-req" : "input-cont1"}
                 value={title}
                 onChange={(e) => {
                   setTitle(e.target.value);
                 }}
+                onClick={() => {
+                  setTitleReq(false);
+                }}
               />
+              {reqTitle && (
+                <div className="error">This attribute is required!</div>
+              )}
             </div>
             <div className="col">
               <label htmlFor="key">
@@ -141,16 +262,25 @@ function CreateCategory() {
               <input
                 type="text"
                 id="key"
+                className={reqKey ? "input-req" : "input-cont1"}
                 value={key}
                 onChange={(e) => {
                   setKey(e.target.value);
                 }}
+                onClick={() => {
+                  setKeyReq(false);
+                }}
               />
+              {reqKey && (
+                <div className="error">This attribute is required!</div>
+              )}
             </div>
           </div>
           <div className="cont2">
             <div className="for-image">
-              <p className="text">image</p>
+              <p className="text">
+                image<span>*</span>
+              </p>
               {image ? (
                 <div className="del">
                   <img src="" alt={fileName} />
@@ -167,7 +297,7 @@ function CreateCategory() {
                 </div>
               ) : (
                 <div
-                  className="input-ct-img"
+                  className={reqImage ? "req-image" : "input-ct-img"}
                   onDragEnter={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
@@ -185,6 +315,9 @@ function CreateCategory() {
                     e.stopPropagation();
                     handleDrop(e);
                   }}
+                  onClick={() => {
+                    setImageReq(false);
+                  }}
                 >
                   <label htmlFor="inputImg" className="labelImg">
                     <RiImageAddFill className="icon" />
@@ -200,6 +333,9 @@ function CreateCategory() {
                     onChange={handleImageChange}
                   />
                 </div>
+              )}
+              {reqImage && (
+                <div className="error">This attribute is required!</div>
               )}
             </div>
             <div className="for-select">
