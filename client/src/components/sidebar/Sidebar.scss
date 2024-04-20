@@ -5,10 +5,12 @@
   height: 100vh;
   background-color: #0d122f;
   border-right: 1px solid #474f7a;
+  overflow: hidden;
 
   .sidebar-content {
     display: flex;
     flex-direction: column;
+    cursor: pointer;
     .icon {
       padding-left: 10px;
       color: rgb(85, 85, 244);
@@ -45,12 +47,14 @@
         font-size: 1.1rem;
         margin-block: 5px;
         font-weight: 500;
+        cursor: pointer;
       }
       .active {
         color: #435fff;
         font-size: 1.1rem;
         margin-block: 5px;
         font-weight: 500;
+        cursor: pointer;
       }
     }
   }

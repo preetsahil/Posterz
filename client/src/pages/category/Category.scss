@@ -17,6 +17,8 @@
       align-items: center;
       gap: 8px;
       color: #5143d0;
+      cursor: pointer;
+
       .icon {
         font-size: 1.3rem;
       }
@@ -43,6 +45,8 @@
         background-color: #435fff;
         padding: 8px 14px;
         border-radius: 4px;
+        cursor: pointer;
+
         p {
           color: rgb(244, 244, 244);
         }

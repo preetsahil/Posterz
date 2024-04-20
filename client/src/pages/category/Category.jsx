@@ -3,10 +3,13 @@ import "./Category.scss";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { FaPlus } from "react-icons/fa6";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 function Category() {
   const navigate = useNavigate();
   const location = useLocation();
+  const categories = useSelector((state) => state.categoryReducer.categories);
+
   return (
     <div className="cat">
       {location.pathname === "/admin/category" ? (
@@ -24,7 +27,11 @@ function Category() {
             <div className="banner">
               <div className="heading">
                 <h1 className="title">Category</h1>
-                <p className="entry"> 2 enteries found</p>
+                {categories.length === 1 ? (
+                  <p className="entry"> {categories.length} entry found </p>
+                ) : (
+                  <p className="entry"> {categories.length} entries found </p>
+                )}
               </div>
               <div
                 className="ctr-btn"

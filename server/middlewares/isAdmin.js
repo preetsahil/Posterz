@@ -10,7 +10,6 @@ const isAdmin = async (req, res, next) => {
   }
 
   const adminToken = req.headers.authorization.split(" ")[1];
-  //validate the admin token
   try {
     const decoded = jwt.verify(
       adminToken,
@@ -19,8 +18,7 @@ const isAdmin = async (req, res, next) => {
     req._id = decoded._id;
     next();
   } catch (e) {
-    console.log(e);
-    return res.status(401).send("Invalid admin key");
+    return res.status(401).send({ message: "Invalid admin key" });
   }
 };
 module.exports = isAdmin;

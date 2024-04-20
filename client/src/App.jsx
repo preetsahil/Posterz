@@ -56,6 +56,7 @@ function App() {
                     marginTop: "10px",
                     background: "#0d122f",
                     border: "0.1em solid #474f7a",
+                    color: "rgb(244, 244, 244)"
                   },
                 },
                 error: {
@@ -63,7 +64,7 @@ function App() {
                     marginTop: "10px",
                     background: "#0d122f",
                     border: "0.1em solid #474f7a",
-
+                    color: "rgb(244, 244, 244)"
                   },
                 },
               }}

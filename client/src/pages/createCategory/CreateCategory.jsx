@@ -11,7 +11,8 @@ import { MdDelete } from "react-icons/md";
 import { axiosClient } from "../../utils/axiosClient";
 import { useDispatch, useSelector } from "react-redux";
 import { showToast } from "../../redux/slices/appConfigSlice";
-import { TOAST_FAILURE } from "../../App";
+import { TOAST_FAILURE, TOAST_SUCCESS } from "../../App";
+import { fetchCategories } from "../../redux/slices/categorySlice";
 
 function CreateCategory() {
   const navigate = useNavigate();
@@ -22,13 +23,15 @@ function CreateCategory() {
   const [reqTitle, setTitleReq] = useState(false);
   const [reqKey, setKeyReq] = useState(false);
   const [reqImage, setImageReq] = useState(false);
-
+  const [dupKey, setDupKey] = useState(false);
   const [fileName, setFileName] = useState("");
   const [showProd, setShowProd] = useState("");
   const products = useSelector((state) => state.productReducer.products);
   const [selectedProd, setSelectedProd] = useState([]);
   const [border, setBorder] = useState(true);
   const [productsCopy, setProductsCopy] = useState([]);
+  const categories = useSelector((state) => state.categoryReducer.categories);
+  const [dupTitle, setDupTitle] = useState(false);
 
   useEffect(() => {
     if (selectedProd.length === 0) {
@@ -73,143 +76,143 @@ function CreateCategory() {
   };
 
   const saveCategory = async () => {
-    // || key === "" || image === "" || selectedProd.length === 0
+    if (title === "" && key === "" && image === "") {
+      dispatch(
+        showToast({
+          type: TOAST_FAILURE,
+          message: "Warning: These attributes is required!",
+        })
+      );
+      setTitleReq(true);
+      setKeyReq(true);
+      setImageReq(true);
+      return;
+    }
+    if (title === "" && image === "") {
+      dispatch(
+        showToast({
+          type: TOAST_FAILURE,
+          message: "Warning: These attributes is required!",
+        })
+      );
+      setTitleReq(true);
+      setImageReq(true);
+      return;
+    }
+    if (title === "" && key === "") {
+      dispatch(
+        showToast({
+          type: TOAST_FAILURE,
+          message: "Warning: These attributes is required!",
+        })
+      );
+      setTitleReq(true);
+      setKeyReq(true);
+      return;
+    }
+    if (key === "" && image === "") {
+      dispatch(
+        showToast({
+          type: TOAST_FAILURE,
+          message: "Warning: These attributes is required!",
+        })
+      );
+      setKeyReq(true);
+      setImageReq(true);
+      return;
+    }
+
+    if (title === "") {
+      dispatch(
+        showToast({
+          type: TOAST_FAILURE,
+          message: "Warning: This attribute is required!",
+        })
+      );
+      setTitleReq(true);
+      return;
+    }
+    if (image === "") {
+      dispatch(
+        showToast({
+          type: TOAST_FAILURE,
+          message: "Warning: This attribute is required!",
+        })
+      );
+      setImageReq(true);
+      return;
+    }
+
+    if (key === "") {
+      dispatch(
+        showToast({
+          type: TOAST_FAILURE,
+          message: "Warning: This attribute is required!",
+        })
+      );
+      setKeyReq(true);
+      return;
+    }
+
+    const titleExists = categories.some(
+      (category) => category.title.toLowerCase() === title.toLowerCase()
+    );
+    const keyExists = categories.some(
+      (category) => category.key.toLowerCase() === key.toLowerCase()
+    );
+
+    if (titleExists && keyExists) {
+      // Both title and key already exist
+      dispatch(
+        showToast({
+          type: TOAST_FAILURE,
+          message: "Warning: Title and Key already exists!",
+        })
+      );
+      setDupTitle(true);
+      setDupKey(true);
+      return;
+    } else if (titleExists) {
+      // Title already exists
+      dispatch(
+        showToast({
+          type: TOAST_FAILURE,
+          message: "Warning: Title already exists!",
+        })
+      );
+      setDupTitle(true);
+      return;
+    } else if (keyExists) {
+      // Key already exists
+      dispatch(
+        showToast({
+          type: TOAST_FAILURE,
+          message: "Warning: Key already exists!",
+        })
+      );
+      setDupKey(true);
+      return;
+    }
     try {
-      if (title === "" && key === "" && image === "") {
-        dispatch(
-          showToast({
-            type: TOAST_FAILURE,
-            message: (
-              <p style={{ color: "rgb(244, 244, 244)" }}>
-                <strong style={{ marginRight: "10px" }}>Warning:</strong>These
-                attributes is required!
-              </p>
-            ),
-          })
-        );
-        setTitleReq(true);
-        setKeyReq(true);
-        setImageReq(true);
-        return;
-      }
-      if (title === "" && image === "") {
-        dispatch(
-          showToast({
-            type: TOAST_FAILURE,
-            message: (
-              <p style={{ color: "rgb(244, 244, 244)" }}>
-                <strong style={{ marginRight: "10px" }}>Warning:</strong>These
-                attributes is required!
-              </p>
-            ),
-          })
-        );
-        setTitleReq(true);
-        setImageReq(true);
-        return;
-      }
-      if (title === "" && key === "") {
-        dispatch(
-          showToast({
-            type: TOAST_FAILURE,
-            message: (
-              <p style={{ color: "rgb(244, 244, 244)" }}>
-                <strong style={{ marginRight: "10px" }}>Warning:</strong>These
-                attributes is required!
-              </p>
-            ),
-          })
-        );
-        setTitleReq(true);
-        setKeyReq(true);
-        return;
-      }
-      if (key === "" && image === "") {
-        dispatch(
-          showToast({
-            type: TOAST_FAILURE,
-            message: (
-              <p style={{ color: "rgb(244, 244, 244)" }}>
-                <strong style={{ marginRight: "10px" }}>Warning:</strong>These
-                attributes is required!
-              </p>
-            ),
-          })
-        );
-        setKeyReq(true);
-        setImageReq(true);
-        return;
-      }
-
-      if (title === "") {
-        dispatch(
-          showToast({
-            type: TOAST_FAILURE,
-            message: (
-              <p style={{ color: "rgb(244, 244, 244)" }}>
-                <strong style={{ marginRight: "10px" }}>Warning:</strong>This
-                attribute is required!
-              </p>
-            ),
-          })
-        );
-        setTitleReq(true);
-        return;
-      }
-      if (image === "") {
-        dispatch(
-          showToast({
-            type: TOAST_FAILURE,
-            message: (
-              <p style={{ color: "rgb(244, 244, 244)" }}>
-                <strong style={{ marginRight: "10px" }}>Warning:</strong>This
-                attribute is required!
-              </p>
-            ),
-          })
-        );
-        setImageReq(true);
-        return;
-      }
-
-      if (key === "") {
-        dispatch(
-          showToast({
-            type: TOAST_FAILURE,
-            message: (
-              <p style={{ color: "rgb(244, 244, 244)" }}>
-                <strong style={{ marginRight: "10px" }}>Warning:</strong>This
-                attribute is required!
-              </p>
-            ),
-          })
-        );
-        setKeyReq(true);
-        return;
-      }
-
-      const category = {
-        title: title,
-        key: key,
-        image: ctimg,
-        product: selectedProd,
-      };
-
       await axiosClient.post("/admin/category", {
         title: title.toUpperCase(),
         key: key.toLowerCase(),
         image,
         selectedProd,
       });
-      alert("category added");
+      dispatch(
+        showToast({
+          type: TOAST_SUCCESS,
+          message: "Success: Category added Successfully!",
+        })
+      );
       setImage("");
       setTitle("");
       setKey("");
       setFileName("");
       setSelectedProd([]);
-    } catch (error) {
-      dispatch(showToast({ type: TOAST_FAILURE, message: error.message }));
-    }
+      dispatch(fetchCategories());
+    } catch (error) {}
   };
 
   return (
@@ -218,6 +221,15 @@ function CreateCategory() {
         <div
           className="backButton"
           onClick={() => {
+            if (image || title || key || selectedProd.length > 0) {
+              alert(
+                "Are you sure you want to leave this page? All your modifications will be lost"
+              );
+            }
+            setImage("");
+            setTitle("");
+            setKey("");
+            setSelectedProd([]);
             navigate("/admin/category");
           }}
         >
@@ -249,11 +261,13 @@ function CreateCategory() {
                 }}
                 onClick={() => {
                   setTitleReq(false);
+                  setDupTitle(false);
                 }}
               />
               {reqTitle && (
                 <div className="error">This attribute is required!</div>
               )}
+              {dupTitle && <div className="error">Title already exist</div>}
             </div>
             <div className="col">
               <label htmlFor="key">
@@ -269,11 +283,13 @@ function CreateCategory() {
                 }}
                 onClick={() => {
                   setKeyReq(false);
+                  setDupKey(false);
                 }}
               />
               {reqKey && (
                 <div className="error">This attribute is required!</div>
               )}
+              {dupKey && <div className="error">Key already exist</div>}
             </div>
           </div>
           <div className="cont2">

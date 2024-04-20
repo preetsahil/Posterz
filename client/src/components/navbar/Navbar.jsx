@@ -6,7 +6,6 @@ import { useSelector } from "react-redux";
 function Navbar() {
   const [openCart, setOpenCart] = useState(false);
   const categories = useSelector((state) => state.categoryReducer.categories);
-
   return (
     <div className="Navbar">
       <div className="container nav-container">
