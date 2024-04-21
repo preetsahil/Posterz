@@ -14,15 +14,16 @@ const categorySchema = mongoose.Schema(
       required: true,
       unique: true,
     },
-    image:{
-        publicId:{
-            type:String,
-            required:true,
-        },
-        url:{
-            type:String,
-            required:true,
-        }
+    image: {
+      fileName: String,
+      publicId: {
+        type: String,
+        required: true,
+      },
+      url: {
+        type: String,
+        required: true,
+      },
     },
     products: [
       {

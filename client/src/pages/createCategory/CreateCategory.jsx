@@ -199,6 +199,7 @@ function CreateCategory() {
         key: key.toLowerCase(),
         image,
         selectedProd,
+        fileName,
       });
       dispatch(
         showToast({

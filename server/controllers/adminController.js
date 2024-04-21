@@ -45,7 +45,7 @@ const loginController = async (req, res) => {
 };
 const addCategoryController = async (req, res) => {
   try {
-    const { title, key, image, selectedProd } = req.body;
+    const { title, key, image, selectedProd, fileName } = req.body;
 
     if (!title) {
       return res.status(400).send("title is required");
@@ -70,6 +70,7 @@ const addCategoryController = async (req, res) => {
       title,
       key,
       image: {
+        fileName,
         publicId: cloudImg?.public_id,
         url: cloudImg?.url,
       },

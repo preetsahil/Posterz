@@ -3,6 +3,7 @@
   display: flex;
   flex: 1;
   background-color: #0d122f;
+  overflow-y: auto;
 
   .Cat {
     display: flex;
@@ -11,6 +12,10 @@
       margin-top: 20px;
       margin-left: 40px;
       width: 850px;
+      z-index: 99;
+      position: sticky;
+      padding: 10px;
+      top: 0;
 
       .backButton {
         display: flex;
@@ -54,19 +59,21 @@
       }
     }
   }
-  .cat-list {
+  .catgories {
     margin-top: 20px;
     margin-left: 40px;
     width: 850px;
     background-color: #0b0f26;
-    padding: 20px;
+    padding-inline: 25px;
+    padding-bottom: 20px;
     border-radius: 5px;
     display: flex;
     flex-direction: column;
     .head {
       display: flex;
       align-items: center;
-
+      border-bottom: 0.1em solid #474f7a6c;
+      padding-block: 25px;
       .openCheck {
         background-color: #0b0f26;
         border: 0.1em solid #474f7a;
@@ -100,6 +107,8 @@
         margin-inline: 25px;
         .id {
           display: flex;
+          position: relative;
+          gap: 3px;
           width: 60px;
 
           p {
@@ -111,10 +120,28 @@
           .none {
             display: none;
           }
+          &:hover::before {
+            content: "Sort on date";
+            position: absolute;
+            top: -35px;
+            left: 20%;
+            font-weight: 700;
+            transform: translateX(-50%);
+            background-color: rgb(244, 244, 244);
+            color: black;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            white-space: nowrap;
+          }
         }
         .title {
           display: flex;
-          width: 100px;
+          width: 120px;
+          gap: 3px;
+
+          position: relative;
+
           p {
             color: rgb(165, 165, 186);
             font-weight: 600;
@@ -123,11 +150,28 @@
           }
           .none {
             display: none;
+          }
+          &:hover::before {
+            content: "Sort on title";
+            position: absolute;
+            top: -35px;
+            left: 20%;
+            font-weight: 700;
+            transform: translateX(-50%);
+            background-color: rgb(244, 244, 244);
+            color: black;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            white-space: nowrap;
           }
         }
         .key {
           display: flex;
           width: 100px;
+          gap: 3px;
+
+          position: relative;
           p {
             color: rgb(165, 165, 186);
             font-weight: 600;
@@ -137,9 +181,23 @@
           .none {
             display: none;
           }
+          &:hover::before {
+            content: "Sort on key";
+            position: absolute;
+            top: -35px;
+            left: 20%;
+            font-weight: 700;
+            transform: translateX(-50%);
+            background-color: rgb(244, 244, 244);
+            color: black;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            white-space: nowrap;
+          }
         }
         .image {
-          width: 100px;
+          width: 120px;
 
           p {
             color: rgb(165, 165, 186);
@@ -153,6 +211,104 @@
             color: rgb(165, 165, 186);
             font-weight: 600;
             font-size: 0.875rem;
+          }
+        }
+      }
+    }
+    .cat-list {
+      .cat-item {
+        display: flex;
+        border-bottom: 0.1em solid #474f7a6c;
+        padding-block: 25px;
+        cursor: pointer;
+        .openCheck {
+          background-color: #0b0f26;
+          border: 0.1em solid #474f7a;
+          display: flex;
+          height: 20px;
+          width: 20px;
+          border-radius: 5px;
+          cursor: pointer;
+          .tick {
+            color: #0b0f26;
+          }
+        }
+
+        .closeCheck {
+          border: 0.1em solid #474f7a;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          height: 20px;
+          width: 20px;
+          border-radius: 5px;
+          cursor: pointer;
+          background-color: #4f60c2;
+
+          .tick {
+            color: rgb(244, 244, 244);
+          }
+        }
+        .desc {
+          display: flex;
+          margin-inline: 25px;
+          .id {
+            display: flex;
+            width: 60px;
+
+            p {
+              color: rgb(244, 244, 244);
+              font-size: 0.875rem;
+            }
+            .none {
+              display: none;
+            }
+          }
+          .title {
+            display: flex;
+            width: 120px;
+
+            p {
+              color: rgb(244, 244, 244);
+              font-size: 0.875rem;
+            }
+            .none {
+              display: none;
+            }
+          }
+          .key {
+            display: flex;
+            width: 100px;
+            p {
+              color: rgb(244, 244, 244);
+              font-size: 0.875rem;
+            }
+            .none {
+              display: none;
+            }
+          }
+          .image {
+            width: 120px;
+            display: flex;
+
+            img {
+              color: rgb(244, 244, 244);
+              font-size: 0.875rem;
+              width: 20px;
+              height: 20px;
+              border-radius: 50%;
+            }
+            p {
+              color: rgb(165, 165, 186);
+            }
+          }
+          .products {
+            width: 100px;
+            p {
+              color: rgb(244, 244, 244);
+
+              font-size: 0.875rem;
+            }
           }
         }
       }
