@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import "./Category.scss";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { FaPlus } from "react-icons/fa6";
@@ -10,10 +10,13 @@ import { IoMdArrowDropdown } from "react-icons/io";
 
 function Category() {
   const navigate = useNavigate();
-
+  const [isSticky, setSticky] = useState(false);
+  const ref = useRef(null);
   const location = useLocation();
   const [up, setUp] = useState(false);
   const [down, setDown] = useState(false);
+  const [contentTop, setContentTop] = useState(0);
+
   const [visId, setVisId] = useState(false);
   const [visTitle, setVisTitle] = useState(false);
   const [visKey, setVisKey] = useState(false);
@@ -41,11 +44,34 @@ function Category() {
     }
   };
 
+  const calculateContentTop = () => {
+    const categoryElement = document.getElementById("categories");
+    if (categoryElement) {
+      const { top } = categoryElement.getBoundingClientRect();
+      if (top < 51) {
+        setSticky(true);
+      } else {
+        setSticky(false);
+      }
+    }
+  };
+
+  const handleScroll = () => {
+    calculateContentTop();
+  };
+
+  useEffect(() => {
+    ref.current.addEventListener("scroll", handleScroll);
+    return () => {
+      ref.current.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   return (
-    <div className="cat">
+    <div className="cat" ref={ref}>
       {location.pathname === "/admin/category" ? (
         <div className="Cat">
-          <div className="content">
+          <div className={isSticky ? "sticky" : "content"}>
             <div
               className="backButton"
               onClick={() => {
@@ -57,7 +83,7 @@ function Category() {
             </div>
             <div className="banner">
               <div className="heading">
-                <h1 className="title">Category</h1>
+                <h1 className="title">Category </h1>
                 {categories.length === 1 ? (
                   <p className="entry"> {categories.length} entry found </p>
                 ) : (
@@ -75,7 +101,12 @@ function Category() {
               </div>
             </div>
           </div>
-          <div className="catgories">
+          <div className="pop-up">
+            {selectedCategoryIds.length > 0 && (
+              <div>{selectedCategoryIds.length}</div>
+            )}
+          </div>
+          <div className="catgories" id="categories">
             <div className="head">
               <div
                 className={
@@ -189,99 +220,9 @@ function Category() {
                   <p>IMAGE</p>
                 </div>
                 <div className="products">
-                  <p>N-Products</p>
+                  <p>N-Products </p>
                 </div>
               </div>
-            </div>
-            <div className="cat-list">
-              {categories.map((category) => (
-                <div className="cat-item" key={category._id}>
-                  <div
-                    className={
-                      isCategorySelected(category._id)
-                        ? "closeCheck"
-                        : "openCheck"
-                    }
-                    onClick={() => handleCategorySelect(category._id)}
-                  >
-                    <TiTick className="tick" />
-                  </div>
-                  <div
-                    className="desc"
-                    onClick={() => {
-                      console.log(category._id);
-                      //   navigate(`/admin/category/${category._id}`);
-                    }}
-                  >
-                    <div className="id">
-                      <p>
-                        {category._id.slice(
-                          category._id.length - 2,
-                          category._id.length
-                        )}
-                      </p>
-                    </div>
-                    <div className="title">
-                      <p>{category.title}</p>
-                    </div>
-                    <div className="key">
-                      <p>{category.key}</p>
-                    </div>
-                    <div className="image">
-                      <img src={category.image.url} alt="" />
-                      <p>{category.image.fileName?.slice(0, 2)}</p>
-                    </div>
-                    <div className="products">
-                      <p>{category.products.length}</p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className="cat-list">
-              {categories.map((category) => (
-                <div className="cat-item" key={category._id}>
-                  <div
-                    className={
-                      isCategorySelected(category._id)
-                        ? "closeCheck"
-                        : "openCheck"
-                    }
-                    onClick={() => handleCategorySelect(category._id)}
-                  >
-                    <TiTick className="tick" />
-                  </div>
-                  <div
-                    className="desc"
-                    onClick={() => {
-                      console.log(category._id);
-                      //   navigate(`/admin/category/${category._id}`);
-                    }}
-                  >
-                    <div className="id">
-                      <p>
-                        {category._id.slice(
-                          category._id.length - 2,
-                          category._id.length
-                        )}
-                      </p>
-                    </div>
-                    <div className="title">
-                      <p>{category.title}</p>
-                    </div>
-                    <div className="key">
-                      <p>{category.key}</p>
-                    </div>
-                    <div className="image">
-                      <img src={category.image.url} alt="" />
-                      <p>{category.image.fileName?.slice(0, 2)}</p>
-                    </div>
-                    <div className="products">
-                      <p>{category.products.length}</p>
-                    </div>
-                  </div>
-                </div>
-              ))}
             </div>
             <div className="cat-list">
               {categories.map((category) => (
