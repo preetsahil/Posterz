@@ -1,22 +1,22 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { FaArrowLeftLong, FaLeftLong } from "react-icons/fa6";
 import { RiImageAddFill } from "react-icons/ri";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { GoDotFill } from "react-icons/go";
-import "./CreateCategory.scss";
+import "./UpdateCategory.scss";
 import { TbGridDots } from "react-icons/tb";
 import { RxCross2 } from "react-icons/rx";
-import { useNavigate } from "react-router-dom";
 import { MdDelete } from "react-icons/md";
-import { axiosClient } from "../../utils/axiosClient";
 import { useDispatch, useSelector } from "react-redux";
-import { showToast } from "../../redux/slices/appConfigSlice";
 import { TOAST_FAILURE, TOAST_SUCCESS } from "../../App";
+import { showToast } from "../../redux/slices/appConfigSlice";
+import { axiosClient } from "../../utils/axiosClient";
 import { fetchCategories } from "../../redux/slices/categorySlice";
+import { useParams } from "react-router-dom";
 
-function CreateCategory() {
-  const navigate = useNavigate();
+function UpdateCategory() {
   const [image, setImage] = useState("");
+  const params = useParams();
   const [title, setTitle] = useState("");
   const dispatch = useDispatch();
   const [key, setKey] = useState("");
@@ -32,10 +32,6 @@ function CreateCategory() {
   const [productsCopy, setProductsCopy] = useState([]);
   const categories = useSelector((state) => state.categoryReducer.categories);
   const [dupTitle, setDupTitle] = useState(false);
-
-  useEffect(() => {
-    setProductsCopy([...products]);
-  }, [products]);
 
   const handleDrop = (e) => {
     let dt = e.dataTransfer;
@@ -61,13 +57,6 @@ function CreateCategory() {
       }
     };
   };
-  const handleClickOutside = (event) => {
-    if (showProd && !event.target.closest(".for-select")) {
-      setShowProd(false);
-      setBorder(true);
-    }
-  };
-
   const saveCategory = async () => {
     if (title === "" && key === "" && image === "") {
       dispatch(
@@ -209,31 +198,58 @@ function CreateCategory() {
       dispatch(fetchCategories());
     } catch (error) {}
   };
+  const handleClickOutside = (event) => {
+    if (showProd && !event.target.closest(".for-select")) {
+      setShowProd(false);
+      setBorder(true);
+    }
+  };
+
+  useEffect(() => {
+    if (params.categoryId) {
+      const category = categories.find(
+        (category) => category._id === params.categoryId
+      );
+      if (category) {
+        setTitle(category.title);
+        setKey(category.key);
+        setImage(category.image.url);
+        setSelectedProd(category.products);
+        setFileName(category.image.fileName);
+        setProductsCopy(
+          products.filter(
+            (product) =>
+              !category.products.some((prod) => prod._id === product._id)
+          )
+        );  
+      }
+    }
+  }, [params.categoryId]);
 
   return (
-    <div className="createcat">
+    <div className="updatecat">
       <div className="content" onClick={(e) => handleClickOutside(e)}>
         <div
           className="backButton"
-          onClick={() => {
-            if (image || title || key || selectedProd.length > 0) {
-              alert(
-                "Are you sure you want to leave this page? All your modifications will be lost"
-              );
-            }
-            setImage("");
-            setTitle("");
-            setKey("");
-            setSelectedProd([]);
-            navigate("/admin/category");
-          }}
+          // onClick={() => {
+          // if (image || title || key || selectedProd.length > 0) {
+          // alert(
+          // "Are you sure you want to leave this page? All your modifications will be lost"
+          // );
+          // }
+          // setImage("");
+          // setTitle("");
+          // setKey("");
+          // setSelectedProd([]);
+          // navigate("/admin/category");
+          //}}
         >
           <FaArrowLeftLong className="icon" />
           Back
         </div>
         <div className="banner">
           <div className="heading">
-            <h1 className="title">Create an entry</h1>
+            <h1 className="title">Category</h1>
             <p className="entry"> API ID: category</p>
           </div>
           <div className="ctr-btn" onClick={saveCategory}>
@@ -430,4 +446,4 @@ function CreateCategory() {
   );
 }
 
-export default CreateCategory;
+export default UpdateCategory;

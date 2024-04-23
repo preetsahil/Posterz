@@ -18,6 +18,7 @@ import { useEffect } from "react";
 import { fetchCategories } from "./redux/slices/categorySlice";
 import { fetchProducts } from "./redux/slices/productSlice";
 import toast, { Toaster } from "react-hot-toast";
+import UpdateCategory from "./pages/UpdateCategory/UpdateCategory";
 
 export const TOAST_SUCCESS = "toast_success";
 export const TOAST_FAILURE = "toast_failure";
@@ -55,7 +56,7 @@ function App() {
                     marginTop: "10px",
                     background: "#0d122f",
                     border: "0.1em solid #474f7a",
-                    color: "rgb(244, 244, 244)"
+                    color: "rgb(244, 244, 244)",
                   },
                 },
                 error: {
@@ -63,7 +64,7 @@ function App() {
                     marginTop: "10px",
                     background: "#0d122f",
                     border: "0.1em solid #474f7a",
-                    color: "rgb(244, 244, 244)"
+                    color: "rgb(244, 244, 244)",
                   },
                 },
               }}
@@ -75,6 +76,7 @@ function App() {
               <Route path="/admin" element={<AdminDashBoard />}>
                 <Route path="category" element={<Category />}>
                   <Route path="create" element={<CreateCategory />} />
+                  <Route path=":categoryId" element={<UpdateCategory />} />
                 </Route>
                 <Route path="product" element={<Product />} />
                 <Route path="order" element={<Order />} />

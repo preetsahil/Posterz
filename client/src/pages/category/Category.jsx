@@ -7,9 +7,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { TiTick } from "react-icons/ti";
 import { IoMdArrowDropup } from "react-icons/io";
 import { IoMdArrowDropdown } from "react-icons/io";
-import { TOAST_SUCCESS } from "../../App";
-import { showToast } from "../../redux/slices/appConfigSlice";
 import { deleteCategory } from "../../redux/slices/categorySlice";
+import { BsDash } from "react-icons/bs";
 
 function Category() {
   const navigate = useNavigate();
@@ -69,6 +68,16 @@ function Category() {
       ref.current?.removeEventListener("scroll", handleScroll);
     };
   }, []);
+  const handleItemClick = (categoryId, event) => {
+    const isClickOnCheckbox =
+      event.target.closest(".closeCheck") || event.target.closest(".openCheck");
+
+    if (!isClickOnCheckbox) {
+      navigate(`/admin/category/${categoryId}`);
+    } else {
+      handleCategorySelect(categoryId);
+    }
+  };
 
   return (
     <div className="cat" ref={ref}>
@@ -146,32 +155,32 @@ function Category() {
           </div>
           <div className="catgories" id="categories">
             <div className="head">
-              {selectedCategoryIds.length !== categories.length &&
-                selectedCategoryIds.length > 0 && (
-                  <div
-                    className={
-                      selectedCategoryIds.length === categories.length &&
-                      selectedCategoryIds.length !== 0
-                        ? "closeCheck"
-                        : "openCheck"
-                    }
-                    onClick={handleSelectAllCategories}
-                  >
-                    <TiTick className="tick" />
-                  </div>
-                )}
+              {selectedCategoryIds.length !== categories.length && (
+                <div
+                  className={
+                    selectedCategoryIds.length !== 0
+                      ? "closeCheck"
+                      : "openCheck"
+                  }
+                  onClick={handleSelectAllCategories}
+                >
+                  <BsDash className="dash" />
+                </div>
+              )}
+              {selectedCategoryIds.length === categories.length && (
+                <div
+                  className={
+                    selectedCategoryIds.length === categories.length &&
+                    selectedCategoryIds.length !== 0
+                      ? "closeCheck"
+                      : "openCheck"
+                  }
+                  onClick={handleSelectAllCategories}
+                >
+                  <TiTick className="tick" />
+                </div>
+              )}
 
-              <div
-                className={
-                  selectedCategoryIds.length === categories.length &&
-                  selectedCategoryIds.length !== 0
-                    ? "closeCheck"
-                    : "openCheck"
-                }
-                onClick={handleSelectAllCategories}
-              >
-                <TiTick className="tick" />
-              </div>
               <div className="heading">
                 <div className="id">
                   <p
@@ -280,24 +289,23 @@ function Category() {
             </div>
             <div className="cat-list">
               {categories?.map((category) => (
-                <div className="cat-item" key={category._id}>
+                <div
+                  className="cat-item"
+                  key={category._id}
+                  onClick={(e) => {
+                    handleItemClick(category._id, e);
+                  }}
+                >
                   <div
                     className={
                       isCategorySelected(category._id)
                         ? "closeCheck"
                         : "openCheck"
                     }
-                    onClick={() => handleCategorySelect(category._id)}
                   >
                     <TiTick className="tick" />
                   </div>
-                  <div
-                    className="desc"
-                    onClick={() => {
-                      console.log(category._id);
-                      //   navigate(`/admin/category/${category._id}`);
-                    }}
-                  >
+                  <div className="desc">
                     <div className="id">
                       <p>
                         {category._id.slice(
@@ -314,7 +322,12 @@ function Category() {
                     </div>
                     <div className="image">
                       <img src={category.image?.url} alt="" />
-                      <p>{category.image.fileName?.slice(0, 2)}</p>
+                      <p>
+                        {category.image.fileName?.slice(0, 2) +
+                          category.image.fileName?.slice(
+                            category.image.fileName.lastIndexOf(".")
+                          )}
+                      </p>
                     </div>
                     <div className="products">
                       <p>{category.products?.length}</p>

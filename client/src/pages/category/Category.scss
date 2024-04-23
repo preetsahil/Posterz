@@ -111,19 +111,19 @@
     }
     .pop-up {
       margin-top: 20px;
-      margin-left: 40px;
+      margin-left: 48px;
       width: 850px;
       display: flex;
-      gap:10px;
+      gap: 10px;
       align-items: center;
 
       .entry {
         margin-top: 1px;
-        color: rgb(165, 165, 186);
+        color: rgb(217, 217, 238);
       }
       .delete {
         background-color: #0d122f;
-        padding: 5px 8px;
+        padding: 6px 12px;
         border: 0.1em solid #474f7a;
         border-radius: 5px;
         font-weight: 900;
@@ -157,6 +157,9 @@
           .tick {
             color: #0b0f26;
           }
+          .dash {
+            color: #0b0f26;
+          }
         }
 
         .closeCheck {
@@ -172,6 +175,10 @@
 
           .tick {
             color: rgb(244, 244, 244);
+          }
+          .dash {
+            color: #0b0f26;
+            font-weight: 900;
           }
         }
         .heading {
@@ -369,7 +376,10 @@
                 width: 20px;
                 height: 20px;
                 border-radius: 50%;
+                border: 0.9px dashed #474f7a;
+             
               }
+
               p {
                 color: rgb(165, 165, 186);
               }
