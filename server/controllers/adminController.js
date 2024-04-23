@@ -76,16 +76,23 @@ const addCategoryController = async (req, res) => {
       },
     });
     if (selectedProd) {
-      selectedProd.map(async (prod) => {
-        const product = await Product.findOne({ _id: prod._id });
-        if (!product) {
-          return res.status(400).send("Product not found: " + product);
-        }
-        product.categories.push(category._id);
-        category.products.push(product._id);
-        await product.save();
-        await category.save();
-      });
+      await Promise.all(
+        selectedProd.map(async (prod) => {
+          try {
+            const product = await Product.findOne({ _id: prod._id });
+            if (!product) {
+              console.log("product not found : " + prod._id);
+              return;
+            }
+            product.categories.push(category._id);
+            category.products.push(product._id);
+            await product.save();
+            await category.save();
+          } catch (err) {
+            console.log(err.message);
+          }
+        })
+      );
     }
 
     return res.status(200).send(category);
@@ -147,16 +154,17 @@ const addProductController = async (req, res) => {
 
 const deleteCategoryController = async (req, res) => {
   try {
-    const { key } = req.body;
-    const ctgy = await Category.findOne({ key });
+    const id = req.params.id;
+   console.log("hello")
+    const ctgy = await Category.findOne({ _id: id });
     if (!ctgy) {
       return res.status(400).send("this category doesn't exist");
     }
 
-    await Product.deleteMany({ category: ctgy._id });
-    await ctgy.deleteOne();
+    await Product.updateMany({}, { $pull: { categories: ctgy._id } });
+    await Category.deleteOne({ _id: id });
 
-    return res.status(200).send("Category is deleted");
+    return res.status(200).send({ id });
   } catch (error) {
     return res.status(500).send(error.message);
   }

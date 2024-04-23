@@ -212,6 +212,7 @@ function CreateCategory() {
       setKey("");
       setFileName("");
       setSelectedProd([]);
+      setProductsCopy([...products])
       dispatch(fetchCategories());
     } catch (error) {}
   };

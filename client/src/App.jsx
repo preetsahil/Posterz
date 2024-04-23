@@ -39,7 +39,6 @@ function App() {
         break;
       case TOAST_FAILURE:
         toast.error(toastData.message);
-        console.log(toastData);
         break;
     }
   }, [toastData]);

@@ -63,9 +63,9 @@
       }
     }
     .content {
-      margin-top: 20px;
-      margin-left: 40px;
-      width: 850px;
+      margin-top: 10px;
+      margin-left: 30px;
+      width: 870px;
       padding: 10px;
 
       .backButton {
@@ -89,7 +89,7 @@
             color: rgb(244, 244, 244);
           }
           .entry {
-            margin-top: 5px;
+            margin-top: 1px;
             color: rgb(165, 165, 186);
           }
         }
@@ -113,9 +113,26 @@
       margin-top: 20px;
       margin-left: 40px;
       width: 850px;
+      display: flex;
+      gap:10px;
+      align-items: center;
+
+      .entry {
+        margin-top: 1px;
+        color: rgb(165, 165, 186);
+      }
+      .delete {
+        background-color: #0d122f;
+        padding: 5px 8px;
+        border: 0.1em solid #474f7a;
+        border-radius: 5px;
+        font-weight: 900;
+        cursor: pointer;
+        color: rgb(234, 17, 17);
+      }
     }
     .catgories {
-      margin-top: 20px;
+      margin-top: 15px;
       margin-left: 40px;
       width: 850px;
       background-color: #0b0f26;

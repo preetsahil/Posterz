@@ -1,12 +1,15 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./Category.scss";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { FaPlus } from "react-icons/fa6";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { TiTick } from "react-icons/ti";
 import { IoMdArrowDropup } from "react-icons/io";
 import { IoMdArrowDropdown } from "react-icons/io";
+import { TOAST_SUCCESS } from "../../App";
+import { showToast } from "../../redux/slices/appConfigSlice";
+import { deleteCategory } from "../../redux/slices/categorySlice";
 
 function Category() {
   const navigate = useNavigate();
@@ -15,13 +18,14 @@ function Category() {
   const location = useLocation();
   const [up, setUp] = useState(false);
   const [down, setDown] = useState(false);
-  const [contentTop, setContentTop] = useState(0);
+  const dispatch = useDispatch();
 
   const [visId, setVisId] = useState(false);
   const [visTitle, setVisTitle] = useState(false);
   const [visKey, setVisKey] = useState(false);
   const [selectedCategoryIds, setSelectedCategoryIds] = useState([]);
   const categories = useSelector((state) => state.categoryReducer.categories);
+
   const isCategorySelected = (categoryId) =>
     selectedCategoryIds.includes(categoryId) ||
     selectedCategoryIds.length === categories.length;
@@ -59,11 +63,10 @@ function Category() {
   const handleScroll = () => {
     calculateContentTop();
   };
-
   useEffect(() => {
-    ref.current.addEventListener("scroll", handleScroll);
+    ref.current?.addEventListener("scroll", handleScroll);
     return () => {
-      ref.current.removeEventListener("scroll", handleScroll);
+      ref.current?.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
@@ -84,9 +87,13 @@ function Category() {
             <div className="banner">
               <div className="heading">
                 <h1 className="title">Category </h1>
-                {categories.length === 1 ? (
+                {categories.length === 0 && <div></div>}
+
+                {categories.length === 1 && (
                   <p className="entry"> {categories.length} entry found </p>
-                ) : (
+                )}
+
+                {categories.length > 1 && (
                   <p className="entry"> {categories.length} entries found </p>
                 )}
               </div>
@@ -102,15 +109,62 @@ function Category() {
             </div>
           </div>
           <div className="pop-up">
-            {selectedCategoryIds.length > 0 && (
-              <div>{selectedCategoryIds.length}</div>
+            {selectedCategoryIds.length === 0 && <div></div>}
+
+            {selectedCategoryIds.length === 1 && (
+              <p className="entry">
+                {" "}
+                {selectedCategoryIds.length} entry selected{" "}
+              </p>
+            )}
+
+            {selectedCategoryIds.length > 1 && (
+              <p className="entry">
+                {" "}
+                {selectedCategoryIds.length} entries found{" "}
+              </p>
+            )}
+            {selectedCategoryIds.length >= 1 && (
+              <div
+                className="delete"
+                onClick={async () => {
+                  try {
+                    if (selectedCategoryIds.length === 1) {
+                      dispatch(deleteCategory(selectedCategoryIds[0]));
+                    } else {
+                      selectedCategoryIds.map((categoryId) => {
+                        dispatch(deleteCategory(categoryId));
+                      });
+                    }
+                    setSelectedCategoryIds([]);
+                  } catch (error) {}
+                }}
+              >
+                Delete
+              </div>
             )}
           </div>
           <div className="catgories" id="categories">
             <div className="head">
+              {selectedCategoryIds.length !== categories.length &&
+                selectedCategoryIds.length > 0 && (
+                  <div
+                    className={
+                      selectedCategoryIds.length === categories.length &&
+                      selectedCategoryIds.length !== 0
+                        ? "closeCheck"
+                        : "openCheck"
+                    }
+                    onClick={handleSelectAllCategories}
+                  >
+                    <TiTick className="tick" />
+                  </div>
+                )}
+
               <div
                 className={
-                  selectedCategoryIds.length === categories.length
+                  selectedCategoryIds.length === categories.length &&
+                  selectedCategoryIds.length !== 0
                     ? "closeCheck"
                     : "openCheck"
                 }
@@ -225,7 +279,7 @@ function Category() {
               </div>
             </div>
             <div className="cat-list">
-              {categories.map((category) => (
+              {categories?.map((category) => (
                 <div className="cat-item" key={category._id}>
                   <div
                     className={
@@ -259,11 +313,11 @@ function Category() {
                       <p>{category.key}</p>
                     </div>
                     <div className="image">
-                      <img src={category.image.url} alt="" />
+                      <img src={category.image?.url} alt="" />
                       <p>{category.image.fileName?.slice(0, 2)}</p>
                     </div>
                     <div className="products">
-                      <p>{category.products.length}</p>
+                      <p>{category.products?.length}</p>
                     </div>
                   </div>
                 </div>
