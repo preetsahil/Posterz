@@ -155,7 +155,6 @@ const addProductController = async (req, res) => {
 const deleteCategoryController = async (req, res) => {
   try {
     const id = req.params.id;
-   console.log("hello")
     const ctgy = await Category.findOne({ _id: id });
     if (!ctgy) {
       return res.status(400).send("this category doesn't exist");
@@ -188,57 +187,67 @@ const deleteProductController = async (req, res) => {
 };
 const updateCategoryController = async (req, res) => {
   try {
-    const { id, title, key, image, products } = req.body;
+    const { id, title, key, fileName, image ,selectedProd} = req.body;
     const ctgy = await Category.findOne({ _id: id });
     if (!ctgy) {
       return res.status(400).send("this category doesn't exist");
     }
-    ctgy.title = title;
-    ctgy.key = key;
-    //upload image
-    //  ctgy.image.publicId=
-    //  ctgy.image.url=
-    if (products.length < ctgy.product.length) {
-      let productToRemove = [];
-
-      productToRemove = ctgy.product.filter(
-        (item) => !products.includes(item._id.toString())
-      );
-      await Product.updateMany(
-        {
-          _id: { $in: productToRemove },
-        },
-        { $pull: { category: ctgy._id } }
-      );
-      ctgy.product = products;
-
-      await ctgy.save();
-      return res.status(200).send({ ctgy });
+    if (ctgy.title !== title) {
+      ctgy.title = title;
+    }
+    if (ctgy.key !== key) {
+      ctgy.key = key;
     }
 
-    if (ctgy.product && ctgy.product.length > 0) {
-      let productToAdd = [];
+    //upload image
+    let cloudImg;
+    if (image) {
+      cloudImg = await cloudinary.uploader.upload(image, {
+        folder: "product",
+      });
+    }
+    ctgy.image.publicId = cloudImg?.public_id;
+    ctgy.image.url = cloudImg?.url;
+    if (ctgy.image.fileName !== fileName) {
+      ctgy.image.fileName = fileName;
+    }
+    // remove the ctgy from the products which are in ctgy.products
 
-      productToAdd = products.filter(
-        (item) => !ctgy.product.map((cat) => cat._id.toString()).includes(item)
+    if (ctgy.products.length > 0) {
+      await Promise.all(
+        ctgy.products.map(async (prod) => {
+          await Product.updateOne(
+            { _id: prod._id },
+            {
+              $pull: { categories: ctgy._id },
+            }
+          );
+        })
       );
-      await Product.updateMany(
-        {
-          _id: { $in: productToAdd },
-        },
-        { $addToSet: { category: ctgy._id } }
+      ctgy.products = [];
+    }
+
+    if (selectedProd) {
+      await Promise.all(
+        selectedProd.map(async (prod) => {
+          try {
+            const product = await Product.findOne({ _id: prod._id });
+            if (!product) {
+              console.log("product not found : " + prod._id);
+              return;
+            }
+            product.categories.push(ctgy._id);
+            ctgy.products.push(product._id);
+            await product.save();
+            await ctgy.save();
+          } catch (err) {
+            console.log(err.message);
+          }
+        })
       );
-      ctgy.product = products;
-    } else {
-      await Product.updateMany(
-        {
-          _id: { $in: products },
-        },
-        { $addToSet: { category: ctgy._id } }
-      );
-      ctgy.product = products;
     }
     await ctgy.save();
+
     return res.status(200).send({ ctgy });
   } catch (error) {
     return res.status(500).send(error.message);

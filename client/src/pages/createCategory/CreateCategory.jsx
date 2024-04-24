@@ -35,17 +35,14 @@ function CreateCategory() {
 
   useEffect(() => {
     if (selectedProd.length === 0) {
-      console.log("if");
       setProductsCopy([...products]);
     } else {
-      console.log("else");
       const copy = products.filter(
         (product) => !selectedProd.some((prod) => prod._id === product._id)
       );
       setProductsCopy([...copy]);
     }
   }, [selectedProd, products]);
-
 
   const handleDrop = (e) => {
     let dt = e.dataTransfer;
@@ -157,12 +154,8 @@ function CreateCategory() {
       return;
     }
 
-    const titleExists = categories.some(
-      (category) => category.title.toLowerCase() === title.toLowerCase()
-    );
-    const keyExists = categories.some(
-      (category) => category.key.toLowerCase() === key.toLowerCase()
-    );
+    const titleExists = categories.some((category) => category.title === title);
+    const keyExists = categories.some((category) => category.key === key);
 
     if (titleExists && keyExists) {
       // Both title and key already exist
@@ -198,8 +191,8 @@ function CreateCategory() {
     }
     try {
       await axiosClient.post("/admin/category", {
-        title: title.toUpperCase(),
-        key: key.toLowerCase(),
+        title: title,
+        key: key,
         image,
         selectedProd,
         fileName,
@@ -227,15 +220,20 @@ function CreateCategory() {
           className="backButton"
           onClick={() => {
             if (image || title || key || selectedProd.length > 0) {
-              alert(
-                "Are you sure you want to leave this page? All your modifications will be lost"
-              );
+              if (
+                confirm(
+                  "Are you sure you want to leave this page? All your modifications will be lost"
+                )
+              ) {
+                setImage("");
+                setTitle("");
+                setKey("");
+                setSelectedProd([]);
+                navigate("/admin/category");
+              }
+            } else {
+              navigate("/admin/category");
             }
-            setImage("");
-            setTitle("");
-            setKey("");
-            setSelectedProd([]);
-            navigate("/admin/category");
           }}
         >
           <FaArrowLeftLong className="icon" />
@@ -262,7 +260,7 @@ function CreateCategory() {
                 className={reqTitle ? "input-req" : "input-cont1"}
                 value={title}
                 onChange={(e) => {
-                  setTitle(e.target.value);
+                  setTitle(e.target.value.toUpperCase());
                 }}
                 onClick={() => {
                   setTitleReq(false);
@@ -284,7 +282,7 @@ function CreateCategory() {
                 className={reqKey ? "input-req" : "input-cont1"}
                 value={key}
                 onChange={(e) => {
-                  setKey(e.target.value);
+                  setKey(e.target.value.toLowerCase());
                 }}
                 onClick={() => {
                   setKeyReq(false);

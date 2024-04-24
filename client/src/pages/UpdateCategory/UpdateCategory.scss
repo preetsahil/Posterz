@@ -34,6 +34,21 @@
           color: rgb(244, 244, 244);
         }
       }
+      .no-ctr-btn {
+        display: flex;
+        align-items: center;
+        color: rgb(224, 211, 211);
+        gap: 5px;
+        background-color: #0b0f26;
+        border: 0.1em solid #474f7a;
+
+        padding: 8px 14px;
+        border-radius: 4px;
+        p {
+          color: rgb(146, 141, 141);
+          font-weight: 700;
+        }
+      }
       .ctr-btn {
         display: flex;
         align-items: center;

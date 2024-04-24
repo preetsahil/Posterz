@@ -12,14 +12,19 @@ import { TOAST_FAILURE, TOAST_SUCCESS } from "../../App";
 import { showToast } from "../../redux/slices/appConfigSlice";
 import { axiosClient } from "../../utils/axiosClient";
 import { fetchCategories } from "../../redux/slices/categorySlice";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
+let category;
 function UpdateCategory() {
   const [image, setImage] = useState("");
+
   const params = useParams();
   const [title, setTitle] = useState("");
+  const [updatedTitle, setUpdatedTitle] = useState("");
+  const [change, setChange] = useState(false);
   const dispatch = useDispatch();
   const [key, setKey] = useState("");
+  const [updatedKey, setUpdatedKey] = useState("");
   const [reqTitle, setTitleReq] = useState(false);
   const [reqKey, setKeyReq] = useState(false);
   const [reqImage, setImageReq] = useState(false);
@@ -28,10 +33,13 @@ function UpdateCategory() {
   const [showProd, setShowProd] = useState("");
   const products = useSelector((state) => state.productReducer.products);
   const [selectedProd, setSelectedProd] = useState([]);
+  const [updatedSelectedProd, setUpdatedSelectedProd] = useState([]);
   const [border, setBorder] = useState(true);
   const [productsCopy, setProductsCopy] = useState([]);
   const categories = useSelector((state) => state.categoryReducer.categories);
   const [dupTitle, setDupTitle] = useState(false);
+  const [originalSelectedProd, setOriginalSelectedProd] = useState([]);
+  const navigate = useNavigate();
 
   const handleDrop = (e) => {
     let dt = e.dataTransfer;
@@ -45,6 +53,7 @@ function UpdateCategory() {
       }
     };
   };
+
   const handleImageChange = (e) => {
     e.preventDefault();
     const file = e.target.files[0];
@@ -58,7 +67,7 @@ function UpdateCategory() {
     };
   };
   const saveCategory = async () => {
-    if (title === "" && key === "" && image === "") {
+    if (updatedTitle === "" && updatedKey === "" && image === "") {
       dispatch(
         showToast({
           type: TOAST_FAILURE,
@@ -70,7 +79,7 @@ function UpdateCategory() {
       setImageReq(true);
       return;
     }
-    if (title === "" && image === "") {
+    if (updatedTitle === "" && image === "") {
       dispatch(
         showToast({
           type: TOAST_FAILURE,
@@ -81,7 +90,7 @@ function UpdateCategory() {
       setImageReq(true);
       return;
     }
-    if (title === "" && key === "") {
+    if (updatedTitle === "" && updatedKey === "") {
       dispatch(
         showToast({
           type: TOAST_FAILURE,
@@ -92,7 +101,7 @@ function UpdateCategory() {
       setKeyReq(true);
       return;
     }
-    if (key === "" && image === "") {
+    if (updatedKey === "" && image === "") {
       dispatch(
         showToast({
           type: TOAST_FAILURE,
@@ -104,7 +113,7 @@ function UpdateCategory() {
       return;
     }
 
-    if (title === "") {
+    if (updatedTitle === "") {
       dispatch(
         showToast({
           type: TOAST_FAILURE,
@@ -125,7 +134,7 @@ function UpdateCategory() {
       return;
     }
 
-    if (key === "") {
+    if (updatedKey === "") {
       dispatch(
         showToast({
           type: TOAST_FAILURE,
@@ -136,65 +145,72 @@ function UpdateCategory() {
       return;
     }
 
-    const titleExists = categories.some(
-      (category) => category.title.toLowerCase() === title.toLowerCase()
-    );
-    const keyExists = categories.some(
-      (category) => category.key.toLowerCase() === key.toLowerCase()
-    );
-
-    if (titleExists && keyExists) {
-      // Both title and key already exist
-      dispatch(
-        showToast({
-          type: TOAST_FAILURE,
-          message: "Warning: Title and Key already exists!",
-        })
+    if (updatedKey !== key && updatedTitle !== title) {
+      const keyExists = categories.some(
+        (category) => category.key === updatedKey
       );
-      setDupTitle(true);
-      setDupKey(true);
-      return;
-    } else if (titleExists) {
-      // Title already exists
-      dispatch(
-        showToast({
-          type: TOAST_FAILURE,
-          message: "Warning: Title already exists!",
-        })
+      const titleExists = categories.some(
+        (category) => category.title === updatedTitle
       );
-      setDupTitle(true);
-      return;
-    } else if (keyExists) {
-      // Key already exists
-      dispatch(
-        showToast({
-          type: TOAST_FAILURE,
-          message: "Warning: Key already exists!",
-        })
-      );
-      setDupKey(true);
-      return;
+      if (titleExists && keyExists) {
+        dispatch(
+          showToast({
+            type: TOAST_FAILURE,
+            message: "Warning: Title and Key already exists!",
+          })
+        );
+        setDupTitle(true);
+        setDupKey(true);
+        return;
+      }
     }
+    if (updatedTitle !== title) {
+      const titleExists = categories.some(
+        (category) => category.title === updatedTitle
+      );
+      if (titleExists) {
+        dispatch(
+          showToast({
+            type: TOAST_FAILURE,
+            message: "Warning: Title already exists!",
+          })
+        );
+        setDupTitle(true);
+        return;
+      }
+    }
+    if (updatedKey !== key) {
+      const keyExists = categories.some(
+        (category) => category.key === updatedKey
+      );
+      if (keyExists) {
+        dispatch(
+          showToast({
+            type: TOAST_FAILURE,
+            message: "Warning: Key already exists!",
+          })
+        );
+        setDupKey(true);
+        return;
+      }
+    }
+
     try {
-      await axiosClient.post("/admin/category", {
-        title: title.toUpperCase(),
-        key: key.toLowerCase(),
+      await axiosClient.put("/admin/category", {
+        id: params.categoryId,
+        title: updatedTitle,
+        key: updatedKey,
+        fileName,
         image,
         selectedProd,
-        fileName,
       });
       dispatch(
         showToast({
           type: TOAST_SUCCESS,
-          message: "Success: Category added Successfully!",
+          message: "Success: Category Updated Successfully!",
         })
       );
-      setImage("");
-      setTitle("");
-      setKey("");
-      setFileName("");
-      setSelectedProd([]);
-      setProductsCopy([...products]);
+      setChange(false);
       dispatch(fetchCategories());
     } catch (error) {}
   };
@@ -207,7 +223,7 @@ function UpdateCategory() {
 
   useEffect(() => {
     if (params.categoryId) {
-      const category = categories.find(
+      category = categories.find(
         (category) => category._id === params.categoryId
       );
       if (category) {
@@ -215,34 +231,54 @@ function UpdateCategory() {
         setKey(category.key);
         setImage(category.image.url);
         setSelectedProd(category.products);
+        setOriginalSelectedProd(category.products);
         setFileName(category.image.fileName);
-        setProductsCopy(
-          products.filter(
-            (product) =>
-              !category.products.some((prod) => prod._id === product._id)
-          )
-        );  
+        setUpdatedKey(category.key);
+        setUpdatedTitle(category.title);
       }
     }
-  }, [params.categoryId]);
+  }, [params.categoryId, categories]);
+  const compareTwoArray = (originalSelectedProd, selectedProd) => {
+    return (
+      originalSelectedProd.length === selectedProd.length &&
+      originalSelectedProd.every((orgProd) =>
+        selectedProd.find((selProd) => selProd._id === orgProd._id)
+      )
+    );
+  };
+  useEffect(() => {
+    const copy = products.filter(
+      (product) => !selectedProd.some((prod) => prod._id === product._id)
+    );
+    //check if the products that are in selected is same as the products that was in the original selected
+    //match their id
+    //if they are not the same, set change to true
+    if (compareTwoArray(originalSelectedProd, selectedProd)) {
+      setChange(false);
+    } else {
+      setChange(true);
+    }
+
+    setProductsCopy([...copy]);
+  }, [selectedProd]);
 
   return (
-    <div className="updatecat">
-      <div className="content" onClick={(e) => handleClickOutside(e)}>
+    <div className="updatecat" onClick={(e) => handleClickOutside(e)}>
+      <div className="content">
         <div
           className="backButton"
-          // onClick={() => {
-          // if (image || title || key || selectedProd.length > 0) {
-          // alert(
-          // "Are you sure you want to leave this page? All your modifications will be lost"
-          // );
-          // }
-          // setImage("");
-          // setTitle("");
-          // setKey("");
-          // setSelectedProd([]);
-          // navigate("/admin/category");
-          //}}
+          onClick={() => {
+            if (change) {
+              if (
+                confirm(
+                  "Are you sure you want to leave this page? All your modifications will be lost"
+                )
+              ) {
+                navigate("/admin/category");
+              }
+            }
+            navigate("/admin/category");
+          }}
         >
           <FaArrowLeftLong className="icon" />
           Back
@@ -252,7 +288,14 @@ function UpdateCategory() {
             <h1 className="title">Category</h1>
             <p className="entry"> API ID: category</p>
           </div>
-          <div className="ctr-btn" onClick={saveCategory}>
+          <div
+            className={change ? "ctr-btn" : "no-ctr-btn"}
+            onClick={() => {
+              if (change) {
+                saveCategory();
+              }
+            }}
+          >
             <p>Save</p>
           </div>
         </div>
@@ -266,9 +309,14 @@ function UpdateCategory() {
                 type="text"
                 id="title"
                 className={reqTitle ? "input-req" : "input-cont1"}
-                value={title}
+                value={updatedTitle}
                 onChange={(e) => {
-                  setTitle(e.target.value);
+                  setUpdatedTitle(e.target.value.toUpperCase());
+                  if (e.target.value !== title) {
+                    setChange(true);
+                  } else {
+                    setChange(false);
+                  }
                 }}
                 onClick={() => {
                   setTitleReq(false);
@@ -288,9 +336,14 @@ function UpdateCategory() {
                 type="text"
                 id="key"
                 className={reqKey ? "input-req" : "input-cont1"}
-                value={key}
+                value={updatedKey}
                 onChange={(e) => {
-                  setKey(e.target.value);
+                  setUpdatedKey(e.target.value.toLowerCase());
+                  if (e.target.value !== key) {
+                    setChange(true);
+                  } else {
+                    setChange(false);
+                  }
                 }}
                 onClick={() => {
                   setKeyReq(false);
@@ -314,6 +367,7 @@ function UpdateCategory() {
                   <div
                     className="del-icon"
                     onClick={() => {
+                      setChange(true);
                       setImage("");
                       setFileName("");
                     }}
@@ -387,14 +441,11 @@ function UpdateCategory() {
                   <div className="product">
                     {productsCopy?.map((product) => (
                       <div
-                        key={product.id}
+                        key={product._id}
                         onClick={() => {
                           setBorder(!border);
                           setShowProd(!showProd);
                           setSelectedProd([...selectedProd, product]);
-                          setProductsCopy(
-                            productsCopy.filter((p) => p.id !== product.id)
-                          );
                         }}
                         className="product-item"
                       >
@@ -410,7 +461,7 @@ function UpdateCategory() {
               {selectedProd.length !== 0 && (
                 <div className="selected-prod">
                   {selectedProd.map((product) => (
-                    <div key={product.id} className="sel-prod">
+                    <div key={product._id} className="sel-prod">
                       <div
                         style={{
                           display: "flex",
@@ -428,10 +479,9 @@ function UpdateCategory() {
                         onClick={() => {
                           setSelectedProd(
                             selectedProd.filter(
-                              (prod) => prod.id !== product.id
+                              (prod) => prod._id !== product._id
                             )
                           );
-                          setProductsCopy([...productsCopy, product]);
                         }}
                       />
                     </div>
