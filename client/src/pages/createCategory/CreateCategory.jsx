@@ -34,8 +34,18 @@ function CreateCategory() {
   const [dupTitle, setDupTitle] = useState(false);
 
   useEffect(() => {
-    setProductsCopy([...products]);
-  }, [products]);
+    if (selectedProd.length === 0) {
+      console.log("if");
+      setProductsCopy([...products]);
+    } else {
+      console.log("else");
+      const copy = products.filter(
+        (product) => !selectedProd.some((prod) => prod._id === product._id)
+      );
+      setProductsCopy([...copy]);
+    }
+  }, [selectedProd, products]);
+
 
   const handleDrop = (e) => {
     let dt = e.dataTransfer;
@@ -211,8 +221,8 @@ function CreateCategory() {
   };
 
   return (
-    <div className="createcat">
-      <div className="content" onClick={(e) => handleClickOutside(e)}>
+    <div className="createcat" onClick={(e) => handleClickOutside(e)}>
+      <div className="content">
         <div
           className="backButton"
           onClick={() => {
@@ -371,14 +381,11 @@ function CreateCategory() {
                   <div className="product">
                     {productsCopy?.map((product) => (
                       <div
-                        key={product.id}
+                        key={product._id}
                         onClick={() => {
                           setBorder(!border);
                           setShowProd(!showProd);
                           setSelectedProd([...selectedProd, product]);
-                          setProductsCopy(
-                            productsCopy.filter((p) => p.id !== product.id)
-                          );
                         }}
                         className="product-item"
                       >
@@ -394,7 +401,7 @@ function CreateCategory() {
               {selectedProd.length !== 0 && (
                 <div className="selected-prod">
                   {selectedProd.map((product) => (
-                    <div key={product.id} className="sel-prod">
+                    <div key={product._id} className="sel-prod">
                       <div
                         style={{
                           display: "flex",
@@ -412,10 +419,9 @@ function CreateCategory() {
                         onClick={() => {
                           setSelectedProd(
                             selectedProd.filter(
-                              (prod) => prod.id !== product.id
+                              (prod) => prod._id !== product._id
                             )
                           );
-                          setProductsCopy([...productsCopy, product]);
                         }}
                       />
                     </div>
