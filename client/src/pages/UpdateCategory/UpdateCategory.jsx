@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FaArrowLeftLong, FaLeftLong } from "react-icons/fa6";
 import { RiImageAddFill } from "react-icons/ri";
 import { IoMdArrowDropdown } from "react-icons/io";
@@ -17,8 +17,9 @@ import { useNavigate, useParams } from "react-router-dom";
 let category;
 function UpdateCategory() {
   const [image, setImage] = useState("");
-
+  const ref = useRef(null);
   const params = useParams();
+  const [isSticky, setSticky] = useState(false);
   const [title, setTitle] = useState("");
   const [updatedTitle, setUpdatedTitle] = useState("");
   const [change, setChange] = useState(false);
@@ -261,10 +262,31 @@ function UpdateCategory() {
 
     setProductsCopy([...copy]);
   }, [selectedProd]);
+  const calculateContentTop = () => {
+    const inputDiv = document.getElementById("input-div");
 
+    if (inputDiv) {
+      const { top } = inputDiv.getBoundingClientRect();
+      if (top < 15) {
+        setSticky(true);
+      } else {
+        setSticky(false);
+      }
+    }
+  };
+
+  const handleScroll = () => {
+    calculateContentTop();
+  };
+  useEffect(() => {
+    ref.current?.addEventListener("scroll", handleScroll);
+    return () => {
+      ref.current?.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
   return (
-    <div className="updatecat" onClick={(e) => handleClickOutside(e)}>
-      <div className="content">
+    <div className="updatecat" onClick={(e) => handleClickOutside(e)} ref={ref}>
+      <div className={isSticky ? "sticky" : "content"}>
         <div
           className="backButton"
           onClick={() => {
@@ -299,196 +321,192 @@ function UpdateCategory() {
             <p>Save</p>
           </div>
         </div>
-        <div className="input-div">
-          <div className="cont1">
-            <div className="col">
-              <label htmlFor="title">
-                title<span>*</span>
-              </label>
-              <input
-                type="text"
-                id="title"
-                className={reqTitle ? "input-req" : "input-cont1"}
-                value={updatedTitle}
-                onChange={(e) => {
-                  setUpdatedTitle(e.target.value.toUpperCase());
-                  if (e.target.value !== title) {
-                    setChange(true);
-                  } else {
-                    setChange(false);
-                  }
-                }}
-                onClick={() => {
-                  setTitleReq(false);
-                  setDupTitle(false);
-                }}
-              />
-              {reqTitle && (
-                <div className="error">This attribute is required!</div>
-              )}
-              {dupTitle && <div className="error">Title already exist</div>}
-            </div>
-            <div className="col">
-              <label htmlFor="key">
-                key<span>*</span>
-              </label>
-              <input
-                type="text"
-                id="key"
-                className={reqKey ? "input-req" : "input-cont1"}
-                value={updatedKey}
-                onChange={(e) => {
-                  setUpdatedKey(e.target.value.toLowerCase());
-                  if (e.target.value !== key) {
-                    setChange(true);
-                  } else {
-                    setChange(false);
-                  }
-                }}
-                onClick={() => {
-                  setKeyReq(false);
-                  setDupKey(false);
-                }}
-              />
-              {reqKey && (
-                <div className="error">This attribute is required!</div>
-              )}
-              {dupKey && <div className="error">Key already exist</div>}
-            </div>
+      </div>
+      <div className="input-div" id="input-div">
+        <div className="cont1">
+          <div className="col">
+            <label htmlFor="title">
+              title<span>*</span>
+            </label>
+            <input
+              type="text"
+              id="title"
+              className={reqTitle ? "input-req" : "input-cont1"}
+              value={updatedTitle}
+              onChange={(e) => {
+                setUpdatedTitle(e.target.value.toUpperCase());
+                if (e.target.value.toUpperCase() !== title) {
+                  setChange(true);
+                } else {
+                  setChange(false);
+                }
+              }}
+              onClick={() => {
+                setTitleReq(false);
+                setDupTitle(false);
+              }}
+            />
+            {reqTitle && (
+              <div className="error">This attribute is required!</div>
+            )}
+            {dupTitle && <div className="error">Title already exist</div>}
           </div>
-          <div className="cont2">
-            <div className="for-image">
-              <p className="text">
-                image<span>*</span>
-              </p>
-              {image ? (
-                <div className="del">
-                  <img src="" alt={fileName} />
-                  <div
-                    className="del-icon"
-                    onClick={() => {
-                      setChange(true);
-                      setImage("");
-                      setFileName("");
-                    }}
-                  >
-                    <MdDelete />
-                  </div>
-                  <p>{fileName}</p>
-                </div>
-              ) : (
+          <div className="col">
+            <label htmlFor="key">
+              key<span>*</span>
+            </label>
+            <input
+              type="text"
+              id="key"
+              className={reqKey ? "input-req" : "input-cont1"}
+              value={updatedKey}
+              onChange={(e) => {
+                setUpdatedKey(e.target.value.toLowerCase());
+                if (e.target.value.toLowerCase() !== key) {
+                  setChange(true);
+                } else {
+                  setChange(false);
+                }
+              }}
+              onClick={() => {
+                setKeyReq(false);
+                setDupKey(false);
+              }}
+            />
+            {reqKey && <div className="error">This attribute is required!</div>}
+            {dupKey && <div className="error">Key already exist</div>}
+          </div>
+        </div>
+        <div className="cont2">
+          <div className="for-image">
+            <p className="text">
+              image<span>*</span>
+            </p>
+            {image ? (
+              <div className="del">
+                <img src="" alt={fileName} />
                 <div
-                  className={reqImage ? "req-image" : "input-ct-img"}
-                  onDragEnter={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                  }}
-                  onDragLeave={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                  }}
-                  onDragOver={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                  }}
-                  onDrop={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    handleDrop(e);
-                  }}
+                  className="del-icon"
                   onClick={() => {
-                    setImageReq(false);
+                    setChange(true);
+                    setImage("");
+                    setFileName("");
                   }}
                 >
-                  <label htmlFor="inputImg" className="labelImg">
-                    <RiImageAddFill className="icon" />
-                    <p>
-                      Click to add an asset or drag and drop one in this area
-                    </p>
-                  </label>
-                  <input
-                    type="file"
-                    className="inputImg"
-                    id="inputImg"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                  />
+                  <MdDelete />
                 </div>
-              )}
-              {reqImage && (
-                <div className="error">This attribute is required!</div>
-              )}
-            </div>
-            <div className="for-select">
-              <p className="text">
-                {selectedProd.length === 0
-                  ? "products"
-                  : `products (${selectedProd.length})`}
-              </p>
-
+                <p>{fileName}</p>
+              </div>
+            ) : (
               <div
-                className={border ? "dropdown" : "dropdown-border"}
-                onClick={(e) => {
-                  setShowProd(!showProd);
-                  setBorder(!border);
+                className={reqImage ? "req-image" : "input-ct-img"}
+                onDragEnter={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }}
+                onDragLeave={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }}
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  handleDrop(e);
+                }}
+                onClick={() => {
+                  setImageReq(false);
                 }}
               >
-                <p className="text-1">Add relation</p>
-                <IoMdArrowDropdown className="icon-1" />
+                <label htmlFor="inputImg" className="labelImg">
+                  <RiImageAddFill className="icon" />
+                  <p>Click to add an asset or drag and drop one in this area</p>
+                </label>
+                <input
+                  type="file"
+                  className="inputImg"
+                  id="inputImg"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                />
               </div>
-              {showProd && (
-                <div className="dropdown-content">
-                  <div className="product">
-                    {productsCopy?.map((product) => (
-                      <div
-                        key={product._id}
-                        onClick={() => {
-                          setBorder(!border);
-                          setShowProd(!showProd);
-                          setSelectedProd([...selectedProd, product]);
-                        }}
-                        className="product-item"
-                      >
-                        <span>
-                          <GoDotFill />
-                        </span>
-                        <p>{product.title}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-              {selectedProd.length !== 0 && (
-                <div className="selected-prod">
-                  {selectedProd.map((product) => (
-                    <div key={product._id} className="sel-prod">
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "10px",
-                          marginLeft: "5px",
-                        }}
-                      >
-                        <TbGridDots className="dots" />
-                        <p>{product.title}</p>
-                      </div>
+            )}
+            {reqImage && (
+              <div className="error">This attribute is required!</div>
+            )}
+          </div>
+          <div className="for-select">
+            <p className="text">
+              {selectedProd.length === 0
+                ? "products"
+                : `products (${selectedProd.length})`}
+            </p>
 
-                      <RxCross2
-                        className="cross"
-                        onClick={() => {
-                          setSelectedProd(
-                            selectedProd.filter(
-                              (prod) => prod._id !== product._id
-                            )
-                          );
-                        }}
-                      />
+            <div
+              className={border ? "dropdown" : "dropdown-border"}
+              onClick={(e) => {
+                setShowProd(!showProd);
+                setBorder(!border);
+              }}
+            >
+              <p className="text-1">Add relation</p>
+              <IoMdArrowDropdown className="icon-1" />
+            </div>
+            {showProd && (
+              <div className="dropdown-content">
+                <div className="product">
+                  {productsCopy?.map((product) => (
+                    <div
+                      key={product._id}
+                      onClick={() => {
+                        setBorder(!border);
+                        setShowProd(!showProd);
+                        setSelectedProd([...selectedProd, product]);
+                      }}
+                      className="product-item"
+                    >
+                      <span>
+                        <GoDotFill />
+                      </span>
+                      <p>{product.title}</p>
                     </div>
                   ))}
                 </div>
-              )}
-            </div>
+              </div>
+            )}
+            {selectedProd.length !== 0 && (
+              <div className="selected-prod">
+                {selectedProd.map((product) => (
+                  <div key={product._id} className="sel-prod">
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "10px",
+                        marginLeft: "5px",
+                      }}
+                    >
+                      <TbGridDots className="dots" />
+                      <p>{product.title}</p>
+                    </div>
+
+                    <RxCross2
+                      className="cross"
+                      onClick={() => {
+                        setSelectedProd(
+                          selectedProd.filter(
+                            (prod) => prod._id !== product._id
+                          )
+                        );
+                      }}
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>

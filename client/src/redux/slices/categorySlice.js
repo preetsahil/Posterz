@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { axiosClient } from "../../utils/axiosClient";
 import { TOAST_FAILURE, TOAST_SUCCESS } from "../../App";
 import { showToast } from "./appConfigSlice";
-import store from "../store";
+let search_params;
 
 export const fetchCategories = createAsyncThunk("/categories", async () => {
   try {
@@ -40,10 +40,54 @@ const categorySlice = createSlice({
   name: "categorySlice",
   initialState: {
     categories: [],
+    originalCategories: [],
+  },
+  reducers: {
+    sortOnTitleIncreasing: (state) => {
+      state.categories = state.categories.sort((a, b) =>
+        a.title.localeCompare(b.title)
+      );
+    },
+    sortOnTitleDecreasing: (state) => {
+      state.categories = state.categories.sort((a, b) =>
+        b.title.localeCompare(a.title)
+      );
+    },
+    sortOnKeyDecreasing: (state) => {
+      state.categories = state.categories.sort((a, b) =>
+        b.key.localeCompare(a.key)
+      );
+    },
+    sortOnKeyIncreasing: (state) => {
+      state.categories = state.categories.sort((a, b) =>
+        a.key.localeCompare(b.key)
+      );
+    },
+    sortOnIdIncreasing: (state) => {
+      state.categories = state.categories.sort((a, b) =>
+        a._id.localeCompare(b._id)
+      );
+    },
+    sortOnIdDecreasing: (state) => {
+      state.categories = state.categories.sort((a, b) =>
+        b._id.localeCompare(a._id)
+      );
+    },
+    search: (state, action) => {
+      const search_params = action.payload[0];
+      const searchQuery = action.payload[1].toLowerCase();
+
+      state.categories = state.originalCategories.filter((data) =>
+        search_params.some((param) =>
+          data[param].toString().toLowerCase().includes(searchQuery)
+        )
+      );
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchCategories.fulfilled, (state, action) => {
       state.categories = action.payload;
+      state.originalCategories = action.payload;
     });
     builder.addCase(deleteCategory.fulfilled, (state, action) => {
       state.categories = state.categories.filter(
@@ -54,3 +98,12 @@ const categorySlice = createSlice({
 });
 
 export default categorySlice.reducer;
+export const {
+  sortOnTitleIncreasing,
+  sortOnTitleDecreasing,
+  sortOnKeyDecreasing,
+  sortOnKeyIncreasing,
+  sortOnIdDecreasing,
+  sortOnIdIncreasing,
+  search,
+} = categorySlice.actions;

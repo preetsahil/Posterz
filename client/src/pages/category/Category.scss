@@ -64,8 +64,8 @@
     }
     .content {
       margin-top: 10px;
-      margin-left: 30px;
-      width: 870px;
+      margin-left: 50px;
+      width: 830px;
       padding: 10px;
 
       .backButton {
@@ -109,10 +109,51 @@
         }
       }
     }
+
+    .searchDiv {
+      display: flex;
+      margin-top: 30px;
+      margin-left: 60px;
+      position: relative;
+      align-items: center;
+      ::placeholder {
+        color: rgb(174, 174, 218);
+      }
+      .input-search {
+        background-color: #0b0f26;
+        color: rgb(244, 244, 244);
+        border-radius: 5px;
+        border: none;
+        padding: 8px 33px;
+        font-size: 0.9rem;
+        border: 0.01em solid #474f7a;
+
+        &:focus {
+          outline: 0.2em solid #435fff;
+        }
+      }
+      .icon {
+        position: absolute;
+        left: 10px;
+        color: rgb(244, 244, 244);
+      }
+      .cross {
+        position: absolute;
+        left: 220px;
+        color: rgb(165, 165, 186);
+        font-size: 1.2rem;
+        font-weight: 900;
+        cursor: pointer;
+      }
+
+      .input-search:focus + .icon {
+        color: #435fff;
+      }
+    }
     .pop-up {
-      margin-top: 20px;
-      margin-left: 48px;
-      width: 850px;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      margin-left: 60px;
       display: flex;
       gap: 10px;
       align-items: center;
@@ -124,7 +165,7 @@
       .delete {
         background-color: #0d122f;
         padding: 6px 12px;
-        border: 0.1em solid #474f7a;
+        border: 0.01em solid #474f7a;
         border-radius: 5px;
         font-weight: 900;
         cursor: pointer;
@@ -132,14 +173,15 @@
       }
     }
     .catgories {
-      margin-top: 15px;
-      margin-left: 40px;
-      width: 850px;
+      margin-left: 60px;
+      width: 750px;
       background-color: #0b0f26;
       padding-inline: 25px;
-      padding-bottom: 20px;
+      padding-bottom: 30px;
+      margin-bottom: 15px;
       border-radius: 5px;
       display: flex;
+      border: 0.01rem solid #474f7a;
       flex-direction: column;
       .head {
         display: flex;
@@ -200,7 +242,7 @@
               display: none;
             }
             &:hover::before {
-              content: "Sort on date";
+              content: "Sort on createdDate";
               position: absolute;
               top: -35px;
               left: 20%;
@@ -218,7 +260,6 @@
             display: flex;
             width: 120px;
             gap: 3px;
-
             position: relative;
 
             p {
@@ -249,7 +290,6 @@
             display: flex;
             width: 100px;
             gap: 3px;
-
             position: relative;
             p {
               color: rgb(165, 165, 186);
@@ -377,7 +417,6 @@
                 height: 20px;
                 border-radius: 50%;
                 border: 0.9px dashed #474f7a;
-             
               }
 
               p {
@@ -391,6 +430,200 @@
 
                 font-size: 0.875rem;
               }
+            }
+            .icons {
+              display: flex;
+              margin-left: 40px;
+              gap: 20px;
+              position: relative;
+              .edit {
+                position: relative;
+                .edit-icon {
+                  color: rgb(165, 165, 186);
+                  cursor: pointer;
+                  position: relative;
+
+                  &:hover {
+                    color: rgb(134, 134, 153);
+                  }
+                }
+                &:hover::before {
+                  content: "Edit";
+                  position: absolute;
+                  top: -35px;
+                  left: 20%;
+                  font-weight: 700;
+                  transform: translateX(-50%);
+                  background-color: rgb(244, 244, 244);
+                  color: black;
+                  padding: 5px 10px;
+                  border-radius: 4px;
+                  font-size: 12px;
+                  white-space: nowrap;
+                }
+              }
+              .del {
+                position: relative;
+                .del-icon {
+                  color: rgb(165, 165, 186);
+                  cursor: pointer;
+                  &:hover {
+                    color: rgb(134, 134, 153);
+                  }
+                }
+                &:hover::before {
+                  content: "Delete";
+                  position: absolute;
+                  top: -35px;
+                  left: 20%;
+                  font-weight: 700;
+                  transform: translateX(-50%);
+                  background-color: rgb(244, 244, 244);
+                  color: black;
+                  padding: 5px 10px;
+                  border-radius: 4px;
+                  font-size: 12px;
+                  white-space: nowrap;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    .pagination {
+      margin-bottom: 40px;
+      margin-left: 60px;
+      display: flex;
+      width: 750px;
+      align-items: center;
+      justify-content: space-between;
+      .select {
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        .list {
+          position: absolute;
+          bottom: 40px;
+          border: 0.01rem solid #474f7a;
+          border-radius: 5px;
+          background-color: #0b0f26;
+          padding: 2px;
+          div {
+            padding: 10px;
+            width: 60px;
+            .blue {
+              text-align: center;
+              color: #5143d0;
+              font-weight: 700;
+              font-size: 0.8rem;
+            }
+
+            .white {
+              text-align: center;
+              color: rgb(244, 244, 244);
+              font-size: 0.8rem;
+            }
+            &:hover {
+              background-color: #070a1b;
+              border-radius: 5px;
+            }
+          }
+        }
+        .records {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+
+          .borderrecordesperpage {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-inline: 10px;
+            padding-block: 8px;
+            border-radius: 5px;
+            outline: 0.01rem solid #474f7a;
+
+            p {
+              color: rgb(244, 244, 244);
+            }
+            .icon-down {
+              color: rgb(165, 165, 186);
+            }
+          }
+          .recordsperpage {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            outline: 0.02em solid #263277;
+
+            padding-inline: 10px;
+            padding-block: 8px;
+            border-radius: 5px;
+
+            p {
+              color: rgb(244, 244, 244);
+            }
+            .icon-down {
+              color: rgb(165, 165, 186);
+            }
+          }
+        }
+
+        .text {
+          font-size: 0.875rem;
+          color: rgb(165, 165, 186);
+        }
+      }
+
+      .page-number {
+        display: flex;
+        align-items: center;
+        .no-lesser {
+          color: rgb(165, 165, 186);
+        }
+        .less {
+          color: rgb(165, 165, 186);
+          &:hover {
+            color: rgb(244, 244, 244);
+          }
+        }
+        .no-greater {
+          color: rgb(165, 165, 186);
+        }
+        .greater {
+          color: rgb(165, 165, 186);
+          &:hover {
+            color: rgb(244, 244, 244);
+          }
+        }
+        .page {
+          display: flex;
+          gap: 5px;
+          align-items: center;
+          margin-inline: 15px;
+
+          .active {
+            background-color: #0a0e24;
+            padding: 10px 12px;
+            border-radius: 5px;
+            p {
+              color: rgb(244, 244, 244);
+              font-weight: 700;
+              font-size: 0.705rem;
+            }
+          }
+          .simple {
+            padding: 10px 12px;
+            border-radius: 5px;
+            transition: ease 0.2s;
+            p {
+              color: rgb(244, 244, 244);
+              font-size: 0.705rem;
+            }
+            &:hover {
+              background-color: #070a1b;
             }
           }
         }

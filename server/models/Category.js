@@ -17,7 +17,7 @@ const categorySchema = mongoose.Schema(
     image: {
       fileName: String,
       publicId: {
-        type: String,
+        type: String,      
         required: true,
       },
       url: {
