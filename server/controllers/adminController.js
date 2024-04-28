@@ -65,8 +65,10 @@ const addCategoryController = async (req, res) => {
         folder: "category",
       });
     }
+    const createdBy = req._id;
 
     const category = await Category.create({
+      createdBy,
       title,
       key,
       image: {
@@ -74,6 +76,7 @@ const addCategoryController = async (req, res) => {
         publicId: cloudImg?.public_id,
         url: cloudImg?.url,
       },
+      lastModifyBy: createdBy,
     });
     if (selectedProd) {
       await Promise.all(
@@ -187,7 +190,7 @@ const deleteProductController = async (req, res) => {
 };
 const updateCategoryController = async (req, res) => {
   try {
-    const { id, title, key, fileName, image ,selectedProd} = req.body;
+    const { id, title, key, fileName, image, selectedProd } = req.body;
     const ctgy = await Category.findOne({ _id: id });
     if (!ctgy) {
       return res.status(400).send("this category doesn't exist");
@@ -198,6 +201,7 @@ const updateCategoryController = async (req, res) => {
     if (ctgy.key !== key) {
       ctgy.key = key;
     }
+    ctgy.lastModifyBy = req._id;
 
     //upload image
     let cloudImg;

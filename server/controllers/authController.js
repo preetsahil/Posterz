@@ -34,6 +34,7 @@ const signUpController = async (req, res) => {
         email,
         name,
         password: hashedPassword,
+        isAdmin: true,
       });
     }
     const user = await User.findOne({ email });

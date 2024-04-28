@@ -1,17 +1,20 @@
 import React, { useEffect, useRef, useState } from "react";
-import { FaArrowLeftLong, FaLeftLong } from "react-icons/fa6";
+import { FaArrowLeftLong } from "react-icons/fa6";
 import { RiImageAddFill } from "react-icons/ri";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { GoDotFill } from "react-icons/go";
 import "./UpdateCategory.scss";
 import { TbGridDots } from "react-icons/tb";
 import { RxCross2 } from "react-icons/rx";
-import { MdDelete } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { TOAST_FAILURE, TOAST_SUCCESS } from "../../App";
+import { MdDelete } from "react-icons/md";
 import { showToast } from "../../redux/slices/appConfigSlice";
 import { axiosClient } from "../../utils/axiosClient";
-import { fetchCategories } from "../../redux/slices/categorySlice";
+import {
+  deleteCategory,
+  fetchCategories,
+} from "../../redux/slices/categorySlice";
 import { useNavigate, useParams } from "react-router-dom";
 
 let category;
@@ -41,6 +44,10 @@ function UpdateCategory() {
   const [dupTitle, setDupTitle] = useState(false);
   const [originalSelectedProd, setOriginalSelectedProd] = useState([]);
   const navigate = useNavigate();
+  const [name, setName] = useState("");
+  const [createdTime, setCreatedTime] = useState("");
+  const [updatedTime, setUpdatedTime] = useState("");
+  const [modifyName, setModifyName] = useState("");
 
   const handleDrop = (e) => {
     let dt = e.dataTransfer;
@@ -222,6 +229,24 @@ function UpdateCategory() {
     }
   };
 
+  function timeAgo(date) {
+    const now = new Date();
+    const secondsAgo = Math.round((now - date) / 1000);
+    const minutesAgo = Math.round(secondsAgo / 60);
+    const hoursAgo = Math.round(minutesAgo / 60);
+    const daysAgo = Math.round(hoursAgo / 24);
+
+    if (secondsAgo < 60) {
+      return `${secondsAgo} seconds ago`;
+    } else if (minutesAgo < 60) {
+      return `${minutesAgo} minutes ago`;
+    } else if (hoursAgo < 24) {
+      return `${hoursAgo} hours ago`;
+    } else {
+      return `${daysAgo} days ago`;
+    }
+  }
+
   useEffect(() => {
     if (params.categoryId) {
       category = categories.find(
@@ -236,6 +261,10 @@ function UpdateCategory() {
         setFileName(category.image.fileName);
         setUpdatedKey(category.key);
         setUpdatedTitle(category.title);
+        setModifyName(category.lastModifyBy?.name || "-");
+        setName(category.createdBy?.name || "-");
+        setCreatedTime(timeAgo(new Date(category.createdAt)));
+        setUpdatedTime(timeAgo(new Date(category.updatedAt)));
       }
     }
   }, [params.categoryId, categories]);
@@ -284,6 +313,13 @@ function UpdateCategory() {
       ref.current?.removeEventListener("scroll", handleScroll);
     };
   }, []);
+  const handleDelete = () => {
+    try {
+      dispatch(deleteCategory(params.categoryId));
+      dispatch(fetchCategories());
+      navigate("/admin/category");
+    } catch (error) {}
+  };
   return (
     <div className="updatecat" onClick={(e) => handleClickOutside(e)} ref={ref}>
       <div className={isSticky ? "sticky" : "content"}>
@@ -322,191 +358,232 @@ function UpdateCategory() {
           </div>
         </div>
       </div>
-      <div className="input-div" id="input-div">
-        <div className="cont1">
-          <div className="col">
-            <label htmlFor="title">
-              title<span>*</span>
-            </label>
-            <input
-              type="text"
-              id="title"
-              className={reqTitle ? "input-req" : "input-cont1"}
-              value={updatedTitle}
-              onChange={(e) => {
-                setUpdatedTitle(e.target.value.toUpperCase());
-                if (e.target.value.toUpperCase() !== title) {
-                  setChange(true);
-                } else {
-                  setChange(false);
-                }
-              }}
-              onClick={() => {
-                setTitleReq(false);
-                setDupTitle(false);
-              }}
-            />
-            {reqTitle && (
-              <div className="error">This attribute is required!</div>
-            )}
-            {dupTitle && <div className="error">Title already exist</div>}
-          </div>
-          <div className="col">
-            <label htmlFor="key">
-              key<span>*</span>
-            </label>
-            <input
-              type="text"
-              id="key"
-              className={reqKey ? "input-req" : "input-cont1"}
-              value={updatedKey}
-              onChange={(e) => {
-                setUpdatedKey(e.target.value.toLowerCase());
-                if (e.target.value.toLowerCase() !== key) {
-                  setChange(true);
-                } else {
-                  setChange(false);
-                }
-              }}
-              onClick={() => {
-                setKeyReq(false);
-                setDupKey(false);
-              }}
-            />
-            {reqKey && <div className="error">This attribute is required!</div>}
-            {dupKey && <div className="error">Key already exist</div>}
-          </div>
-        </div>
-        <div className="cont2">
-          <div className="for-image">
-            <p className="text">
-              image<span>*</span>
-            </p>
-            {image ? (
-              <div className="del">
-                <img src="" alt={fileName} />
-                <div
-                  className="del-icon"
-                  onClick={() => {
+      <div className="update-div">
+        <div className="input-div" id="input-div">
+          <div className="cont1">
+            <div className="col">
+              <label htmlFor="title">
+                title<span>*</span>
+              </label>
+              <input
+                type="text"
+                id="title"
+                className={reqTitle ? "input-req" : "input-cont1"}
+                value={updatedTitle}
+                onChange={(e) => {
+                  setUpdatedTitle(e.target.value.toUpperCase());
+                  if (e.target.value.toUpperCase() !== title) {
                     setChange(true);
-                    setImage("");
-                    setFileName("");
-                  }}
-                >
-                  <MdDelete />
-                </div>
-                <p>{fileName}</p>
-              </div>
-            ) : (
-              <div
-                className={reqImage ? "req-image" : "input-ct-img"}
-                onDragEnter={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                }}
-                onDragLeave={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                }}
-                onDragOver={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                }}
-                onDrop={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  handleDrop(e);
+                  } else {
+                    setChange(false);
+                  }
                 }}
                 onClick={() => {
-                  setImageReq(false);
+                  setTitleReq(false);
+                  setDupTitle(false);
+                }}
+              />
+              {reqTitle && (
+                <div className="error">This attribute is required!</div>
+              )}
+              {dupTitle && <div className="error">Title already exist</div>}
+            </div>
+            <div className="col">
+              <label htmlFor="key">
+                key<span>*</span>
+              </label>
+              <input
+                type="text"
+                id="key"
+                className={reqKey ? "input-req" : "input-cont1"}
+                value={updatedKey}
+                onChange={(e) => {
+                  setUpdatedKey(e.target.value.toLowerCase());
+                  if (e.target.value.toLowerCase() !== key) {
+                    setChange(true);
+                  } else {
+                    setChange(false);
+                  }
+                }}
+                onClick={() => {
+                  setKeyReq(false);
+                  setDupKey(false);
+                }}
+              />
+              {reqKey && (
+                <div className="error">This attribute is required!</div>
+              )}
+              {dupKey && <div className="error">Key already exist</div>}
+            </div>
+          </div>
+          <div className="cont2">
+            <div className="for-image">
+              <p className="text">
+                image<span>*</span>
+              </p>
+              {image ? (
+                <div className="del">
+                  <img src="" alt={fileName} />
+                  <div
+                    className="del-icon"
+                    onClick={() => {
+                      setChange(true);
+                      setImage("");
+                      setFileName("");
+                    }}
+                  >
+                    <MdDelete />
+                  </div>
+                  <p>{fileName}</p>
+                </div>
+              ) : (
+                <div
+                  className={reqImage ? "req-image" : "input-ct-img"}
+                  onDragEnter={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                  }}
+                  onDragLeave={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                  }}
+                  onDragOver={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                  }}
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleDrop(e);
+                  }}
+                  onClick={() => {
+                    setImageReq(false);
+                  }}
+                >
+                  <label htmlFor="inputImg" className="labelImg">
+                    <RiImageAddFill className="icon" />
+                    <p>
+                      Click to add an asset or drag and drop one in this area
+                    </p>
+                  </label>
+                  <input
+                    type="file"
+                    className="inputImg"
+                    id="inputImg"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                  />
+                </div>
+              )}
+              {reqImage && (
+                <div className="error">This attribute is required!</div>
+              )}
+            </div>
+            <div className="for-select">
+              <p className="text">
+                {selectedProd.length === 0
+                  ? "products"
+                  : `products (${selectedProd.length})`}
+              </p>
+
+              <div
+                className={border ? "dropdown" : "dropdown-border"}
+                onClick={(e) => {
+                  setShowProd(!showProd);
+                  setBorder(!border);
                 }}
               >
-                <label htmlFor="inputImg" className="labelImg">
-                  <RiImageAddFill className="icon" />
-                  <p>Click to add an asset or drag and drop one in this area</p>
-                </label>
-                <input
-                  type="file"
-                  className="inputImg"
-                  id="inputImg"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                />
+                <p className="text-1">Add relation</p>
+                <IoMdArrowDropdown className="icon-1" />
               </div>
-            )}
-            {reqImage && (
-              <div className="error">This attribute is required!</div>
-            )}
-          </div>
-          <div className="for-select">
-            <p className="text">
-              {selectedProd.length === 0
-                ? "products"
-                : `products (${selectedProd.length})`}
-            </p>
+              {showProd && (
+                <div className="dropdown-content">
+                  <div className="product">
+                    {productsCopy?.map((product) => (
+                      <div
+                        key={product._id}
+                        onClick={() => {
+                          setBorder(!border);
+                          setShowProd(!showProd);
+                          setSelectedProd([...selectedProd, product]);
+                        }}
+                        className="product-item"
+                      >
+                        <span>
+                          <GoDotFill />
+                        </span>
+                        <p>{product.title}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {selectedProd.length !== 0 && (
+                <div className="selected-prod">
+                  {selectedProd.map((product) => (
+                    <div key={product._id} className="sel-prod">
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "10px",
+                          marginLeft: "5px",
+                        }}
+                      >
+                        <TbGridDots className="dots" />
+                        <p>{product.title}</p>
+                      </div>
 
-            <div
-              className={border ? "dropdown" : "dropdown-border"}
-              onClick={(e) => {
-                setShowProd(!showProd);
-                setBorder(!border);
-              }}
-            >
-              <p className="text-1">Add relation</p>
-              <IoMdArrowDropdown className="icon-1" />
-            </div>
-            {showProd && (
-              <div className="dropdown-content">
-                <div className="product">
-                  {productsCopy?.map((product) => (
-                    <div
-                      key={product._id}
-                      onClick={() => {
-                        setBorder(!border);
-                        setShowProd(!showProd);
-                        setSelectedProd([...selectedProd, product]);
-                      }}
-                      className="product-item"
-                    >
-                      <span>
-                        <GoDotFill />
-                      </span>
-                      <p>{product.title}</p>
+                      <RxCross2
+                        className="cross"
+                        onClick={() => {
+                          setSelectedProd(
+                            selectedProd.filter(
+                              (prod) => prod._id !== product._id
+                            )
+                          );
+                        }}
+                      />
                     </div>
                   ))}
                 </div>
+              )}
+            </div>
+          </div>
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+          <div className="right">
+            <div className="info">
+              <p
+                style={{
+                  textAlign: "center",
+                  borderBottom: "0.01em solid #474f7a",
+                  paddingBottom: "8px",
+                }}
+              >
+                INFORMATION
+              </p>
+              <div className="createdAt">
+                <p className="white">Created </p>
+                <p className="grey">{createdTime}</p>
               </div>
-            )}
-            {selectedProd.length !== 0 && (
-              <div className="selected-prod">
-                {selectedProd.map((product) => (
-                  <div key={product._id} className="sel-prod">
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "10px",
-                        marginLeft: "5px",
-                      }}
-                    >
-                      <TbGridDots className="dots" />
-                      <p>{product.title}</p>
-                    </div>
-
-                    <RxCross2
-                      className="cross"
-                      onClick={() => {
-                        setSelectedProd(
-                          selectedProd.filter(
-                            (prod) => prod._id !== product._id
-                          )
-                        );
-                      }}
-                    />
-                  </div>
-                ))}
+              <div className="by">
+                <p className="white">By</p>
+                <p className="grey">{name}</p>
               </div>
-            )}
+              <div className="updatedAt">
+                <p className="white">Last update</p>
+                <p className="grey">{updatedTime}</p>
+              </div>
+              <div className="by">
+                <p className="white">By</p>
+                <p className="grey">{modifyName}</p>
+              </div>
+            </div>
+          </div>
+          <div className="button" onClick={handleDelete}>
+            <MdDelete />
+            <p className="text">Delete this entry</p>
           </div>
         </div>
       </div>

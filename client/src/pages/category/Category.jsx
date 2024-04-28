@@ -77,7 +77,7 @@ function Category() {
     const categoryElement = document.getElementById("categories");
     if (categoryElement) {
       const { top } = categoryElement.getBoundingClientRect();
-      if (top < 51) {
+      if (top < 10) {
         setSticky(true);
       } else {
         setSticky(false);

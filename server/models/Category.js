@@ -2,6 +2,14 @@ const mongoose = require("mongoose");
 
 const categorySchema = mongoose.Schema(
   {
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+    lastModifyBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
     title: {
       type: String,
       required: true,
@@ -17,7 +25,7 @@ const categorySchema = mongoose.Schema(
     image: {
       fileName: String,
       publicId: {
-        type: String,      
+        type: String,
         required: true,
       },
       url: {

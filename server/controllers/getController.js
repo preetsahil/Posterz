@@ -11,7 +11,10 @@ const productController = async (req, res) => {
 };
 const categoryController = async (req, res) => {
   try {
-    const categories = await Category.find({}).populate("products");
+    const categories = await Category.find({})
+      .populate("products")
+      .populate("createdBy")
+      .populate("lastModifyBy");
     return res.status(200).send({ categories });
   } catch (error) {
     return res.status(500).send(error.message);

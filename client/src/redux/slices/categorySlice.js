@@ -2,11 +2,11 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { axiosClient } from "../../utils/axiosClient";
 import { TOAST_FAILURE, TOAST_SUCCESS } from "../../App";
 import { showToast } from "./appConfigSlice";
-let search_params;
 
 export const fetchCategories = createAsyncThunk("/categories", async () => {
   try {
     const response = await axiosClient.get("/api/categories");
+    console.log("hsagf")
     return response.data.categories;
   } catch (error) {
     return Promise.reject(error);
