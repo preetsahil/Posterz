@@ -2,12 +2,20 @@ const mongoose = require("mongoose");
 
 const productSchema = mongoose.Schema(
   {
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+    lastModifyBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
     title: {
       type: String,
       required: true,
       unique: true,
       minlength: 1,
-      maxlength: 20,
+      maxlength: 30,
     },
     desc: {
       type: String,
@@ -22,13 +30,14 @@ const productSchema = mongoose.Schema(
       required: true,
     },
     image: {
+      fileName: String,
       publicId: {
         type: String,
-        // required:true,
+        required: true,
       },
       url: {
         type: String,
-        // required:true,
+        required: true,
       },
     },
 

@@ -193,8 +193,8 @@ function CreateCategory() {
     }
     try {
       await axiosClient.post("/admin/category", {
-        title: title,
-        key: key,
+        title,
+        key,
         image,
         selectedProd,
         fileName,
@@ -418,7 +418,7 @@ function CreateCategory() {
                         <span>
                           <GoDotFill />
                         </span>
-                        <p>{product.title}</p>
+                        <p>{product.title.toLowerCase()}</p>
                       </div>
                     ))}
                   </div>

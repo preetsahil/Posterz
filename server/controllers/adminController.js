@@ -84,7 +84,7 @@ const addCategoryController = async (req, res) => {
           try {
             const product = await Product.findOne({ _id: prod._id });
             if (!product) {
-              console.log("product not found : " + prod._id);
+              res.status(400).send("product not found : " + prod._id);
               return;
             }
             product.categories.push(category._id);
@@ -106,7 +106,8 @@ const addCategoryController = async (req, res) => {
 
 const addProductController = async (req, res) => {
   try {
-    const { title, key, desc, price, image, categories, isTopPick } = req.body;
+    const { title, key, desc, price, image, selectedCat, isTopPick, fileName } =
+      req.body;
     if (!title) {
       return res.status(400).send("title is required");
     }
@@ -124,32 +125,39 @@ const addProductController = async (req, res) => {
         folder: "product",
       });
     }
+
+    const createdBy = req._id;
+
     const product = await Product.create({
+      createdBy,
       title,
       key,
       desc,
       price,
       isTopPick,
       image: {
+        fileName,
         publicId: cloudImg?.public_id,
         url: cloudImg?.url,
       },
+      lastModifyBy: createdBy,
     });
 
-    if (categories) {
-      categories.map(async (cat) => {
+    if (selectedCat) {
+      const cat = selectedCat[0];
+      try {
         const category = await Category.findOne({ _id: cat._id });
         if (!category) {
           return res.status(400).send("Category not found: " + category);
         }
-        category.products.push(product._id);
         product.categories.push(category._id);
+        category.products.push(product._id);
         await category.save();
         await product.save();
-      });
+      } catch (error) {}
     }
 
-    return res.status(200).send({ product });
+    return res.status(200).send(product);
   } catch (error) {
     return res.status(500).send(error.message);
   }
