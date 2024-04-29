@@ -11,14 +11,16 @@ import AdminLogin from "./components/adminLogin/AdminLogin";
 import OnlyIfNotLoggedIn from "./components/OnlyIfNotLoggedIn";
 import Category from "./pages/category/Category";
 import CreateCategory from "./pages/createCategory/CreateCategory";
+import UpdateCategory from "./pages/UpdateCategory/UpdateCategory";
 import Order from "./components/admindashboard/order/Order";
-import Product from "./components/admindashboard/product/Product";
+import Product from "./pages/product/Product";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { fetchCategories } from "./redux/slices/categorySlice";
 import { fetchProducts } from "./redux/slices/productSlice";
 import toast, { Toaster } from "react-hot-toast";
-import UpdateCategory from "./pages/UpdateCategory/UpdateCategory";
+import CreateProduct from "./pages/CreateProduct/CreateProduct";
+import UpdateProduct from "./pages/UpdateProduct/UpdateProduct";
 
 export const TOAST_SUCCESS = "toast_success";
 export const TOAST_FAILURE = "toast_failure";
@@ -78,7 +80,11 @@ function App() {
                   <Route path="create" element={<CreateCategory />} />
                   <Route path=":categoryId" element={<UpdateCategory />} />
                 </Route>
-                <Route path="product" element={<Product />} />
+                <Route path="product" element={<Product />}>
+                  <Route path="create" element={<CreateProduct />} />
+                  <Route path=":productId" element={<UpdateProduct />} />
+                </Route>
+
                 <Route path="order" element={<Order />} />
               </Route>
             </Route>

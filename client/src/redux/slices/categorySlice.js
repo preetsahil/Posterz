@@ -6,7 +6,6 @@ import { showToast } from "./appConfigSlice";
 export const fetchCategories = createAsyncThunk("/categories", async () => {
   try {
     const response = await axiosClient.get("/api/categories");
-    console.log("hsagf")
     return response.data.categories;
   } catch (error) {
     return Promise.reject(error);

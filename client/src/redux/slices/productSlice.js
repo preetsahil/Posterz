@@ -5,7 +5,9 @@ export const fetchProducts = createAsyncThunk("/products", async () => {
   try {
     const response = await axiosClient.get("/api/products");
     return response.data.products;
-  } catch (error) {}
+  } catch (error) {
+    return Promise.reject(error);
+  }
 });
 
 const productSlice = createSlice({

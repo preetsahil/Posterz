@@ -9,8 +9,8 @@ function AdminDashBoard() {
 
   return (
     <div className="AdminDashBoard">
-        <Sidebar />
-        {location.pathname === "/admin" ? <Detail /> : <Outlet />}
+      <Sidebar />
+      {location.pathname === "/admin" ? <Detail /> : <Outlet />}
     </div>
   );
 }

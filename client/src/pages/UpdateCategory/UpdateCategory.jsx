@@ -343,7 +343,7 @@ function UpdateCategory() {
         </div>
         <div className="banner">
           <div className="heading">
-            <h1 className="title">Category</h1>
+            <h1 className="title">{title}</h1>
             <p className="entry"> API ID: category</p>
           </div>
           <div

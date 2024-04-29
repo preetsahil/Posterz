@@ -1,0 +1,111 @@
+.prod {
+    flex-direction: column;
+    display: flex;
+    flex: 1;
+    background-color: #0d122f;
+    overflow-y: auto;
+    .Prod {
+      display: flex;
+      flex-direction: column;
+      .sticky {
+        display: flex;
+        align-items: center;
+        background-color: #0b0f26;
+        z-index: 99;
+        top: 0;
+        gap: 20px;
+        position: sticky;
+        padding: 10px;
+        .backButton {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          color: #5143d0;
+          cursor: pointer;
+  
+          .icon {
+            font-size: 1.3rem;
+          }
+        }
+        .banner {
+          display: flex;
+          align-items: center;
+          gap: 600px;
+          margin-top: 10px;
+          .heading {
+            display: flex;
+            flex-direction: column;
+            .title {
+              color: rgb(244, 244, 244);
+              font-size: 1.2rem;
+            }
+            .entry {
+              font-size: 0.875rem;
+              color: rgb(165, 165, 186);
+            }
+          }
+          .ctr-btn {
+            display: flex;
+            align-items: center;
+            color: rgb(244, 244, 244);
+            gap: 5px;
+            background-color: #435fff;
+  
+            padding: 4px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+  
+            p {
+              color: rgb(244, 244, 244);
+            }
+          }
+        }
+      }
+      .content {
+        margin-top: 10px;
+        margin-left: 50px;
+        width: 830px;
+        padding: 10px;
+  
+        .backButton {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          color: #5143d0;
+          cursor: pointer;
+  
+          .icon {
+            font-size: 1.3rem;
+          }
+        }
+        .banner {
+          display: flex;
+          align-items: center;
+          margin-top: 10px;
+          justify-content: space-between;
+          .heading {
+            .title {
+              color: rgb(244, 244, 244);
+            }
+            .entry {
+              margin-top: 1px;
+              color: rgb(165, 165, 186);
+            }
+          }
+          .ctr-btn {
+            display: flex;
+            align-items: center;
+            color: rgb(244, 244, 244);
+            gap: 5px;
+            background-color: #435fff;
+            padding: 8px 14px;
+            border-radius: 4px;
+            cursor: pointer;
+  
+            p {
+              color: rgb(244, 244, 244);
+            }
+          }
+        }
+      }
+    }}
