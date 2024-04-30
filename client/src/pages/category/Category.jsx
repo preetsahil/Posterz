@@ -25,6 +25,10 @@ import {
 } from "../../redux/slices/categorySlice";
 import { BsDash } from "react-icons/bs";
 import { RxCross2 } from "react-icons/rx";
+import {
+  fetchProducts,
+  updateProductsWithCategoryZero,
+} from "../../redux/slices/productSlice";
 
 function Category() {
   const navigate = useNavigate();
@@ -99,6 +103,15 @@ function Category() {
     const deleteIcon = event.target.closest(".del");
     if (deleteIcon) {
       dispatch(deleteCategory(categoryId));
+      const category = categories.find(
+        (category) => category._id === categoryId
+      );
+      //add the products in category to updateProductsWithCategoryZero
+      category.products.map((product) => {
+        return dispatch(
+          updateProductsWithCategoryZero(product)
+        );
+      });
       return;
     }
 
@@ -260,10 +273,28 @@ function Category() {
                 onClick={async () => {
                   try {
                     if (selectedCategoryIds.length === 1) {
-                      dispatch(deleteCategory(selectedCategoryIds[0]));
+                      const id = selectedCategoryIds[0];
+                      dispatch(deleteCategory(id));
+                      const category = categories.find(
+                        (category) => category._id === id
+                      );
+                      //add the products in category to updateProductsWithCategoryZero
+                      category.products.map((product) => {
+                        return dispatch(
+                          updateProductsWithCategoryZero(product)
+                        );
+                      });
                     } else {
                       selectedCategoryIds.map((categoryId) => {
                         dispatch(deleteCategory(categoryId));
+                        const category = categories.find(
+                          (category) => category._id === categoryId
+                        );
+                        category.products.map((product) => {
+                          return dispatch(
+                            updateProductsWithCategoryZero(product)
+                          );
+                        });
                       });
                     }
                     setSelectedCategoryIds([]);
@@ -449,9 +480,9 @@ function Category() {
                     <div className="image">
                       <img src={category.image?.url} alt="" />
                       <p>
-                        {category.image.fileName?.slice(0, 2) +
-                          category.image.fileName?.slice(
-                            category.image.fileName.lastIndexOf(".")
+                        {category.image?.fileName?.slice(0, 2) +
+                          category.image?.fileName?.slice(
+                            category.image?.fileName?.lastIndexOf(".")
                           )}
                       </p>
                     </div>

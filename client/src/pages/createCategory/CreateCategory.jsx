@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { showToast } from "../../redux/slices/appConfigSlice";
 import { TOAST_FAILURE, TOAST_SUCCESS } from "../../App";
 import { fetchCategories } from "../../redux/slices/categorySlice";
+import { fetchProducts } from "../../redux/slices/productSlice";
 
 function CreateCategory() {
   const navigate = useNavigate();
@@ -34,12 +35,14 @@ function CreateCategory() {
   const [productsCopy, setProductsCopy] = useState([]);
   const categories = useSelector((state) => state.categoryReducer.categories);
   const [dupTitle, setDupTitle] = useState(false);
+  const productsWithZeroCategory=useSelector((state)=>state.productReducer.productsWithZeroCategory)
 
   useEffect(() => {
     if (selectedProd.length === 0) {
-      setProductsCopy([...products]);
+      //it should have products that have zero categories
+      setProductsCopy([...productsWithZeroCategory]);
     } else {
-      const copy = products.filter(
+      const copy = productsWithZeroCategory.filter(
         (product) => !selectedProd.some((prod) => prod._id === product._id)
       );
       setProductsCopy([...copy]);
@@ -212,6 +215,7 @@ function CreateCategory() {
       setSelectedProd([]);
       setProductsCopy([...products]);
       dispatch(fetchCategories());
+      dispatch(fetchProducts());
     } catch (error) {}
   };
   const calculateContentTop = () => {
@@ -437,7 +441,7 @@ function CreateCategory() {
                         }}
                       >
                         <TbGridDots className="dots" />
-                        <p>{product.title}</p>
+                        <p>{product.title.toLowerCase()}</p>
                       </div>
 
                       <RxCross2

@@ -84,13 +84,17 @@ const addCategoryController = async (req, res) => {
           try {
             const product = await Product.findOne({ _id: prod._id });
             if (!product) {
-              res.status(400).send("product not found : " + prod._id);
+              console.log("product not found : " + prod);
               return;
             }
-            product.categories.push(category._id);
-            category.products.push(product._id);
-            await product.save();
-            await category.save();
+            await Product.updateOne(
+              { _id: prod._id },
+              { $set: { categories: category._id } }
+            );
+            await Category.updateOne(
+              { _id: category._id },
+              { $push: { products: prod._id } }
+            );
           } catch (err) {
             console.log(err.message);
           }
@@ -113,6 +117,9 @@ const addProductController = async (req, res) => {
     }
     if (!key) {
       return res.status(400).send("key is required");
+    }
+    if (!image) {
+      return res.status(400).send("image is required");
     }
 
     if (!price) {
@@ -143,17 +150,22 @@ const addProductController = async (req, res) => {
       lastModifyBy: createdBy,
     });
 
-    if (selectedCat) {
+    if (selectedCat.length > 0) {
       const cat = selectedCat[0];
       try {
         const category = await Category.findOne({ _id: cat._id });
         if (!category) {
-          return res.status(400).send("Category not found: " + category);
+          console.log("Category not found: " + category);
+          return;
         }
-        product.categories.push(category._id);
-        category.products.push(product._id);
-        await category.save();
-        await product.save();
+        await Category.updateOne(
+          { _id: cat },
+          { $push: { products: product._id } }
+        );
+        await Product.updateOne(
+          { _id: product._id },
+          { $set: { categories: cat._id } }
+        );
       } catch (error) {}
     }
 
@@ -171,7 +183,10 @@ const deleteCategoryController = async (req, res) => {
       return res.status(400).send("this category doesn't exist");
     }
 
-    await Product.updateMany({}, { $pull: { categories: ctgy._id } });
+    await Product.updateMany(
+      { categories: ctgy._id },
+      { $set: { categories: null } }
+    );
     await Category.deleteOne({ _id: id });
 
     return res.status(200).send({ id });
@@ -223,21 +238,21 @@ const updateCategoryController = async (req, res) => {
     if (ctgy.image.fileName !== fileName) {
       ctgy.image.fileName = fileName;
     }
-    // remove the ctgy from the products which are in ctgy.products
 
     if (ctgy.products.length > 0) {
       await Promise.all(
-        ctgy.products.map(async (prod) => {
+        ctgy.products.map(async (id) => {
           await Product.updateOne(
-            { _id: prod._id },
+            { _id: id },
             {
-              $pull: { categories: ctgy._id },
+              $set: { categories: null },
             }
           );
         })
       );
       ctgy.products = [];
     }
+    await ctgy.save();
 
     if (selectedProd) {
       await Promise.all(
@@ -245,20 +260,32 @@ const updateCategoryController = async (req, res) => {
           try {
             const product = await Product.findOne({ _id: prod._id });
             if (!product) {
-              console.log("product not found : " + prod._id);
+              console.log("product not found : " + prod);
               return;
             }
-            product.categories.push(ctgy._id);
-            ctgy.products.push(product._id);
-            await product.save();
-            await ctgy.save();
+
+            if (product.categories) {
+              await Category.updateOne(
+                { _id: product.categories },
+                { $pull: { products: prod._id } }
+              );
+            }
+
+            await Product.updateOne(
+              { _id: prod._id },
+              { $set: { categories: ctgy._id } }
+            );
+
+            await Category.updateOne(
+              { _id: ctgy._id },
+              { $push: { products: prod._id } }
+            );
           } catch (err) {
             console.log(err.message);
           }
         })
       );
     }
-    await ctgy.save();
 
     return res.status(200).send({ ctgy });
   } catch (error) {

@@ -13,6 +13,7 @@ import { showToast } from "../../redux/slices/appConfigSlice";
 import { TOAST_FAILURE, TOAST_SUCCESS } from "../../App";
 import { fetchProducts } from "../../redux/slices/productSlice";
 import { axiosClient } from "../../utils/axiosClient";
+import { fetchCategories } from "../../redux/slices/categorySlice";
 function CreateProduct() {
   const navigate = useNavigate();
   const [image, setImage] = useState("");
@@ -338,6 +339,7 @@ function CreateProduct() {
       setSelectedCat([]);
       setcatCopy([...categories]);
       setIsTopPick(false);
+      dispatch(fetchCategories());
       dispatch(fetchProducts());
     } catch (error) {}
   };
@@ -571,7 +573,7 @@ function CreateProduct() {
                         <span>
                           <GoDotFill />
                         </span>
-                        <p>{category.title}</p>
+                        <p>{category.title.toLowerCase()}</p>
                       </div>
                     ))}
                   </div>

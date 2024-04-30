@@ -16,6 +16,7 @@ import {
   fetchCategories,
 } from "../../redux/slices/categorySlice";
 import { useNavigate, useParams } from "react-router-dom";
+import { fetchProducts } from "../../redux/slices/productSlice";
 
 let category;
 function UpdateCategory() {
@@ -220,6 +221,7 @@ function UpdateCategory() {
       );
       setChange(false);
       dispatch(fetchCategories());
+      dispatch(fetchProducts());
     } catch (error) {}
   };
   const handleClickOutside = (event) => {
@@ -280,6 +282,7 @@ function UpdateCategory() {
     const copy = products.filter(
       (product) => !selectedProd.some((prod) => prod._id === product._id)
     );
+
     //check if the products that are in selected is same as the products that was in the original selected
     //match their id
     //if they are not the same, set change to true
@@ -512,7 +515,7 @@ function UpdateCategory() {
                         <span>
                           <GoDotFill />
                         </span>
-                        <p>{product.title}</p>
+                        <p>{product.title.toLowerCase()}</p>
                       </div>
                     ))}
                   </div>
@@ -531,7 +534,7 @@ function UpdateCategory() {
                         }}
                       >
                         <TbGridDots className="dots" />
-                        <p>{product.title}</p>
+                        <p>{product.title.toLowerCase()}</p>
                       </div>
 
                       <RxCross2

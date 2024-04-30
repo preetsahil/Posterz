@@ -14,12 +14,24 @@ const productSlice = createSlice({
   name: "productSlice",
   initialState: {
     products: [],
+    productsWithZeroCategory: [],
+  },
+  reducers: {
+    updateProductsWithCategoryZero: (state,action) => {
+      const product=action.payload;
+      //push this inside state.productsWithZeroCategory
+      state.productsWithZeroCategory.push(product);
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchProducts.fulfilled, (state, action) => {
       state.products = action.payload;
+      state.productsWithZeroCategory = action.payload.filter(
+        (product) => product.categories === null
+      );
     });
   },
 });
 
 export default productSlice.reducer;
+export const { updateProductsWithCategoryZero } = productSlice.actions;
