@@ -25,10 +25,7 @@ import {
 } from "../../redux/slices/categorySlice";
 import { BsDash } from "react-icons/bs";
 import { RxCross2 } from "react-icons/rx";
-import {
-  fetchProducts,
-  updateProductsWithCategoryZero,
-} from "../../redux/slices/productSlice";
+import { updateProductsWithCategoryZero } from "../../redux/slices/productSlice";
 
 function Category() {
   const navigate = useNavigate();
@@ -108,9 +105,7 @@ function Category() {
       );
       //add the products in category to updateProductsWithCategoryZero
       category.products.map((product) => {
-        return dispatch(
-          updateProductsWithCategoryZero(product)
-        );
+        return dispatch(updateProductsWithCategoryZero(product));
       });
       return;
     }
@@ -172,7 +167,7 @@ function Category() {
         <div
           className="Cat"
           onClick={(e) => {
-            if (!e.target.closest("#heading")) {
+            if (!e.target.closest("#head")) {
               setVisId(false);
               setVisKey(false);
               setVisTitle(false);
@@ -306,7 +301,7 @@ function Category() {
             )}
           </div>
           <div className="catgories" id="categories">
-            <div className="head">
+            <div className="head" id="head">
               {selectedCategoryIds.length !== paginatedCategories.length && (
                 <div
                   className={

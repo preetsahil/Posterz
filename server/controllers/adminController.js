@@ -182,7 +182,6 @@ const deleteCategoryController = async (req, res) => {
     if (!ctgy) {
       return res.status(400).send("this category doesn't exist");
     }
-
     await Product.updateMany(
       { categories: ctgy._id },
       { $set: { categories: null } }
@@ -197,16 +196,19 @@ const deleteCategoryController = async (req, res) => {
 
 const deleteProductController = async (req, res) => {
   try {
-    const { key } = req.body;
-    const prod = await Product.findOne({ key });
+    const id = req.params.id;
+    const prod = await Product.findOne({ _id: id });
     if (!prod) {
       return res.status(400).send("this product doesn't exist");
     }
-
-    await Category.updateMany({}, { $pull: { product: prod._id } });
+    if (prod.categories) {
+      await Category.updateOne(
+        { _id: prod.categories },
+        { $pull: { products: prod._id } }
+      );
+    }
     await prod.deleteOne();
-
-    return res.status(200).send("Product is deleted");
+    return res.status(200).send({ id });
   } catch (error) {
     return res.status(500).send(error.message);
   }

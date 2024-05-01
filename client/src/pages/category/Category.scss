@@ -225,10 +225,10 @@
         .heading {
           display: flex;
           margin-inline: 25px;
+          gap: 10px;
           .id {
             display: flex;
             position: relative;
-            gap: 3px;
             width: 60px;
 
             p {
@@ -258,9 +258,7 @@
           .title {
             display: flex;
             width: 120px;
-            gap: 3px;
             position: relative;
-
             p {
               color: rgb(165, 165, 186);
               font-weight: 600;
@@ -288,7 +286,6 @@
           .key {
             display: flex;
             width: 100px;
-            gap: 3px;
             position: relative;
             p {
               color: rgb(165, 165, 186);
@@ -370,6 +367,7 @@
           .desc {
             display: flex;
             margin-inline: 25px;
+            gap: 10px;
             .id {
               display: flex;
               width: 60px;
@@ -378,25 +376,22 @@
                 color: rgb(244, 244, 244);
                 font-size: 0.875rem;
               }
-              .none {
-                display: none;
-              }
             }
             .title {
               display: flex;
               width: 120px;
+              overflow: hidden;
 
               p {
                 color: rgb(244, 244, 244);
                 font-size: 0.875rem;
               }
-              .none {
-                display: none;
-              }
             }
             .key {
               display: flex;
               width: 100px;
+              overflow: hidden;
+
               p {
                 color: rgb(244, 244, 244);
                 font-size: 0.875rem;
@@ -432,7 +427,7 @@
             }
             .icons {
               display: flex;
-              margin-left: 40px;
+              margin-left: 10px;
               gap: 20px;
               position: relative;
               .edit {

@@ -5,7 +5,7 @@ router.post("/", adminController.loginController);
 router.post("/category", isAdmin, adminController.addCategoryController);
 router.post("/product", isAdmin, adminController.addProductController);
 router.delete("/category/:id", isAdmin, adminController.deleteCategoryController);
-router.delete("/product", isAdmin, adminController.deleteProductController);
+router.delete("/product/:id", isAdmin, adminController.deleteProductController);
 router.put("/category", isAdmin, adminController.updateCategoryController);
 router.put("/product", isAdmin, adminController.updateProductController);
 
