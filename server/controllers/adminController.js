@@ -95,9 +95,7 @@ const addCategoryController = async (req, res) => {
               { _id: category._id },
               { $push: { products: prod._id } }
             );
-          } catch (err) {
-            console.log(err.message);
-          }
+          } catch (err) {}
         })
       );
     }
@@ -150,25 +148,23 @@ const addProductController = async (req, res) => {
       lastModifyBy: createdBy,
     });
 
-    if (selectedCat.length > 0) {
-      const cat = selectedCat[0];
+    if (Object.keys(selectedCat).length !== 0) {
       try {
-        const category = await Category.findOne({ _id: cat._id });
+        const category = await Category.findOne({ _id: selectedCat._id });
         if (!category) {
           console.log("Category not found: " + category);
           return;
         }
         await Category.updateOne(
-          { _id: cat },
+          { _id: selectedCat._id },
           { $push: { products: product._id } }
         );
         await Product.updateOne(
           { _id: product._id },
-          { $set: { categories: cat._id } }
+          { $set: { categories: selectedCat._id } }
         );
       } catch (error) {}
     }
-
     return res.status(200).send(product);
   } catch (error) {
     return res.status(500).send(error.message);
@@ -184,7 +180,7 @@ const deleteCategoryController = async (req, res) => {
     }
     await Product.updateMany(
       { categories: ctgy._id },
-      { $set: { categories: null } }
+      { $unset: { categories: "" } }
     );
     await Category.deleteOne({ _id: id });
 
@@ -232,7 +228,7 @@ const updateCategoryController = async (req, res) => {
     let cloudImg;
     if (image) {
       cloudImg = await cloudinary.uploader.upload(image, {
-        folder: "product",
+        folder: "category",
       });
     }
     ctgy.image.publicId = cloudImg?.public_id;
@@ -247,7 +243,7 @@ const updateCategoryController = async (req, res) => {
           await Product.updateOne(
             { _id: id },
             {
-              $set: { categories: null },
+              $unset: { categories: "" },
             }
           );
         })
@@ -297,61 +293,77 @@ const updateCategoryController = async (req, res) => {
 
 const updateProductController = async (req, res) => {
   try {
-    const { id, title, key, desc, price, image, isTopPick, categories } =
-      req.body;
+    const {
+      id,
+      title,
+      key,
+      desc,
+      price,
+      image,
+      selectedCat,
+      isTopPick,
+      fileName,
+    } = req.body;
 
     const prod = await Product.findOne({ _id: id });
-    prod.title = title;
-    prod.key = key;
-    prod.desc = desc;
-    prod.price = price;
-    //upload image
-    //  prod.image.publicId=
-    //  prod.image.url=
-    prod.isTopPick = isTopPick;
-
-    if (categories.length < prod.category.length) {
-      let categoryToRemove = [];
-
-      categoryToRemove = prod.category.filter(
-        (item) => !categories.includes(item._id.toString())
-      );
-      await Category.updateMany(
-        {
-          _id: { $in: categoryToRemove },
-        },
-        { $pull: { product: prod._id } }
-      );
-      prod.category = categories;
-
-      await prod.save();
-      return res.status(200).send({ prod });
+    if (!prod) {
+      return res.status(400).send("this product doesn't exist");
+    }
+    if (prod.title !== title) {
+      prod.title = title;
+    }
+    if (prod.key !== key) {
+      prod.key = key;
+    }
+    if (prod.desc !== desc) {
+      prod.desc = desc;
+    }
+    if (prod.price !== price) {
+      prod.price = price;
+    }
+    if (prod.isTopPick !== isTopPick) {
+      prod.isTopPick = isTopPick;
+    }
+    prod.lastModifyBy = req._id;
+    let cloudImg;
+    if (image) {
+      cloudImg = await cloudinary.uploader.upload(image, {
+        folder: "product",
+      });
+    }
+    prod.image.publicId = cloudImg?.public_id;
+    prod.image.url = cloudImg?.url;
+    if (prod.image.fileName !== fileName) {
+      prod.image.fileName = fileName;
     }
 
-    if (prod.category && prod.category.length > 0) {
-      let categoryToAdd = [];
-
-      categoryToAdd = categories.filter(
-        (item) => !prod.category.map((cat) => cat._id.toString()).includes(item)
+    if (prod.categories) {
+      await Category.updateOne(
+        { _id: prod.categories },
+        { $pull: { products: prod._id } }
       );
-      await Category.updateMany(
-        {
-          _id: { $in: categoryToAdd },
-        },
-        { $addToSet: { product: prod._id } }
-      );
-      prod.category = categories;
-    } else {
-      await Category.updateMany(
-        {
-          _id: { $in: categories },
-        },
-        { $addToSet: { product: prod._id } }
-      );
-      prod.category = categories;
+      prod.categories = undefined;
     }
 
     await prod.save();
+
+    if (Object.keys(selectedCat).length !== 0) {
+      try {
+        const category = await Category.findOne({ _id: selectedCat._id });
+        if (!category) {
+          console.log("Category not found: " + category);
+          return;
+        }
+        await Category.updateOne(
+          { _id: selectedCat._id },
+          { $push: { products: prod._id } }
+        );
+        await Product.updateOne(
+          { _id: prod._id },
+          { $set: { categories: selectedCat._id } }
+        );
+      } catch (error) {}
+    }
 
     return res.status(200).send({ prod });
   } catch (error) {

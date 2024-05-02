@@ -6,7 +6,6 @@ import { TOAST_FAILURE, TOAST_SUCCESS } from "../../App";
 export const fetchProducts = createAsyncThunk("/products", async () => {
   try {
     const response = await axiosClient.get("/api/products");
-    console.log(response.data.products);
     return response.data.products;
   } catch (error) {
     return Promise.reject(error);
@@ -106,7 +105,7 @@ const productSlice = createSlice({
       state.products = action.payload;
       state.originalProducts = action.payload;
       state.productsWithZeroCategory = action.payload.filter(
-        (product) => product.categories === null
+        (product) => !product.categories
       );
     });
     builder.addCase(deleteProduct.fulfilled, (state, action) => {

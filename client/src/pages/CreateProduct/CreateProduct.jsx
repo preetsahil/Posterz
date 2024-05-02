@@ -20,7 +20,7 @@ function CreateProduct() {
   const [isSticky, setSticky] = useState(false);
   const [title, setTitle] = useState("");
   const dispatch = useDispatch();
-  const [price, setPrice] = useState("");
+  const [price, setPrice] = useState(0);
   const [reqPrice, setReqPrice] = useState(false);
   const ref = useRef(null);
   const [desc, setDesc] = useState("");
@@ -32,7 +32,7 @@ function CreateProduct() {
   const [fileName, setFileName] = useState("");
   const [showCat, setShowCat] = useState("");
   const products = useSelector((state) => state.productReducer.products);
-  const [selectedCat, setSelectedCat] = useState([]);
+  const [selectedCat, setSelectedCat] = useState({});
   const [border, setBorder] = useState(true);
   const [catCopy, setcatCopy] = useState([]);
   const categories = useSelector((state) => state.categoryReducer.categories);
@@ -99,18 +99,18 @@ function CreateProduct() {
   };
 
   useEffect(() => {
-    if (selectedCat.length === 0) {
+    if (Object.keys(selectedCat).length === 0) {
       setcatCopy([...categories]);
     } else {
       const copy = categories.filter(
-        (category) => !selectedCat.some((cat) => cat._id === category._id)
+        (category) => selectedCat._id !== category._id
       );
       setcatCopy([...copy]);
     }
   }, [selectedCat, categories]);
 
   const saveProduct = async () => {
-    if (title === "" && key === "" && image === "" && price === "") {
+    if (title === "" && key === "" && image === "" && price === 0) {
       dispatch(
         showToast({
           type: TOAST_FAILURE,
@@ -135,7 +135,7 @@ function CreateProduct() {
       setImageReq(true);
       return;
     }
-    if (title === "" && key === "" && price === "") {
+    if (title === "" && key === "" && price === 0) {
       dispatch(
         showToast({
           type: TOAST_FAILURE,
@@ -147,7 +147,7 @@ function CreateProduct() {
       setReqPrice(true);
       return;
     }
-    if (key === "" && image === "" && price === "") {
+    if (key === "" && image === "" && price === 0) {
       dispatch(
         showToast({
           type: TOAST_FAILURE,
@@ -159,7 +159,7 @@ function CreateProduct() {
       setReqPrice(true);
       return;
     }
-    if (title === "" && image === "" && price === "") {
+    if (title === "" && image === "" && price === 0) {
       dispatch(
         showToast({
           type: TOAST_FAILURE,
@@ -193,7 +193,7 @@ function CreateProduct() {
       setImageReq(true);
       return;
     }
-    if (title === "" && price === "") {
+    if (title === "" && price === 0) {
       dispatch(
         showToast({
           type: TOAST_FAILURE,
@@ -215,7 +215,7 @@ function CreateProduct() {
       setImageReq(true);
       return;
     }
-    if (key === "" && price === "") {
+    if (key === "" && price === 0) {
       dispatch(
         showToast({
           type: TOAST_FAILURE,
@@ -226,7 +226,7 @@ function CreateProduct() {
       setReqPrice(true);
       return;
     }
-    if (image === "" && price === "") {
+    if (image === "" && price === 0) {
       dispatch(
         showToast({
           type: TOAST_FAILURE,
@@ -267,7 +267,7 @@ function CreateProduct() {
       setImageReq(true);
       return;
     }
-    if (price === "") {
+    if (price === 0) {
       dispatch(
         showToast({
           type: TOAST_FAILURE,
@@ -336,7 +336,7 @@ function CreateProduct() {
       setDesc("");
       setPrice("");
       setFileName("");
-      setSelectedCat([]);
+      setSelectedCat({});
       setcatCopy([...categories]);
       setIsTopPick(false);
       dispatch(fetchCategories());
@@ -358,7 +358,7 @@ function CreateProduct() {
               image ||
               title ||
               key ||
-              selectedCat.length > 0 ||
+              Object.keys(selectedCat).length > 0 ||
               desc ||
               price ||
               isTopPick
@@ -371,7 +371,7 @@ function CreateProduct() {
                 setImage("");
                 setTitle("");
                 setKey("");
-                setSelectedCat([]);
+                setSelectedCat({});
                 setDesc("");
                 setPrice("");
                 setIsTopPick(false);
@@ -443,9 +443,9 @@ function CreateProduct() {
                 type="number"
                 id="price"
                 className={reqPrice ? "input-req" : "input-cont1"}
-                value={price}
+                value={price === 0 ? "" : price}
                 onChange={(e) => {
-                  setPrice(e.target.value);
+                  setPrice(Number(e.target.value));
                 }}
                 onClick={() => {
                   setReqPrice(false);
@@ -543,9 +543,9 @@ function CreateProduct() {
 
             <div className="for-select">
               <p className="text">
-                {selectedCat.length === 0
+                {Object.keys(selectedCat).length === 0
                   ? "category"
-                  : `category (${selectedCat.length})`}
+                  : "category (1)"}
               </p>
               <div
                 className={border ? "dropdown" : "dropdown-border"}
@@ -566,7 +566,7 @@ function CreateProduct() {
                         onClick={() => {
                           setBorder(!border);
                           setShowCat(!showCat);
-                          setSelectedCat([category]);
+                          setSelectedCat(category);
                         }}
                         className="category-item"
                       >
@@ -580,30 +580,28 @@ function CreateProduct() {
                 </div>
               )}
 
-              {selectedCat.length !== 0 && (
+              {Object.keys(selectedCat).length !== 0 && (
                 <div className="selected-cat">
-                  {selectedCat.map((category) => (
-                    <div key={category._id} className="sel-cat">
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "10px",
-                          marginLeft: "5px",
-                        }}
-                      >
-                        <TbGridDots className="dots" />
-                        <p>{category.title.toLowerCase()}</p>
-                      </div>
-
-                      <RxCross2
-                        className="cross"
-                        onClick={() => {
-                          setSelectedCat([]);
-                        }}
-                      />
+                  <div key={selectedCat._id} className="sel-cat">
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "10px",
+                        marginLeft: "5px",
+                      }}
+                    >
+                      <TbGridDots className="dots" />
+                      <p>{selectedCat.title.toLowerCase()}</p>
                     </div>
-                  ))}
+
+                    <RxCross2
+                      className="cross"
+                      onClick={() => {
+                        setSelectedCat({});
+                      }}
+                    />
+                  </div>
                 </div>
               )}
             </div>

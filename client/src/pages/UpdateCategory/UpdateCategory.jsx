@@ -38,7 +38,6 @@ function UpdateCategory() {
   const [showProd, setShowProd] = useState("");
   const products = useSelector((state) => state.productReducer.products);
   const [selectedProd, setSelectedProd] = useState([]);
-  const [updatedSelectedProd, setUpdatedSelectedProd] = useState([]);
   const [border, setBorder] = useState(true);
   const [productsCopy, setProductsCopy] = useState([]);
   const categories = useSelector((state) => state.categoryReducer.categories);
@@ -293,7 +292,7 @@ function UpdateCategory() {
     }
 
     setProductsCopy([...copy]);
-  }, [selectedProd]);
+  }, [selectedProd, products]);
   const calculateContentTop = () => {
     const inputDiv = document.getElementById("input-div");
 
@@ -337,8 +336,9 @@ function UpdateCategory() {
               ) {
                 navigate("/admin/category");
               }
+            } else {
+              navigate("/admin/category");
             }
-            navigate("/admin/category");
           }}
         >
           <FaArrowLeftLong className="icon" />
