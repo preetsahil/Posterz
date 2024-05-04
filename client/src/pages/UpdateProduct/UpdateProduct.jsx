@@ -51,6 +51,8 @@ function UpdateProduct() {
   const [change, setChange] = useState(false);
   const [originalPrice, setOriginalPrice] = useState(0);
   const [originalDesc, setOriginalDesc] = useState("");
+  const [reqTitleLen, setReqTitleLen] = useState(false);
+  const [reqKeyLen, setReqKeyLen] = useState(false);
 
   const calculateContentTop = () => {
     const inputDiv = document.getElementById("input-div");
@@ -123,7 +125,7 @@ function UpdateProduct() {
     } else {
       setChange(true);
     }
-  }, [selectedCat,categories]);
+  }, [selectedCat, categories]);
 
   const saveProduct = async () => {
     if (
@@ -298,6 +300,39 @@ function UpdateProduct() {
       setReqPrice(true);
       return;
     }
+    if (updatedKey.length > 20 && updatedTitle.length > 20) {
+      dispatch(
+        showToast({
+          type: TOAST_FAILURE,
+          message: "Warning: Title and Key should have length less than 20!",
+        })
+      );
+      setReqKeyLen(true);
+      setReqTitleLen(true);
+      return;
+    }
+    if (updatedTitle.length > 20) {
+      dispatch(
+        showToast({
+          type: TOAST_FAILURE,
+          message: "Warning: Title should have length less than 20!",
+        })
+      );
+      setReqTitleLen(true);
+      return;
+    }
+
+    if (updatedKey.length > 20) {
+      dispatch(
+        showToast({
+          type: TOAST_FAILURE,
+          message: "Warning: Key should have length less than 20!",
+        })
+      );
+      setReqKeyLen(true);
+      return;
+    }
+
     if (updatedKey !== key && updatedTitle !== title) {
       const keyExists = categories.some(
         (category) => category.key === updatedKey
@@ -422,11 +457,11 @@ function UpdateProduct() {
 
   return (
     <div
-      className="createprod"
+      className="Updateprod"
       onClick={(e) => handleClickOutside(e)}
       ref={ref}
     >
-      <div className={isSticky ? "sticky" : "content"}>
+      <div className={isSticky ? "st" : "co"}>
         <div
           className="backButton"
           onClick={() => {
@@ -486,12 +521,18 @@ function UpdateProduct() {
                 onClick={() => {
                   setTitleReq(false);
                   setDupTitle(false);
+                  setReqTitleLen(false);
                 }}
               />
               {reqTitle && (
                 <div className="error">This attribute is required!</div>
               )}
               {dupTitle && <div className="error">Title already exist</div>}
+              {reqTitleLen && (
+                <div className="error">
+                  Title should have length less than 20
+                </div>
+              )}
             </div>
             <div className="input-desc">
               <label htmlFor="desc">desc</label>
@@ -623,14 +664,17 @@ function UpdateProduct() {
                 onClick={() => {
                   setKeyReq(false);
                   setDupKey(false);
+                  setReqKeyLen(false);
                 }}
               />
               {reqKey && (
                 <div className="error">This attribute is required!</div>
               )}
               {dupKey && <div className="error">Key already exist</div>}
+              {reqKeyLen && (
+                <div className="error">Key should have length less than 20</div>
+              )}
             </div>
-
             <div className="for-select">
               <p className="text">
                 {selectedCat && Object.keys(selectedCat).length !== 0

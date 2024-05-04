@@ -35,8 +35,11 @@ function CreateCategory() {
   const [productsCopy, setProductsCopy] = useState([]);
   const categories = useSelector((state) => state.categoryReducer.categories);
   const [dupTitle, setDupTitle] = useState(false);
-  const productsWithZeroCategory=useSelector((state)=>state.productReducer.productsWithZeroCategory)
-
+  const productsWithZeroCategory = useSelector(
+    (state) => state.productReducer.productsWithZeroCategory
+  );
+  const [reqTitleLen, setReqTitleLen] = useState(false);
+  const [reqKeyLen, setReqKeyLen] = useState(false);
   useEffect(() => {
     if (selectedProd.length === 0) {
       //it should have products that have zero categories
@@ -156,6 +159,38 @@ function CreateCategory() {
         })
       );
       setKeyReq(true);
+      return;
+    }
+    if (key.length > 20 && title.length > 20) {
+      dispatch(
+        showToast({
+          type: TOAST_FAILURE,
+          message: "Warning: Title and Key should have length less than 20!",
+        })
+      );
+      setReqKeyLen(true);
+      setReqTitleLen(true);
+      return;
+    }
+    if (title.length > 20) {
+      dispatch(
+        showToast({
+          type: TOAST_FAILURE,
+          message: "Warning: Title should have length less than 20!",
+        })
+      );
+      setReqTitleLen(true);
+      return;
+    }
+
+    if (key.length > 20) {
+      dispatch(
+        showToast({
+          type: TOAST_FAILURE,
+          message: "Warning: Key should have length less than 20!",
+        })
+      );
+      setReqKeyLen(true);
       return;
     }
 
@@ -297,12 +332,18 @@ function CreateCategory() {
                 onClick={() => {
                   setTitleReq(false);
                   setDupTitle(false);
+                  setReqTitleLen(false);
                 }}
               />
               {reqTitle && (
                 <div className="error">This attribute is required!</div>
               )}
               {dupTitle && <div className="error">Title already exist</div>}
+              {reqTitleLen && (
+                <div className="error">
+                  Title should have length less than 20
+                </div>
+              )}
             </div>
             <div className="col">
               <label htmlFor="key">
@@ -319,12 +360,16 @@ function CreateCategory() {
                 onClick={() => {
                   setKeyReq(false);
                   setDupKey(false);
+                  setReqKeyLen(false);
                 }}
               />
               {reqKey && (
                 <div className="error">This attribute is required!</div>
               )}
               {dupKey && <div className="error">Key already exist</div>}
+              {reqKeyLen && (
+                <div className="error">Key should have length less than 20</div>
+              )}
             </div>
           </div>
           <div className="cont2">

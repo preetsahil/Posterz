@@ -265,33 +265,17 @@ function Category() {
             {selectedCategoryIds.length >= 1 && (
               <div
                 className="delete"
-                onClick={async () => {
+                onClick={ () => {
                   try {
-                    if (selectedCategoryIds.length === 1) {
-                      const id = selectedCategoryIds[0];
-                      dispatch(deleteCategory(id));
+                    selectedCategoryIds.forEach((categoryId) => {
+                      dispatch(deleteCategory(categoryId));
                       const category = categories.find(
-                        (category) => category._id === id
+                        (category) => category._id === categoryId
                       );
-                      //add the products in category to updateProductsWithCategoryZero
-                      category.products.map((product) => {
-                        return dispatch(
-                          updateProductsWithCategoryZero(product)
-                        );
+                      category.products.forEach((product) => {
+                        dispatch(updateProductsWithCategoryZero(product));
                       });
-                    } else {
-                      selectedCategoryIds.map((categoryId) => {
-                        dispatch(deleteCategory(categoryId));
-                        const category = categories.find(
-                          (category) => category._id === categoryId
-                        );
-                        category.products.map((product) => {
-                          return dispatch(
-                            updateProductsWithCategoryZero(product)
-                          );
-                        });
-                      });
-                    }
+                    });
                     setSelectedCategoryIds([]);
                   } catch (error) {}
                 }}

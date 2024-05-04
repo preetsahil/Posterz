@@ -259,24 +259,18 @@ function Product() {
             {selectedProductIds.length >= 1 && (
               <div
                 className="delete"
-                onClick={async () => {
+                onClick={() => {
                   try {
-                    if (selectedProductIds.length === 1) {
-                      const id = selectedProductIds[0];
+                    console.log("sfaj");
+                    selectedProductIds.forEach(async (id) => {
                       dispatch(deleteProduct(id));
-                      const catgeory = products.find(
+                      const category = products.find(
                         (product) => product._id === id
                       ).categories;
-                      dispatch(removeProductFromCategory([id, catgeory._id]));
-                    } else {
-                      selectedProductIds.map((id) => {
-                        dispatch(deleteProduct(id));
-                        const catgeory = products.find(
-                          (product) => product._id === id
-                        ).categories;
-                        dispatch(removeProductFromCategory([id, catgeory._id]));
-                      });
-                    }
+                      if (category) {
+                        dispatch(removeProductFromCategory([id, category._id]));
+                      }
+                    });
                     setSelectedProductIds([]);
                   } catch (error) {}
                 }}
