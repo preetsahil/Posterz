@@ -98,7 +98,6 @@ function UpdateProduct() {
       (product) => product._id === params.productId
     ).categories;
     dispatch(removeProductFromCategory([params.productId, catgeory._id]));
-    dispatch(fetchProducts());
     navigate("/admin/product");
   };
   const handleImageChange = (e) => {

@@ -80,14 +80,10 @@ const productSlice = createSlice({
       );
     },
     sortOnPriceIncreasing: (state) => {
-      state.products = state.products.sort((a, b) =>
-        a.price-b.price
-      );
+      state.products = state.products.sort((a, b) => a.price - b.price);
     },
     sortOnPriceDecreasing: (state) => {
-      state.products = state.products.sort((a, b) =>
-      b.price-a.price
-      );
+      state.products = state.products.sort((a, b) => b.price - a.price);
     },
 
     searchProducts: (state, action) => {
@@ -110,6 +106,9 @@ const productSlice = createSlice({
     });
     builder.addCase(deleteProduct.fulfilled, (state, action) => {
       state.products = state.products.filter(
+        (product) => product._id !== action.payload
+      );
+      state.originalProducts = state.originalProducts.filter(
         (product) => product._id !== action.payload
       );
       state.productsWithZeroCategory = state.productsWithZeroCategory.filter(

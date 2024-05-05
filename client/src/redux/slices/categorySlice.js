@@ -104,6 +104,9 @@ const categorySlice = createSlice({
       state.categories = state.categories.filter(
         (category) => category._id !== action.payload
       );
+      state.originalCategories = state.originalCategories.filter(
+        (category) => category._id !== action.payload
+      );
     });
   },
 });

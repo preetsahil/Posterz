@@ -491,6 +491,7 @@ function Category() {
                       onClick={() => {
                         setPageBorder(false);
                         setRecordPerPage(option);
+                        setCurrentPage(1);
                       }}
                     >
                       <p

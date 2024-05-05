@@ -92,6 +92,7 @@ function Product() {
     if (query.length > 0) {
       setCurrentPage(1);
     }
+
     const paginatedData = usePaginatedData(
       products,
       currentPage,
@@ -526,6 +527,7 @@ function Product() {
                       onClick={() => {
                         setPageBorder(false);
                         setRecordPerPage(option);
+                        setCurrentPage(1);
                       }}
                     >
                       <p

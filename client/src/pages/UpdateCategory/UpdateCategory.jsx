@@ -320,6 +320,7 @@ function UpdateCategory() {
       ref.current?.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
   const handleDelete = () => {
     try {
       dispatch(deleteCategory(params.categoryId));
@@ -330,7 +331,6 @@ function UpdateCategory() {
       category.products.map((product) => {
         return dispatch(updateProductsWithCategoryZero(product));
       });
-      dispatch(fetchCategories());
       navigate("/admin/category");
     } catch (error) {}
   };
