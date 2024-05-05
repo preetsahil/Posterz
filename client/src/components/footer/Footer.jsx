@@ -59,7 +59,7 @@ function Footer() {
             <img src={creditCardImg} alt="credit card img" />
           </div>
           <p style={{ marginTop: "5px" }}>
-            Copyright {new Date().getFullYear()} © <strong>PosterVista.</strong>
+            Copyright {new Date().getFullYear()} © <strong>PosterZ.</strong>
           </p>
         </div>
       </div>

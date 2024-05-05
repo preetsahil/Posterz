@@ -3,8 +3,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { showToast } from "../../redux/slices/appConfigSlice";
 import { TOAST_FAILURE, TOAST_SUCCESS } from "../../App";
-import { fetchCategories } from "../../redux/slices/categorySlice";
-import { fetchProducts } from "../../redux/slices/productSlice";
+import {
+  fetchCategories,
+  removeProductFromCategory,
+} from "../../redux/slices/categorySlice";
+import { deleteProduct, fetchProducts } from "../../redux/slices/productSlice";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { RiImageAddFill } from "react-icons/ri";
 import { IoMdArrowDropdown } from "react-icons/io";
@@ -89,6 +92,15 @@ function UpdateProduct() {
     };
   };
 
+  const handleDelete = () => {
+    dispatch(deleteProduct(params.productId));
+    const catgeory = products.find(
+      (product) => product._id === params.productId
+    ).categories;
+    dispatch(removeProductFromCategory([params.productId, catgeory._id]));
+    dispatch(fetchProducts());
+    navigate("/admin/product");
+  };
   const handleImageChange = (e) => {
     e.preventDefault();
     const file = e.target.files[0];
@@ -298,38 +310,6 @@ function UpdateProduct() {
         })
       );
       setReqPrice(true);
-      return;
-    }
-    if (updatedKey.length > 20 && updatedTitle.length > 20) {
-      dispatch(
-        showToast({
-          type: TOAST_FAILURE,
-          message: "Warning: Title and Key should have length less than 20!",
-        })
-      );
-      setReqKeyLen(true);
-      setReqTitleLen(true);
-      return;
-    }
-    if (updatedTitle.length > 20) {
-      dispatch(
-        showToast({
-          type: TOAST_FAILURE,
-          message: "Warning: Title should have length less than 20!",
-        })
-      );
-      setReqTitleLen(true);
-      return;
-    }
-
-    if (updatedKey.length > 20) {
-      dispatch(
-        showToast({
-          type: TOAST_FAILURE,
-          message: "Warning: Key should have length less than 20!",
-        })
-      );
-      setReqKeyLen(true);
       return;
     }
 
@@ -776,33 +756,39 @@ function UpdateProduct() {
             </div>
           </div>
         </div>
-        <div className="right">
-          <div className="info">
-            <p
-              style={{
-                textAlign: "center",
-                borderBottom: "0.01em solid #474f7a",
-                paddingBottom: "8px",
-              }}
-            >
-              INFORMATION
-            </p>
-            <div className="createdAt">
-              <p className="white">Created </p>
-              <p className="grey">{createdTime}</p>
+        <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+          <div className="right">
+            <div className="info">
+              <p
+                style={{
+                  textAlign: "center",
+                  borderBottom: "0.01em solid #474f7a",
+                  paddingBottom: "8px",
+                }}
+              >
+                INFORMATION
+              </p>
+              <div className="createdAt">
+                <p className="white">Created </p>
+                <p className="grey">{createdTime}</p>
+              </div>
+              <div className="by">
+                <p className="white">By</p>
+                <p className="grey">{name}</p>
+              </div>
+              <div className="updatedAt">
+                <p className="white">Last update</p>
+                <p className="grey">{updatedTime}</p>
+              </div>
+              <div className="by">
+                <p className="white">By</p>
+                <p className="grey">{modifyName}</p>
+              </div>
             </div>
-            <div className="by">
-              <p className="white">By</p>
-              <p className="grey">{name}</p>
-            </div>
-            <div className="updatedAt">
-              <p className="white">Last update</p>
-              <p className="grey">{updatedTime}</p>
-            </div>
-            <div className="by">
-              <p className="white">By</p>
-              <p className="grey">{modifyName}</p>
-            </div>
+          </div>
+          <div className="button" onClick={handleDelete}>
+            <MdDelete />
+            <p className="text">Delete this entry</p>
           </div>
         </div>
       </div>

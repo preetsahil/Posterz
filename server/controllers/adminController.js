@@ -5,6 +5,10 @@ const Category = require("../models/Category");
 const Product = require("../models/Product");
 const cloudinary = require("cloudinary").v2;
 
+function removeSpaces(str) {
+  return str.replace(/\s/g, "");
+}
+
 const loginController = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -45,7 +49,7 @@ const loginController = async (req, res) => {
 };
 const addCategoryController = async (req, res) => {
   try {
-    const { title, key, image, selectedProd, fileName } = req.body;
+    let { title, key, image, selectedProd, fileName } = req.body;
 
     if (!title) {
       return res.status(400).send("title is required");
@@ -53,6 +57,8 @@ const addCategoryController = async (req, res) => {
     if (!key) {
       return res.status(400).send("key is required");
     }
+
+    key = removeSpaces(key);
 
     if (!image) {
       return res.status(400).send("image is required");
@@ -108,7 +114,7 @@ const addCategoryController = async (req, res) => {
 
 const addProductController = async (req, res) => {
   try {
-    const { title, key, desc, price, image, selectedCat, isTopPick, fileName } =
+    let { title, key, desc, price, image, selectedCat, isTopPick, fileName } =
       req.body;
     if (!title) {
       return res.status(400).send("title is required");
@@ -116,6 +122,8 @@ const addProductController = async (req, res) => {
     if (!key) {
       return res.status(400).send("key is required");
     }
+    key = removeSpaces(key);
+
     if (!image) {
       return res.status(400).send("image is required");
     }
@@ -211,11 +219,13 @@ const deleteProductController = async (req, res) => {
 };
 const updateCategoryController = async (req, res) => {
   try {
-    const { id, title, key, fileName, image, selectedProd } = req.body;
+    let { id, title, key, fileName, image, selectedProd } = req.body;
     const ctgy = await Category.findOne({ _id: id });
     if (!ctgy) {
       return res.status(400).send("this category doesn't exist");
     }
+    key = removeSpaces(key);
+
     if (ctgy.title !== title) {
       ctgy.title = title;
     }
@@ -293,7 +303,7 @@ const updateCategoryController = async (req, res) => {
 
 const updateProductController = async (req, res) => {
   try {
-    const {
+    let {
       id,
       title,
       key,
@@ -309,6 +319,8 @@ const updateProductController = async (req, res) => {
     if (!prod) {
       return res.status(400).send("this product doesn't exist");
     }
+    key = removeSpaces(key);
+
     if (prod.title !== title) {
       prod.title = title;
     }

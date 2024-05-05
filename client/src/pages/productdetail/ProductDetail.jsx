@@ -1,29 +1,69 @@
-import React from "react";
-import "./ProductDetail.scss"
-import Naruto from "../../assets/naruto.jpeg";
+import React, { useEffect, useState } from "react";
+import "./ProductDetail.scss";
+import { useParams } from "react-router-dom";
+import Loader from "../../components/loader/Loader";
+import { axiosClient } from "../../utils/axiosClient";
 function ProductDetail() {
+  const params = useParams();
+  const [product, setProduct] = useState(null);
+
+  const fetchData = async () => {
+    const productResponse=await axiosClient.get(`/api/products/?id=${params.productId}`);
+    setProduct(productResponse.data.product[0]);
+  }
+
+  useEffect(() => {
+    setProduct(null);
+    fetchData();
+  }, [params.productId]);
+
+  if (!product) {
+    return <Loader />;
+  }
+
   return (
     <div className="ProductDetail">
       <div className="container">
         <div className="product-layout">
           <div className="product-img">
-            <img src={Naruto} alt="ProductDetail" />
+            <img
+              src={product?.image?.url}
+              alt={product?.title}
+            />
           </div>
           <div className="product-info">
-            <h1 className="heading">Naruto Slayer</h1>
-            <h3 className="price">₹ 34</h3>
-            <p className="description">this is my first product to sell</p>
+            <h1 className="heading">{product?.title}</h1>
+            <h3 className="price">₹ {product?.price}</h3>
+            <p className="description">{product?.desc}</p>
             <div className="cart-options">
               <div className="quantity-selector">
-                <span className="btn decrement">-</span>
-                <span className="quantity">5</span>
-                <span className="btn increment">+</span>
+                <span
+                  className="btn decrement"
+                  // onClick={() => dispatch(removeFromCart(product))}
+                >
+                  -
+                </span>
+                <span className="quantity">q</span>
+                <span
+                  className="btn increment"
+                  // onClick={() => dispatch(addToCart(product))}
+                >
+                  +
+                </span>
               </div>
-              <button className="btn-primary add-to-cart">Add To Cart</button>
+              <button
+                className="btn-primary add-to-cart"
+                // onClick={() => dispatch(addToCart(product))}
+              >
+                Add to Cart
+              </button>
               <div className="category">
-                <p> Category: Anime</p>
+                <p>
+                  Category : {product?.categories?.title.toLowerCase()}{" "}
+                </p>
               </div>
             </div>
+
             <div className="return-policy">
               <ul className="data">
                 <li>

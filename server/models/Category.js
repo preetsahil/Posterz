@@ -14,15 +14,11 @@ const categorySchema = mongoose.Schema(
       type: String,
       required: true,
       unique: true,
-      minlength: 1,
-      maxlength: 20,
     },
     key: {
       type: String,
       required: true,
       unique: true,
-      minlength: 1,
-      maxlength: 20,
     },
     image: {
       fileName: String,

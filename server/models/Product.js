@@ -14,8 +14,6 @@ const productSchema = mongoose.Schema(
       type: String,
       required: true,
       unique: true,
-      minlength: 1,
-      maxlength: 20,
     },
     desc: {
       type: String,
@@ -24,8 +22,6 @@ const productSchema = mongoose.Schema(
       type: String,
       required: true,
       unique: true,
-      minlength: 1,
-      maxlength: 20,
     },
     price: {
       type: Number,

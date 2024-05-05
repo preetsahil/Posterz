@@ -1,17 +1,22 @@
 import React from "react";
-import "./Product.scss"
-function Product({ image }) {
+import "./Product.scss";
+import { useNavigate } from "react-router-dom";
+function Product({ product }) {
+  const navigate = useNavigate();
   return (
-    <div className="Product">
+    <div
+      className="Product"
+      onClick={() => navigate(`/product/${product?.key}`)}
+    >
       <div className="product-container">
         <div className="product-img">
           <div className="img-container">
-            <img src={image} alt="product" id="img" />
+            <img src={product?.image.url} alt={product?.title} id="img" />
           </div>
         </div>
         <div className="product-info">
-          <p className="title">Naruto Slayer</p>
-          <p className="price">₹ 50 </p>
+          <p className="title">{product?.title}</p>
+          <p className="price">₹ {product?.price}</p>
         </div>
       </div>
     </div>

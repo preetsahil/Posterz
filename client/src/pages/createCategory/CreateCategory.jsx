@@ -161,38 +161,6 @@ function CreateCategory() {
       setKeyReq(true);
       return;
     }
-    if (key.length > 20 && title.length > 20) {
-      dispatch(
-        showToast({
-          type: TOAST_FAILURE,
-          message: "Warning: Title and Key should have length less than 20!",
-        })
-      );
-      setReqKeyLen(true);
-      setReqTitleLen(true);
-      return;
-    }
-    if (title.length > 20) {
-      dispatch(
-        showToast({
-          type: TOAST_FAILURE,
-          message: "Warning: Title should have length less than 20!",
-        })
-      );
-      setReqTitleLen(true);
-      return;
-    }
-
-    if (key.length > 20) {
-      dispatch(
-        showToast({
-          type: TOAST_FAILURE,
-          message: "Warning: Key should have length less than 20!",
-        })
-      );
-      setReqKeyLen(true);
-      return;
-    }
 
     const titleExists = categories.some((category) => category.title === title);
     const keyExists = categories.some((category) => category.key === key);

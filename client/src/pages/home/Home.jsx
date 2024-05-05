@@ -1,13 +1,31 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./Home.scss";
 import Hero from "../../components/hero/Hero";
 import Category from "../../components/category/Category";
-import Naruto from "../../assets/naruto.jpeg";
 import Product from "../../components/product/Product";
 import { useSelector } from "react-redux";
+import { axiosClient } from "../../utils/axiosClient";
 
 function Home() {
-  const categories = useSelector((state) => state.categoryReducer.categories);
+  const [topProducts, setTopProducts] = useState([]);
+  const originalCategories = useSelector(
+    (state) => state.categoryReducer.originalCategories
+  );
+
+  async function fetchData() {
+    try {
+      const topProductResponse = await axiosClient.get(
+        "/api/products/?isTopPick=true"
+      );
+      setTopProducts(topProductResponse.data.products);
+    } catch (error) {
+    }
+  }
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
     <div className="Home">
       <Hero />
@@ -19,8 +37,8 @@ function Home() {
           </p>
         </div>
         <div className="content">
-          {categories?.map((category) => (
-            <Category key={category.id} category={category} />
+          {originalCategories?.map((category) => (
+            <Category key={category._id} category={category} />
           ))}
         </div>
       </section>
@@ -30,12 +48,9 @@ function Home() {
           <p className="subheading">All New Designs, Same Old Details.</p>
         </div>
         <div className="content">
-          <Product image={Naruto} />
-          <Product image={Naruto} />
-          <Product image={Naruto} />
-          <Product image={Naruto} />
-          <Product image={Naruto} />
-          <Product image={Naruto} />
+          {topProducts?.map((product) => {
+            return <Product key={product._id} product={product} />;
+          })}
         </div>
       </section>
     </div>

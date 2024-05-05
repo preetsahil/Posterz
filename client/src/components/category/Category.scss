@@ -1,7 +1,8 @@
 .Category {
   width: 32%;
-  aspect-ratio: 16/10;
-  background-size: cover;
+  aspect-ratio: 16/9;
+  background-image: url("../../assets/poster.jpeg");
+  background-size:cover;
   background-repeat: no-repeat;
   background-position: center;
   cursor: pointer;
@@ -11,12 +12,13 @@
     background-color: rgba(0, 0, 0, 0.4);
     transition: 0.2s ease;
 
+
     .heading {
-      color: white;
-      font-weight: bolder;
+        color: white;
+        font-weight: bolder;
     }
-    &:hover {
-      background-color: rgba(0, 0, 0, 0.5);
+    &:hover{
+    background-color: rgba(0, 0, 0, 0.5);
     }
   }
 }

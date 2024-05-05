@@ -16,7 +16,10 @@ import {
   fetchCategories,
 } from "../../redux/slices/categorySlice";
 import { useNavigate, useParams } from "react-router-dom";
-import { fetchProducts } from "../../redux/slices/productSlice";
+import {
+  fetchProducts,
+  updateProductsWithCategoryZero,
+} from "../../redux/slices/productSlice";
 
 let category;
 function UpdateCategory() {
@@ -50,7 +53,7 @@ function UpdateCategory() {
   const [modifyName, setModifyName] = useState("");
   const [reqTitleLen, setReqTitleLen] = useState(false);
   const [reqKeyLen, setReqKeyLen] = useState(false);
-  
+
   const handleDrop = (e) => {
     let dt = e.dataTransfer;
     let file = dt.files[0];
@@ -152,39 +155,6 @@ function UpdateCategory() {
         })
       );
       setKeyReq(true);
-      return;
-    }
-
-    if (updatedKey.length > 20 && updatedTitle.length > 20) {
-      dispatch(
-        showToast({
-          type: TOAST_FAILURE,
-          message: "Warning: Title and Key should have length less than 20!",
-        })
-      );
-      setReqKeyLen(true);
-      setReqTitleLen(true);
-      return;
-    }
-    if (updatedTitle.length > 20) {
-      dispatch(
-        showToast({
-          type: TOAST_FAILURE,
-          message: "Warning: Title should have length less than 20!",
-        })
-      );
-      setReqTitleLen(true);
-      return;
-    }
-
-    if (updatedKey.length > 20) {
-      dispatch(
-        showToast({
-          type: TOAST_FAILURE,
-          message: "Warning: Key should have length less than 20!",
-        })
-      );
-      setReqKeyLen(true);
       return;
     }
 
@@ -353,6 +323,13 @@ function UpdateCategory() {
   const handleDelete = () => {
     try {
       dispatch(deleteCategory(params.categoryId));
+      const category = categories.find(
+        (category) => category._id === params.categoryId
+      );
+      //add the products in category to updateProductsWithCategoryZero
+      category.products.map((product) => {
+        return dispatch(updateProductsWithCategoryZero(product));
+      });
       dispatch(fetchCategories());
       navigate("/admin/category");
     } catch (error) {}

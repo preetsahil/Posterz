@@ -615,50 +615,71 @@
         }
       }
     }
-    .right {
-      padding: 20px 8px;
-      border: 0.01em solid #474f7a;
-      width: 200px;
-      font-size: 0.875rem;
-      background-color: #0b0f26;
-      .info {
-        .createdAt {
-          margin-top: 10px;
-          padding-bottom: 10px;
-          display: flex;
-          justify-content: space-between;
-          .white {
-            color: rgb(244, 244, 244);
-            font-weight: 700;
+    div {
+      .right {
+        padding: 20px 8px;
+        border: 0.01em solid #474f7a;
+        width: 200px;
+        font-size: 0.875rem;
+        background-color: #0b0f26;
+        .info {
+          .createdAt {
+            margin-top: 10px;
+            padding-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            .white {
+              color: rgb(244, 244, 244);
+              font-weight: 700;
+            }
+            .grey {
+              color: rgb(165, 165, 186);
+            }
           }
-          .grey {
-            color: rgb(165, 165, 186);
-          }
-        }
-        .by {
-          display: flex;
-          justify-content: space-between;
-          padding-bottom: 10px;
+          .by {
+            display: flex;
+            justify-content: space-between;
+            padding-bottom: 10px;
 
-          .white {
-            color: rgb(244, 244, 244);
-            font-weight: 700;
+            .white {
+              color: rgb(244, 244, 244);
+              font-weight: 700;
+            }
+            .grey {
+              color: rgb(165, 165, 186);
+            }
           }
-          .grey {
-            color: rgb(165, 165, 186);
+          .updatedAt {
+            display: flex;
+            justify-content: space-between;
+            padding-bottom: 10px;
+            .white {
+              color: rgb(244, 244, 244);
+              font-weight: 700;
+            }
+            .grey {
+              color: rgb(165, 165, 186);
+            }
           }
         }
-        .updatedAt {
-          display: flex;
-          justify-content: space-between;
-          padding-bottom: 10px;
-          .white {
-            color: rgb(244, 244, 244);
-            font-weight: 700;
-          }
-          .grey {
-            color: rgb(165, 165, 186);
-          }
+      }
+
+      .button {
+        color: rgb(211, 24, 24);
+        display: flex;
+        font-size: 0.875rem;
+        padding: 8px;
+        background-color: #0b0f26;
+        border: 0.01em solid #474f7a;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        .text {
+          color: rgb(211, 24, 24);
+          font-weight: 700;
+        }
+        &:hover {
+          background-color: #03030c5e;
         }
       }
     }
