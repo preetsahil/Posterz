@@ -1,15 +1,20 @@
 import React, { useEffect, useState } from "react";
 import "./Collection.scss";
 import Product from "../../components/product/Product";
-import Naruto from "../../assets/naruto.jpeg";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { FaLessThan, FaGreaterThan } from "react-icons/fa6";
 import { axiosClient } from "../../utils/axiosClient";
+import Loader from "../../components/loader/Loader";
 function Collection() {
   const params = useParams();
   const navigate = useNavigate();
   const [categoryId, setCategoryId] = useState("");
   const [products, setProducts] = useState([]);
+  const [pageNumbers, setPageNumbers] = useState([]);
+  const [paginatedProducts, setPaginatedProducts] = useState([]);
+  const recordsPerPage = 12;
+  const [currentPage, setCurrentPage] = useState(1);
   const originalCategories = useSelector(
     (state) => state.categoryReducer.originalCategories
   );
@@ -39,10 +44,36 @@ function Collection() {
   useEffect(() => {
     setCategoryId(params.categoryId);
     fetchProducts();
-  }, [params.categoryId,sortBy]);
+  }, [params.categoryId, sortBy]);
 
   function updateCategory(e) {
+    setCurrentPage(1);
     navigate(`/category/${e.target.value}`);
+  }
+
+  function usePaginatedData(products, currentPage) {
+    const startIndex = (currentPage - 1) * recordsPerPage;
+    const endIndex = startIndex + recordsPerPage;
+    return products.slice(startIndex, endIndex);
+  }
+  function handlePageChange(currentPage) {
+    setCurrentPage(currentPage);
+  }
+
+  useEffect(() => {
+    const nPages = Math.ceil(products.length / recordsPerPage);
+    const pageNumbers = Array.from({ length: nPages }, (_, i) => i + 1);
+    setPageNumbers(pageNumbers);
+    // if (query.length > 0) {
+    //   setCurrentPage(1);
+    // }
+
+    const paginatedData = usePaginatedData(products, currentPage);
+    setPaginatedProducts(paginatedData);
+  }, [currentPage, products]);
+
+  if (!products || !paginatedProducts) {
+    return <Loader />;
   }
 
   return (
@@ -97,9 +128,28 @@ function Collection() {
             </div>
           </div>
           <div className="products-box">
-            {products.map((product) => {
-              return <Product key={product._id} product={product} />;
-            })}
+            <div className="product">
+              {paginatedProducts.map((product) => {
+                return <Product key={product._id} product={product} />;
+              })}
+            </div>
+            <div className="page-number">
+              <table>
+                <tbody>
+                  <tr className="page">
+                    {pageNumbers?.map((page) => (
+                      <td
+                        key={page}
+                        onClick={() => handlePageChange(page)}
+                        className={currentPage === page ? "active" : "simple"}
+                      >
+                        <p>{page}</p>
+                      </td>
+                    ))}
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
