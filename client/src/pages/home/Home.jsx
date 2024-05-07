@@ -18,12 +18,10 @@ function Home() {
         "/api/products/?isTopPick=true"
       );
       setTopProducts(topProductResponse.data.products);
-    } catch (error) {
-    }
+    } catch (error) {}
   }
 
   useEffect(() => {
-    console.log("hello")
     fetchData();
   }, []);
 

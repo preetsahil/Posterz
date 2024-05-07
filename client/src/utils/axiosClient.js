@@ -1,6 +1,6 @@
 import axios from "axios";
 import { getItem, KEY_ADMIN_TOKEN, removeItem } from "./localStorageManager";
-import store from "../redux/store";
+import { store } from "../redux/store";
 import { showToast } from "../redux/slices/appConfigSlice";
 import { TOAST_FAILURE } from "../App";
 export const axiosClient = axios.create({
@@ -14,27 +14,28 @@ axiosClient.interceptors.request.use((request) => {
   return request;
 });
 
-axiosClient.interceptors.response.use(function (response) {
- return response;
-},
-function (error) {
-  if (error.response.status === 401) {
-    removeItem(KEY_ADMIN_TOKEN);
-    window.location.href = "/adminlogin";
+axiosClient.interceptors.response.use(
+  function (response) {
+    return response;
+  },
+  function (error) {
+    if (error.response.status === 401) {
+      removeItem(KEY_ADMIN_TOKEN);
+      window.location.href = "/adminlogin";
+      store.dispatch(
+        showToast({
+          type: TOAST_FAILURE,
+          message: error.response.data.message,
+        })
+      );
+    }
     store.dispatch(
       showToast({
         type: TOAST_FAILURE,
-        message: error.response.data.message,
+        message: error.message,
       })
     );
-  }
-  store.dispatch(
-    showToast({
-      type: TOAST_FAILURE,
-      message: error.message,
-    })
-  );
 
-  return Promise.reject(error);
-}
+    return Promise.reject(error);
+  }
 );
