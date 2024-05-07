@@ -6,7 +6,7 @@ const adminRouter = require("./routes/adminRouter");
 const getRouter = require("./routes/getRouter");
 const cors = require("cors");
 
-var cloudinary = require("cloudinary").v2;
+const cloudinary = require("cloudinary").v2;
 const app = express();
 
 dotenv.config("./env");
@@ -23,6 +23,7 @@ cloudinary.config({
 });
 
 app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ extended: true }));
 app.use("/auth", authRouter);
 app.use("/admin", adminRouter);
 app.use("/api", getRouter);

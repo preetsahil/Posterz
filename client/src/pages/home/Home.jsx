@@ -23,6 +23,7 @@ function Home() {
   }
 
   useEffect(() => {
+    console.log("hello")
     fetchData();
   }, []);
 

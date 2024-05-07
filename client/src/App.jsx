@@ -1,4 +1,3 @@
-// import './App.css'
 import Navbar from "./components/navbar/Navbar";
 import { Route, Routes, useLocation } from "react-router-dom";
 import Home from "./pages/home/Home";
@@ -13,6 +12,7 @@ import Category from "./pages/category/Category";
 import CreateCategory from "./pages/createCategory/CreateCategory";
 import UpdateCategory from "./pages/UpdateCategory/UpdateCategory";
 import Order from "./components/admindashboard/order/Order";
+import Payments from "./components/payments/Payments";
 import Product from "./pages/product/Product";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
@@ -100,6 +100,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/category/:categoryId?" element={<Collection />} />
             <Route path="/product/:productId" element={<ProductDetail />} />
+            <Route path="/payment/:status" element={<Payments />} />
           </Routes>
           <Footer />
         </div>
