@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { act } from "react";
 
 const cartSlice = createSlice({
   name: "cartSlice",
@@ -8,14 +9,12 @@ const cartSlice = createSlice({
   reducers: {
     addToCart: (state, action) => {
       const product = action.payload;
-      const curItem = product
-      ? {
-          title: product.title,
-          key: product.key,
-          price: product.price,
-          image: product.image.url,
-        }
-      : action.payload;
+      const curItem = {
+        title: product.title,
+        key: product.key,
+        price: product.price,
+        image: product.image.url,
+      };
       const index = state.cart.findIndex((item) => item.key === curItem.key);
       if (index === -1) {
         state.cart.push({ ...curItem, quantity: 1 });
