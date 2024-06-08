@@ -3,7 +3,6 @@ import "./Collection.scss";
 import Product from "../../components/product/Product";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { FaLessThan, FaGreaterThan } from "react-icons/fa6";
 import { axiosClient } from "../../utils/axiosClient";
 import Loader from "../../components/loader/Loader";
 function Collection() {

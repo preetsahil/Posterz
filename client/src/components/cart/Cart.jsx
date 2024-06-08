@@ -5,9 +5,11 @@ import CartItem from "../cartitem/CartItem";
 import { BsCartX } from "react-icons/bs";
 import "./Cart.scss";
 import { axiosClient } from "../../utils/axiosClient";
-
+import { KEY_ACCESS_TOKEN, getItem } from "../../utils/localStorageManager";
+import { useNavigate } from "react-router-dom";
 
 function Cart({ onClose }) {
+  const navigate = useNavigate();
   const cart = useSelector((state) => state.cartReducer.cart);
   let totalAmount = 0;
   cart.forEach((item) => {
@@ -17,6 +19,13 @@ function Cart({ onClose }) {
 
   async function handleCheckout() {
     try {
+      const token = getItem(KEY_ACCESS_TOKEN);
+      if (!token) {
+        navigate("/login");
+        onClose();
+        return;
+      }
+
       const {
         data: { key },
       } = await axiosClient.get("/api/getKey");

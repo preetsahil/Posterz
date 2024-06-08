@@ -21,6 +21,8 @@ import { fetchProducts } from "./redux/slices/productSlice";
 import toast, { Toaster } from "react-hot-toast";
 import CreateProduct from "./pages/CreateProduct/CreateProduct";
 import UpdateProduct from "./pages/UpdateProduct/UpdateProduct";
+import Login from "./pages/login/Login";
+import OnlyIfNotLoggedInUser from "./components/OnlyIfNotLoggedInUser";
 
 export const TOAST_SUCCESS = "toast_success";
 export const TOAST_FAILURE = "toast_failure";
@@ -84,7 +86,6 @@ function App() {
                   <Route path="create" element={<CreateProduct />} />
                   <Route path=":productId" element={<UpdateProduct />} />
                 </Route>
-
                 <Route path="order" element={<Order />} />
               </Route>
             </Route>
@@ -95,12 +96,37 @@ function App() {
         </div>
       ) : (
         <div>
+          <div>
+            <Toaster
+              toastOptions={{
+                success: {
+                  style: {
+                    marginTop: "10px",
+                    background: "#0d122f",
+                    border: "0.1em solid #474f7a",
+                    color: "rgb(244, 244, 244)",
+                  },
+                },
+                error: {
+                  style: {
+                    marginTop: "10px",
+                    background: "#0d122f",
+                    border: "0.1em solid #474f7a",
+                    color: "rgb(244, 244, 244)",
+                  },
+                },
+              }}
+            />
+          </div>
           <Navbar />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/category/:categoryId?" element={<Collection />} />
             <Route path="/product/:productId" element={<ProductDetail />} />
             <Route path="/payment/:status" element={<Payments />} />
+            <Route element={<OnlyIfNotLoggedInUser />}>
+              <Route path="/login" element={<Login />} />
+            </Route>
           </Routes>
           <Footer />
         </div>

@@ -38,6 +38,47 @@
     }
 
     .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      .logOutContainer {
+        position: absolute;
+        top: 22px;
+        right: 170px;
+        cursor: pointer;
+    
+        .logOut {
+          padding: 7px 14px;
+          background-color: var(--primary-text-color);
+          border: 1px solid rgb(128, 122, 122);
+          p {
+            color: white;
+          }
+        }
+      }
+      .avatar {
+        padding: 6px;
+        .avatar-cont {
+          width: 35px;
+          height: 35px;
+          border-radius: 50%;
+          cursor: pointer;
+          img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+          }
+        }
+      }
+      .signin {
+        padding: 6px;
+        cursor: pointer;
+
+        .icon1 {
+          font-size: 1.4rem;
+        }
+      }
       .nav-cart {
         position: relative;
         padding: 6px;

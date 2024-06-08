@@ -1,11 +1,19 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { BsCart2 } from "react-icons/bs";
 import "./Navbar.scss";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Cart from "../cart/Cart";
+import { IoPersonOutline } from "react-icons/io5";
+import { KEY_ACCESS_TOKEN, removeItem } from "../../utils/localStorageManager";
+import { deleteProfile } from "../../redux/slices/cartSlice";
+
 function Navbar() {
   const [openCart, setOpenCart] = useState(false);
+  const navigate = useNavigate();
+  const [isClicked, setIsClicked] = useState(false);
+  const dispatch = useDispatch();
+  const profile = useSelector((state) => state.cartReducer.profile);
   const originalCategories = useSelector(
     (state) => state.categoryReducer.originalCategories
   );
@@ -14,6 +22,12 @@ function Navbar() {
   cart.forEach((item) => {
     totalItems += item.quantity;
   });
+  const logOut = () => {
+    removeItem(KEY_ACCESS_TOKEN);
+    dispatch(deleteProfile());
+    setIsClicked(false);
+    navigate("/");
+  };
   return (
     <div>
       <div className="Navbar">
@@ -41,6 +55,39 @@ function Navbar() {
                 <span className="cart-count center">{totalItems}</span>
               )}
             </div>
+            {Object.keys(profile)?.length > 0 ? (
+              <div>
+                <div
+                  className="avatar"
+                  onClick={() => setIsClicked(!isClicked)}
+                >
+                  <div className="avatar-cont">
+                    <img
+                      src={profile?.avatar?.url}
+                      alt="avatar"
+                      className="avatar-img"
+                    />
+                  </div>
+                </div>
+                <div className="logOutContainer" onClick={logOut}>
+                  {isClicked && (
+                    <div className="logOut">
+                      <p>log Out</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ) : (
+              <div
+                className="signin"
+                onClick={() => {
+                  setIsClicked(false);
+                  navigate("/login");
+                }}
+              >
+                <IoPersonOutline className="icon1" />
+              </div>
+            )}
           </div>
         </div>
       </div>

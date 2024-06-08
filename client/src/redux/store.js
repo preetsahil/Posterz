@@ -4,12 +4,21 @@ import productReducer from "./slices/productSlice";
 import appConfigReducer from "./slices/appConfigSlice";
 import cartReducer from "./slices/cartSlice";
 import storage from "redux-persist/lib/storage";
-import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from "redux-persist";
+import {
+  persistStore,
+  persistReducer,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from "redux-persist";
 
 const persistConfig = {
   key: "root",
   storage,
-  blacklist: ['productReducer','categoryReducer','appConfigReducer']
+  blacklist: ["productReducer", "categoryReducer", "appConfigReducer"],
 };
 
 const rootReducer = combineReducers({
@@ -24,11 +33,11 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 export const store = configureStore({
   reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
-  getDefaultMiddleware({
-    serializableCheck: {
-      ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-    },
-  }),
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }),
 });
 
 export const persistor = persistStore(store);

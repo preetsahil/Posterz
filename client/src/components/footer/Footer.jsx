@@ -51,6 +51,7 @@ function Footer() {
               <li className="hover-link">Returns And Exchange Policy</li>
               <li className="hover-link">Shipping Policy</li>
               <li className="hover-link">Terms & Conditions</li>
+              <li className="hover-link">To become the Admin</li>
             </ul>
           </div>
         </div>
