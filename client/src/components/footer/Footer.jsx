@@ -4,8 +4,21 @@ import { RiTwitterXLine } from "react-icons/ri";
 import { PiLinkedinLogo } from "react-icons/pi";
 import "./Footer.scss";
 import creditCardImg from "../../assets/creditcardicons.png";
+import { KEY_ACCESS_TOKEN, getItem } from "../../utils/localStorageManager";
+import { useNavigate } from "react-router-dom";
 
 function Footer() {
+  const navigate=useNavigate()
+  const handleSubmit = () => {
+    const token = getItem(KEY_ACCESS_TOKEN);
+    if (!token) {
+      navigate("/login");
+      onClose();
+      return;
+    }
+    navigate("/requestAdmin");
+
+  }
   return (
     <footer className="Footer">
       <div className="container">
@@ -46,7 +59,7 @@ function Footer() {
           <div className="footer-right">
             <h3 className="title">Company</h3>
             <ul className="company">
-              <li className="hover-link">To become the Admin</li>
+              <li className="hover-link" onClick={handleSubmit}>To become the Admin</li>
               <li className="hover-link">Contact Us</li>
               <li className="hover-link">Privacy Policy</li>
               <li className="hover-link">Returns And Exchange Policy</li>

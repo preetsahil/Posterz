@@ -8,10 +8,9 @@ import { axiosClient } from "../../utils/axiosClient";
 
 function Home() {
   const [topProducts, setTopProducts] = useState([]);
-  const originalCategories = useSelector(
+  const categories = useSelector(
     (state) => state.categoryReducer.originalCategories
   );
-
   async function fetchData() {
     try {
       const topProductResponse = await axiosClient.get(
@@ -36,7 +35,7 @@ function Home() {
           </p>
         </div>
         <div className="content">
-          {originalCategories?.map((category) => (
+          {categories?.map((category) => (
             <Category key={category._id} category={category} />
           ))}
         </div>

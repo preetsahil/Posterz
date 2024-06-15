@@ -13,5 +13,6 @@ router.get("/getOrders", async (req, res) => {
   const order = await Order.find({});
   res.json({ order });
 });
+router.post("/search",getController.searchController);
 
 module.exports = router;

@@ -124,6 +124,7 @@ function Category() {
   const handleSearch = () => {
     const search_params = ["title", "key"];
     dispatch(search([search_params, query]));
+    setCurrentPage(1);
   };
 
   function usePaginatedData(categories, currentPage, recordsPerPage) {
@@ -139,9 +140,6 @@ function Category() {
     setNPages(nPages);
     const pageNumbers = Array.from({ length: nPages }, (_, i) => i + 1);
     setPageNumbers(pageNumbers);
-    if (query.length > 0) {
-      setCurrentPage(1);
-    }
     const paginatedData = usePaginatedData(
       categories,
       currentPage,
@@ -227,6 +225,7 @@ function Category() {
                 setQuery(e.target.value);
                 if (e.target.value === "") {
                   dispatch(fetchCategories());
+                  setCurrentPage(1);
                 }
               }}
               onKeyUp={(e) => {
@@ -242,6 +241,7 @@ function Category() {
                 onClick={() => {
                   setQuery("");
                   dispatch(fetchCategories());
+                  setCurrentPage(1);
                 }}
               />
             )}
@@ -265,7 +265,7 @@ function Category() {
             {selectedCategoryIds.length >= 1 && (
               <div
                 className="delete"
-                onClick={ () => {
+                onClick={() => {
                   try {
                     selectedCategoryIds.forEach((categoryId) => {
                       dispatch(deleteCategory(categoryId));

@@ -5,6 +5,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { axiosClient } from "../../utils/axiosClient";
 import Loader from "../../components/loader/Loader";
+import { FaSearch } from "react-icons/fa";
+import { RxCross2 } from "react-icons/rx";
 function Collection() {
   const params = useParams();
   const navigate = useNavigate();
@@ -13,8 +15,9 @@ function Collection() {
   const [pageNumbers, setPageNumbers] = useState([]);
   const [paginatedProducts, setPaginatedProducts] = useState([]);
   const recordsPerPage = 12;
+  const [query, setQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const originalCategories = useSelector(
+  const categories = useSelector(
     (state) => state.categoryReducer.originalCategories
   );
   const sortOptions = [
@@ -47,6 +50,7 @@ function Collection() {
 
   function updateCategory(e) {
     setCurrentPage(1);
+    setQuery("");
     navigate(`/category/${e.target.value}`);
   }
 
@@ -63,10 +67,6 @@ function Collection() {
     const nPages = Math.ceil(products.length / recordsPerPage);
     const pageNumbers = Array.from({ length: nPages }, (_, i) => i + 1);
     setPageNumbers(pageNumbers);
-    // if (query.length > 0) {
-    //   setCurrentPage(1);
-    // }
-
     const paginatedData = usePaginatedData(products, currentPage);
     setPaginatedProducts(paginatedData);
   }, [currentPage, products]);
@@ -74,6 +74,14 @@ function Collection() {
   if (!products || !paginatedProducts) {
     return <Loader />;
   }
+  const handleSearch = async () => {
+    const response = await axiosClient.post("/api/search", {
+      query,
+      categoryId: params.categoryId,
+    });
+    setProducts(response.data.products);
+    setCurrentPage(1);
+  };
 
   return (
     <div className="Collection">
@@ -106,24 +114,57 @@ function Collection() {
           </div>
         </div>
         <div className="content">
-          <div className="filter-box">
-            <div className="category-filter">
-              <h3>Category</h3>
-              {originalCategories?.map((category) => (
-                <div key={category._id} className="filter-radio">
-                  <input
-                    name="category"
-                    type="radio"
-                    id={category._id}
-                    value={category._id}
-                    onChange={updateCategory}
-                    checked={category._id === categoryId}
-                  />
-                  <label htmlFor={category._id}>
-                    {category.title.toLowerCase()}
-                  </label>
-                </div>
-              ))}
+          <div className="left-box">
+            <div className="filter-box">
+              <div className="category-filter">
+                <h3>Category</h3>
+                {categories?.map((category) => (
+                  <div key={category._id} className="filter-radio">
+                    <input
+                      name="category"
+                      type="radio"
+                      id={category._id}
+                      value={category._id}
+                      onChange={updateCategory}
+                      checked={category._id === categoryId}
+                    />
+                    <label htmlFor={category._id}>
+                      {category.title.toLowerCase()}
+                    </label>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="searchDiv">
+              <input
+                type="text"
+                placeholder="Search"
+                className="input-search"
+                value={query}
+                onKeyUp={(e) => {
+                  if (e.key === "Enter") {
+                    handleSearch();
+                  }
+                }}
+                onChange={(e) => {
+                  setQuery(e.target.value);
+                  if (e.target.value === "") {
+                    fetchProducts();
+                    setCurrentPage(1);
+                  }
+                }}
+              />
+              <FaSearch className="icon" />
+              {query.length > 0 && (
+                <RxCross2
+                  className="cross"
+                  onClick={() => {
+                    setQuery("");
+                    fetchProducts();
+                    setCurrentPage(1);
+                  }}
+                />
+              )}
             </div>
           </div>
           <div className="products-box">

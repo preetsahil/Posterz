@@ -30,18 +30,6 @@ function Navbar() {
     setIsClicked(false);
     navigate("/");
   };
-  // const handleClickOutside = (event) => {
-  //   if (!event.target.closest(".ava-log")) {
-  //     setIsClicked(false);
-  //   }
-  // };
-  // useEffect(() => {
-  //   document.addEventListener("click", handleClickOutside);
-  //   return () => {
-  //     document.removeEventListener("click", handleClickOutside);
-  //   };
-  // }, []);
-
   useClickOutside(ref, () => {
     setIsClicked(false);
   });

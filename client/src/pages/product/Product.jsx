@@ -73,6 +73,7 @@ function Product() {
   const handleSearch = () => {
     const search_params = ["key", "title", "price"];
     dispatch(searchProducts([search_params, query]));
+    setCurrentPage(1);
   };
 
   function usePaginatedData(products, currentPage, recordsPerPage) {
@@ -89,10 +90,6 @@ function Product() {
     setNPages(nPages);
     const pageNumbers = Array.from({ length: nPages }, (_, i) => i + 1);
     setPageNumbers(pageNumbers);
-    if (query.length > 0) {
-      setCurrentPage(1);
-    }
-
     const paginatedData = usePaginatedData(
       products,
       currentPage,
@@ -222,6 +219,7 @@ function Product() {
                 setQuery(e.target.value);
                 if (e.target.value === "") {
                   dispatch(fetchProducts());
+                  setCurrentPage(1);
                 }
               }}
               onKeyUp={(e) => {
@@ -237,6 +235,7 @@ function Product() {
                 onClick={() => {
                   setQuery("");
                   dispatch(fetchProducts());
+                  setCurrentPage(1);
                 }}
               />
             )}

@@ -30,7 +30,6 @@ function Login() {
       navigate(-1);
     } catch (error) {
       setUserDetails([]);
-      console.log(error.message);
     }
   };
 

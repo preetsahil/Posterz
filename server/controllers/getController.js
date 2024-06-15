@@ -121,9 +121,30 @@ const paymentController = async (req, res) => {
   res.redirect("http://localhost:5173/payment/success");
 };
 
+const searchController = async (req, res) => {
+  try {
+    const { query, categoryId } = req.body;
+    let products;
+    if (categoryId) {
+      products = await Product.find({
+        categories: categoryId,
+        title: { $regex: query, $options: "i" },
+      });
+    } else {
+      products = await Product.find({
+        title: { $regex: query, $options: "i" },
+      });
+    }
+    return res.status(200).json({ products });
+  } catch (error) {
+    return res.status(200).send(error.message);
+  }
+};
+
 module.exports = {
   productController,
   categoryController,
   orderController,
   paymentController,
+  searchController,
 };

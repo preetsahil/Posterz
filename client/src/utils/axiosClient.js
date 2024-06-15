@@ -35,7 +35,6 @@ axiosClient.interceptors.response.use(
   },
   function (error) {
     if (error.response.status === 401) {
-      console.log(error.response.config.url);
       if (error.response.config.url === "/api/getKey") {
         removeItem(KEY_ACCESS_TOKEN);
         store.dispatch(
