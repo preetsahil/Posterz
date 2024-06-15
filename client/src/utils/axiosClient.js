@@ -46,6 +46,7 @@ axiosClient.interceptors.response.use(
         );
         store.dispatch(deleteProfile());
         window.location.href = "/login";
+        return;
       }
       removeItem(KEY_ADMIN_TOKEN);
       store.dispatch(

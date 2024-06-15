@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { BsCart2 } from "react-icons/bs";
 import "./Navbar.scss";
@@ -7,9 +7,11 @@ import Cart from "../cart/Cart";
 import { IoPersonOutline } from "react-icons/io5";
 import { KEY_ACCESS_TOKEN, removeItem } from "../../utils/localStorageManager";
 import { deleteProfile } from "../../redux/slices/cartSlice";
+import useClickOutside from "../useClickOutside";
 
 function Navbar() {
   const [openCart, setOpenCart] = useState(false);
+  const ref = useRef();
   const navigate = useNavigate();
   const [isClicked, setIsClicked] = useState(false);
   const dispatch = useDispatch();
@@ -28,9 +30,24 @@ function Navbar() {
     setIsClicked(false);
     navigate("/");
   };
+  // const handleClickOutside = (event) => {
+  //   if (!event.target.closest(".ava-log")) {
+  //     setIsClicked(false);
+  //   }
+  // };
+  // useEffect(() => {
+  //   document.addEventListener("click", handleClickOutside);
+  //   return () => {
+  //     document.removeEventListener("click", handleClickOutside);
+  //   };
+  // }, []);
+
+  useClickOutside(ref, () => {
+    setIsClicked(false);
+  });
   return (
     <div>
-      <div className="Navbar">
+      <div className="Navbar" ref={ref}>
         <div className="container nav-container">
           <div className="nav-left">
             <ul className="link-group">
@@ -56,7 +73,7 @@ function Navbar() {
               )}
             </div>
             {Object.keys(profile)?.length > 0 ? (
-              <div>
+              <div className="ava-log">
                 <div
                   className="avatar"
                   onClick={() => setIsClicked(!isClicked)}

@@ -2,7 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useGoogleLogin } from "@react-oauth/google";
 import { axiosClient } from "../../utils/axiosClient";
 import "./Login.scss";
-import { KEY_ACCESS_TOKEN, getItem, setItem } from "../../utils/localStorageManager";
+import {
+  KEY_ACCESS_TOKEN,
+  getItem,
+  setItem,
+} from "../../utils/localStorageManager";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setProfile } from "../../redux/slices/cartSlice";
@@ -45,7 +49,7 @@ function Login() {
         }}
         className="login-with-google-btn"
       >
-        Sign in with Google
+        <p style={{paddingLeft:"30px"}}>Sign in with Google</p>
       </button>
     </div>
   );
