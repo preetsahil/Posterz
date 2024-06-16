@@ -3,7 +3,6 @@
   height: 80px;
   z-index: 99;
   color: white;
-  text-transform: uppercase;
   position: sticky;
   top: 0;
 
@@ -14,6 +13,7 @@
     height: 100%;
 
     .nav-left {
+      text-transform: uppercase;
       .link-group {
         list-style: none;
         display: flex;
@@ -30,6 +30,7 @@
       position: absolute;
       left: 50%;
       transform: translateX(-50%);
+      text-transform: uppercase;
       background-color: var(--primary-text-color);
 
       .banner {
@@ -46,6 +47,7 @@
         align-items: center;
         gap: 5px;
         .logOutContainer {
+          text-transform: uppercase;
           cursor: pointer;
           .logOut {
             padding: 7px 14px;
@@ -58,6 +60,7 @@
         }
         .avatar {
           padding: 6px;
+          position: relative;
           .avatar-cont {
             width: 35px;
             height: 35px;
@@ -70,13 +73,25 @@
               object-fit: cover;
             }
           }
+          &:hover::before {
+            content: attr(data-email);
+            position: absolute;
+            top: -19px;
+            left: 20%;
+            transform: translateX(-50%);
+            background-color: rgb(244, 244, 244);
+            color: black;
+            border-radius: 4px;
+            font-size: 17px;
+            width: 230px;
+            padding: 3px;
+          }
         }
       }
 
       .signin {
         padding: 6px;
         cursor: pointer;
-
         .icon1 {
           font-size: 1.4rem;
         }

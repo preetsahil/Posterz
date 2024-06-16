@@ -65,6 +65,7 @@ function Navbar() {
                 <div
                   className="avatar"
                   onClick={() => setIsClicked(!isClicked)}
+                  data-email={profile.email}
                 >
                   <div className="avatar-cont">
                     <img

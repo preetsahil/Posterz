@@ -18,7 +18,9 @@ axiosClient.interceptors.request.use((request) => {
   if (
     request.url === "/api/order" ||
     request.url === "/api/getKey" ||
-    request.url === "/api/payment"
+    request.url === "/api/payment" ||
+    request.url === "/auth/sendOtp" ||
+    request.url === "/auth/verifyOtp"
   ) {
     const token = getItem(KEY_ACCESS_TOKEN);
     request.headers["Authorization"] = `Bearer ${token}`;
@@ -35,7 +37,12 @@ axiosClient.interceptors.response.use(
   },
   function (error) {
     if (error.response.status === 401) {
-      if (error.response.config.url === "/api/getKey") {
+      if (
+        error.response.config.url === "/api/getKey" ||
+        error.response.config.url === "/api/order" ||
+        error.response.config.url === "/auth/sendOtp" ||
+        error.response.config.url === "/auth/verify"
+      ) {
         removeItem(KEY_ACCESS_TOKEN);
         store.dispatch(
           showToast({

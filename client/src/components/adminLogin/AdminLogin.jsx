@@ -18,7 +18,6 @@ function AdminLogin() {
       setItem(KEY_ADMIN_TOKEN, response.data.adminToken);
       navigate("/admin");
     } catch (error) {
-      console.log("this error", error);
     }
   }
   return (

@@ -6,9 +6,11 @@ import "./Footer.scss";
 import creditCardImg from "../../assets/creditcardicons.png";
 import { KEY_ACCESS_TOKEN, getItem } from "../../utils/localStorageManager";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 function Footer() {
-  const navigate=useNavigate()
+  const navigate = useNavigate();
+  const profile = useSelector((state) => state.cartReducer.profile);
   const handleSubmit = () => {
     const token = getItem(KEY_ACCESS_TOKEN);
     if (!token) {
@@ -17,8 +19,7 @@ function Footer() {
       return;
     }
     navigate("/requestAdmin");
-
-  }
+  };
   return (
     <footer className="Footer">
       <div className="container">
@@ -59,7 +60,22 @@ function Footer() {
           <div className="footer-right">
             <h3 className="title">Company</h3>
             <ul className="company">
-              <li className="hover-link" onClick={handleSubmit}>To become the Admin</li>
+              {profile.isAdmin && (
+                <li
+                  className="hover-link"
+                  onClick={() => {
+                    navigate("/adminlogin");
+                  }}
+                >
+                  Admin Dashboard
+                </li>
+              )}
+
+              {!profile.isAdmin && (
+                <li className="hover-link" onClick={handleSubmit}>
+                  To become the Admin
+                </li>
+              )}
               <li className="hover-link">Contact Us</li>
               <li className="hover-link">Privacy Policy</li>
               <li className="hover-link">Returns And Exchange Policy</li>

@@ -84,7 +84,6 @@ const categorySlice = createSlice({
     },
     removeProductFromCategory: (state, action) => {
       const [productId, categoryId] = action.payload;
-      console.log(productId, categoryId);
       state.categories = state.categories.map((category) => {
         if (category._id === categoryId) {
           category.products = category.products.filter(

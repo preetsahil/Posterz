@@ -543,7 +543,6 @@ function UpdateProduct() {
                 className={reqPrice ? "input-req" : "input-cont1"}
                 value={price === 0 ? "" : price}
                 onChange={(e) => {
-                  console.log(e.target.value);
                   if (Number(e.target.value) !== originalPrice) {
                     setChange(true);
                   } else {

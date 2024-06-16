@@ -261,7 +261,6 @@ function Product() {
                 className="delete"
                 onClick={() => {
                   try {
-                    console.log("sfaj");
                     selectedProductIds.forEach(async (id) => {
                       dispatch(deleteProduct(id));
                       const category = products.find(

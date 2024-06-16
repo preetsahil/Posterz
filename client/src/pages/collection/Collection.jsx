@@ -53,6 +53,9 @@ function Collection() {
     setQuery("");
     navigate(`/category/${e.target.value}`);
   }
+  const handleChange = () => {
+    navigate(`/category`);
+  };
 
   function usePaginatedData(products, currentPage) {
     const startIndex = (currentPage - 1) * recordsPerPage;
@@ -133,6 +136,9 @@ function Collection() {
                     </label>
                   </div>
                 ))}
+                <div className="allCat" onClick={handleChange}>
+                  <p>All Categories</p>
+                </div>
               </div>
             </div>
             <div className="searchDiv">

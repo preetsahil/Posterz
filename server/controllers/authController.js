@@ -1,5 +1,9 @@
 const User = require("../models/User");
 const axios = require("axios");
+const otpGenerator = require("otp-generator");
+const OTP = require("../models/Otp");
+const mailSender = require("../utils/mailSender");
+const bcrypt = require("bcrypt");
 const cloudinary = require("cloudinary").v2;
 
 const verifyController = async (req, res) => {
@@ -47,6 +51,76 @@ const verifyController = async (req, res) => {
   }
 };
 
+const sendOtpController = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).send("user is not registered");
+    }
+
+    let otp = otpGenerator.generate(6, {
+      upperCaseAlphabets: false,
+      specialChars: false,
+      lowerCaseAlphabets: false,
+    });
+    let result = await OTP.findOne({ otp: otp });
+    while (result) {
+      otp = otpGenerator.generate(6, {
+        upperCaseAlphabets: false,
+        lowerCaseAlphabets: false,
+        specialChars: false,
+      });
+      result = await OTP.findOne({ otp: otp });
+    }
+    await OTP.create({
+      email,
+      otp,
+    });
+
+    mailSender(
+      email,
+      "Request Admin Access",
+      `<h1>Please confirm your OTP</h1>
+       <p>Here is your OTP code: ${otp}</p>`
+    );
+
+    return res
+      .status(200)
+      .send({ message: "OTP sent Successfully, Check your gmail", otp });
+  } catch (error) {
+    return res.status(500).json(error.message);
+  }
+};
+
+const verifyOtpController = async (req, res) => {
+  try {
+    const { otp, email, password } = req.body;
+    const user = await User.findOne({ email });
+    const response = await OTP.find({ email }).sort({ createdAt: -1 }).limit(1);
+    if (response.length === 0 || otp !== response[0].otp) {
+      return res.status(400).send("The OTP is not valid, try again");
+    }
+    if (user.isAdmin) {
+      return res.status(409).send("you already have Admin Access");
+    }
+    user.isAdmin = true;
+    const hashedPassword = await bcrypt.hash(password, 10);
+    user.password = hashedPassword;
+    await user.save();
+    return res
+      .status(200)
+      .send({
+        message: "OTP Verified And Password created for Admin Access",
+        user,
+      });
+  } catch (error) {
+    return res.status(500).json(error.message);
+  }
+};
+
 module.exports = {
   verifyController,
+  sendOtpController,
+  verifyOtpController,
 };

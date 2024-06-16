@@ -24,6 +24,7 @@ import UpdateProduct from "./pages/UpdateProduct/UpdateProduct";
 import Login from "./pages/login/Login";
 import OnlyIfNotLoggedInUser from "./components/OnlyIfNotLoggedInUser";
 import RequestAdmin from "./pages/requestAdmin/RequestAdmin";
+import RequireAcess from "./components/RequireAcess";
 
 export const TOAST_SUCCESS = "toast_success";
 export const TOAST_FAILURE = "toast_failure";
@@ -125,7 +126,9 @@ function App() {
             <Route path="/category/:categoryId?" element={<Collection />} />
             <Route path="/product/:productId" element={<ProductDetail />} />
             <Route path="/payment/:status" element={<Payments />} />
-            <Route path="/requestAdmin" element={<RequestAdmin />} />
+            <Route element={<RequireAcess />}>
+              <Route path="/requestAdmin" element={<RequestAdmin />} />
+            </Route>
             <Route element={<OnlyIfNotLoggedInUser />}>
               <Route path="/login" element={<Login />} />
             </Route>

@@ -63,7 +63,17 @@ function Cart({ onClose }) {
       const rzp1 = new window.Razorpay(options);
       rzp1.open();
     } catch (error) {
-      console.log(error);
+      if (error.response.status === 401) {
+        removeItem(KEY_ACCESS_TOKEN);
+        store.dispatch(
+          showToast({
+            type: TOAST_FAILURE,
+            message: error.response.data.message,
+          })
+        );
+        store.dispatch(deleteProfile());
+        navigate("/login")
+      }
     }
   }
 
