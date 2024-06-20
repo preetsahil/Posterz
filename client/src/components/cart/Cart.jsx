@@ -1,15 +1,17 @@
 import React from "react";
 import { AiOutlineClose } from "react-icons/ai";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import CartItem from "../cartitem/CartItem";
 import { BsCartX } from "react-icons/bs";
 import "./Cart.scss";
 import { axiosClient } from "../../utils/axiosClient";
-import { KEY_ACCESS_TOKEN, getItem } from "../../utils/localStorageManager";
+import { GOOGLE_ACCESS_TOKEN, getItem } from "../../utils/localStorageManager";
 import { useNavigate } from "react-router-dom";
+import { deleteProfile } from "../../redux/slices/profileSlice";
 
 function Cart({ onClose }) {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const cart = useSelector((state) => state.cartReducer.cart);
   let totalAmount = 0;
   cart.forEach((item) => {
@@ -19,8 +21,9 @@ function Cart({ onClose }) {
 
   async function handleCheckout() {
     try {
-      const token = getItem(KEY_ACCESS_TOKEN);
+      const token = getItem(GOOGLE_ACCESS_TOKEN);
       if (!token) {
+        dispatch(deleteProfile());
         navigate("/login");
         onClose();
         return;
@@ -62,19 +65,7 @@ function Cart({ onClose }) {
       };
       const rzp1 = new window.Razorpay(options);
       rzp1.open();
-    } catch (error) {
-      if (error.response.status === 401) {
-        removeItem(KEY_ACCESS_TOKEN);
-        store.dispatch(
-          showToast({
-            type: TOAST_FAILURE,
-            message: error.response.data.message,
-          })
-        );
-        store.dispatch(deleteProfile());
-        navigate("/login")
-      }
-    }
+    } catch (error) {}
   }
 
   return (

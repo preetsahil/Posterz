@@ -51,8 +51,7 @@ const productController = async (req, res) => {
 };
 const categoryController = async (req, res) => {
   try {
-    const categories = await Category.find({})
-      .populate("products")
+    const categories = await Category.find({})      .populate("products")
       .populate("createdBy")
       .populate("lastModifyBy");
     return res.status(200).send({ categories });
@@ -78,9 +77,6 @@ const orderController = async (req, res) => {
     await Promise.all(
       products.map(async (product) => {
         const prod = await Product.find({ key: product.key });
-        if (!prod) {
-          return res.status(404).send({ error: "product not found" });
-        }
         o1.item.push({
           title: product.title,
           price: product.price,

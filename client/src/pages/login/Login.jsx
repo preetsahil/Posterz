@@ -2,43 +2,41 @@ import React, { useEffect, useState } from "react";
 import { useGoogleLogin } from "@react-oauth/google";
 import { axiosClient } from "../../utils/axiosClient";
 import "./Login.scss";
-import {
-  KEY_ACCESS_TOKEN,
-  getItem,
-  setItem,
-} from "../../utils/localStorageManager";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { setProfile } from "../../redux/slices/cartSlice";
+import { setProfile } from "../../redux/slices/profileSlice";
+import { GOOGLE_ACCESS_TOKEN, setItem } from "../../utils/localStorageManager";
+
 function Login() {
-  const [userDetails, setUserDetails] = useState([]);
+  const [authCode, setAuthCode] = useState([]);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const login = useGoogleLogin({
-    onSuccess: (codeResponse) => setUserDetails(codeResponse),
-    onError: (error) => console.log("Login Failed:", error),
+    onSuccess: (codeResponse) => setAuthCode(codeResponse),
+    onError: (error) => console.log(error),
+    flow: "auth-code",
+    redirect_uri: "http://localhost:5173",
   });
+
   const fetchProfile = async () => {
     try {
-      const response = await axiosClient.post("/auth/verify", {
-        userDetails,
+      const response = await axiosClient.post("/auth/oauth2callback", {
+        code: authCode.code,
       });
-      setItem(KEY_ACCESS_TOKEN, userDetails.access_token);
+      setItem(GOOGLE_ACCESS_TOKEN, response.data.accessToken);
       dispatch(setProfile(response.data.user));
       navigate(-1);
     } catch (error) {
-      setUserDetails([]);
+      console.log(error.message);
     }
   };
 
   useEffect(() => {
-    const token = getItem(KEY_ACCESS_TOKEN);
-    if (userDetails.length !== 0 && !token) {
-      fetchProfile();
-    }
-  }, [userDetails]);
+    if (authCode.length === 0) return;
+    fetchProfile();
+  }, [authCode]);
 
   return (
     <div className="login">
@@ -48,7 +46,7 @@ function Login() {
         }}
         className="login-with-google-btn"
       >
-        <p style={{paddingLeft:"30px"}}>Sign in with Google</p>
+        <p style={{ paddingLeft: "30px" }}>Sign in with Google</p>
       </button>
     </div>
   );

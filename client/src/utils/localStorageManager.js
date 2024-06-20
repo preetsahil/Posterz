@@ -1,5 +1,5 @@
-export const KEY_ACCESS_TOKEN = "access_token";
-export const KEY_ADMIN_TOKEN = "admin_token";
+export const KEY_ACCESS_TOKEN = "jwt_access_token";
+export const GOOGLE_ACCESS_TOKEN = "google_access_token";
 
 export function getItem(key) {
   return localStorage.getItem(key);

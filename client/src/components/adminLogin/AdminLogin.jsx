@@ -1,12 +1,57 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./AdminLogin.scss";
 import { axiosClient } from "../../utils/axiosClient";
-import { KEY_ADMIN_TOKEN, setItem } from "../../utils/localStorageManager";
+import {
+  GOOGLE_ACCESS_TOKEN,
+  KEY_ACCESS_TOKEN,
+  setItem,
+} from "../../utils/localStorageManager";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { useGoogleLogin } from "@react-oauth/google";
+import { setAdminProfile, setProfile } from "../../redux/slices/profileSlice";
+import { showToast } from "../../redux/slices/appConfigSlice";
+import { TOAST_FAILURE } from "../../App";
 function AdminLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [authCode, setAuthCode] = useState([]);
+
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const login = useGoogleLogin({
+    onSuccess: (codeResponse) => setAuthCode(codeResponse),
+    onError: (error) => console.log(error),
+    flow: "auth-code",
+    redirect_uri: "http://localhost:5173",
+  });
+
+  const fetchProfile = async () => {
+    try {
+      const response = await axiosClient.post("/auth/oauth2callback", {
+        code: authCode.code,
+      });
+      setItem(GOOGLE_ACCESS_TOKEN, response.data.accessToken);
+      dispatch(setProfile(response.data.user));
+      if (response.data.user.isAdmin) {
+        navigate("/admin");
+      } else {
+        dispatch(
+          showToast({
+            type: TOAST_FAILURE,
+            message:
+              "Access Denied! Request for the Admin Permissions. (Visit the Website)",
+          })
+        );
+      }
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    if (authCode.length === 0) return;
+    fetchProfile();
+  }, [authCode]);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -15,10 +60,11 @@ function AdminLogin() {
         email,
         password,
       });
-      setItem(KEY_ADMIN_TOKEN, response.data.adminToken);
+      setItem(KEY_ACCESS_TOKEN, response.data.adminToken);
+      dispatch(setAdminProfile(response.data.user));
+      //delete when logout
       navigate("/admin");
-    } catch (error) {
-    }
+    } catch (error) {}
   }
   return (
     <div className="AdminLogin">
@@ -52,6 +98,14 @@ function AdminLogin() {
             onClick={handleSubmit}
           />
         </form>
+        <button
+          onClick={() => {
+            login();
+          }}
+          className="login-with-google-btn"
+        >
+          <p style={{ paddingLeft: "30px" }}>Sign in with Google</p>
+        </button>
       </div>
     </div>
   );

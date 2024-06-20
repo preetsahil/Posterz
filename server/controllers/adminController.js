@@ -26,7 +26,7 @@ const loginController = async (req, res) => {
     }
     const matched = await bcrypt.compare(password, user.password);
     if (!matched) {
-      return res.status(403).send("Incorrect Password");
+      return res.status(401).send("Incorrect Password");
     }
 
     if (user.isAdmin) {
@@ -37,10 +37,22 @@ const loginController = async (req, res) => {
           expiresIn: "1d",
         }
       );
+      const refreshToken = jwt.sign(
+        { _id: user._id },
+        process.env.REFRESH_TOKEN_SECRET_ADMIN,
+        {
+          expiresIn: "1y",
+        }
+      );
+      res.cookie("jwt_refresh_token", refreshToken, {
+        httpOnly: true,
+        secure: true,
+        maxAge: 31536000000,
+      });
       return res.status(200).send({ adminToken, user });
     } else {
       return res
-        .status(404)
+        .status(403)
         .send("Access Denied! Request for the Admin Permissions");
     }
   } catch (error) {
@@ -159,10 +171,7 @@ const addProductController = async (req, res) => {
     if (Object.keys(selectedCat).length !== 0) {
       try {
         const category = await Category.findOne({ _id: selectedCat._id });
-        if (!category) {
-          console.log("Category not found: " + category);
-          return;
-        }
+
         await Category.updateOne(
           { _id: selectedCat._id },
           { $push: { products: product._id } }

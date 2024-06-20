@@ -7,20 +7,15 @@ const cartSlice = createSlice({
     profile: {},
   },
   reducers: {
-    setProfile: (state, action) => {
-      state.profile = action.payload;
-    },
-    deleteProfile: (state) => {
-      state.profile = {};
-    },
     addToCart: (state, action) => {
       const product = action.payload;
+      console.log(product);
       const curItem = {
         title: product.title,
         key: product.key,
         price: product.price,
         image: product.image.url,
-        category: product.categories.key,
+        category: product.categories?.key,
       };
       const index = state.cart.findIndex((item) => item.key === curItem.key);
       if (index === -1) {
@@ -50,11 +45,5 @@ const cartSlice = createSlice({
 });
 
 export default cartSlice.reducer;
-export const {
-  addToCart,
-  removeFromCart,
-  clearCart,
-  resetCartItem,
-  setProfile,
-  deleteProfile,
-} = cartSlice.actions;
+export const { addToCart, removeFromCart, clearCart, resetCartItem } =
+  cartSlice.actions;

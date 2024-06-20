@@ -4,16 +4,19 @@ import { RiTwitterXLine } from "react-icons/ri";
 import { PiLinkedinLogo } from "react-icons/pi";
 import "./Footer.scss";
 import creditCardImg from "../../assets/creditcardicons.png";
-import { KEY_ACCESS_TOKEN, getItem } from "../../utils/localStorageManager";
+import { GOOGLE_ACCESS_TOKEN, getItem } from "../../utils/localStorageManager";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteProfile } from "../../redux/slices/profileSlice";
 
 function Footer() {
   const navigate = useNavigate();
-  const profile = useSelector((state) => state.cartReducer.profile);
+  const dispatch = useDispatch();
+  const profile = useSelector((state) => state.profileReducer.profile);
   const handleSubmit = () => {
-    const token = getItem(KEY_ACCESS_TOKEN);
+    const token = getItem(GOOGLE_ACCESS_TOKEN);
     if (!token) {
+      dispatch(deleteProfile());
       navigate("/login");
       onClose();
       return;
@@ -81,6 +84,16 @@ function Footer() {
               <li className="hover-link">Returns And Exchange Policy</li>
               <li className="hover-link">Shipping Policy</li>
               <li className="hover-link">Terms & Conditions</li>
+              {!profile.isAdmin && (
+                <li
+                  className="hover-link"
+                  onClick={() => {
+                    navigate("/adminLogin");
+                  }}
+                >
+                  Visit DashBoard
+                </li>
+              )}
             </ul>
           </div>
         </div>

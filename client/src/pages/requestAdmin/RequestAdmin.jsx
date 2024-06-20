@@ -9,17 +9,20 @@ import { IoEyeOutline } from "react-icons/io5";
 import { TOAST_FAILURE, TOAST_SUCCESS } from "../../App";
 import { useNavigate } from "react-router-dom";
 import OtpInput from "react-otp-input";
-import { KEY_ADMIN_TOKEN, removeItem } from "../../utils/localStorageManager";
-import { setProfile } from "../../redux/slices/cartSlice";
+import { deleteProfile, setProfile } from "../../redux/slices/profileSlice";
+import {
+  GOOGLE_ACCESS_TOKEN,
+  removeItem,
+} from "../../utils/localStorageManager";
 let timeoutId = null;
 function RequestAdmin() {
-  const profile = useSelector((state) => state.cartReducer.profile);
+  const profile = useSelector((state) => state.profileReducer.profile);
   const dispatch = useDispatch();
   const [verify, setVerify] = useState(false);
   const navigate = useNavigate();
   const [code, setCode] = useState("");
   const [password, setPassword] = useState("");
-  const [counter, setCounter] = useState("");
+  const [counter, setCounter] = useState(300);
   const [type, setType] = useState("password");
   const [icon, setIcon] = useState(<IoEyeOffOutline />);
   const [otp, setOtp] = useState();
@@ -75,17 +78,8 @@ function RequestAdmin() {
             message: error.response.data,
           })
         );
-        navigate("/login");
-      }
-      if (error.response.status === 401) {
-        removeItem(KEY_ACCESS_TOKEN);
-        store.dispatch(
-          showToast({
-            type: TOAST_FAILURE,
-            message: error.response.data.message,
-          })
-        );
-        store.dispatch(deleteProfile());
+        removeItem(GOOGLE_ACCESS_TOKEN);
+        dispatch(deleteProfile());
         navigate("/login");
       }
     }
@@ -112,8 +106,6 @@ function RequestAdmin() {
       );
       setCode("");
       setPassword("");
-      removeItem(KEY_ADMIN_TOKEN);
-      console.log(response.data.user);
       dispatch(setProfile(response.data.user));
       navigate("/admin");
     } catch (error) {
@@ -128,19 +120,7 @@ function RequestAdmin() {
         setVerify(false);
         setCode("");
         setPassword("");
-        setCounter("");
-      }
-      if (error.response.status === 401) {
-        removeItem(KEY_ACCESS_TOKEN);
-        store.dispatch(
-          showToast({
-            type: TOAST_FAILURE,
-            message: error.response.data.message,
-          })
-        );
-        clearTimeout(timeoutId);
-        store.dispatch(deleteProfile());
-        navigate("/login");
+        setCounter(300);
       }
       if (error.response.status === 409) {
         dispatch(
@@ -152,7 +132,6 @@ function RequestAdmin() {
         clearTimeout(timeoutId);
         setCode("");
         setPassword("");
-        removeItem(KEY_ADMIN_TOKEN);
         navigate("/admin");
       }
     }

@@ -38,7 +38,7 @@ function App() {
   useEffect(() => {
     dispatch(fetchCategories());
     dispatch(fetchProducts());
-  }, []);
+  }, [dispatch]);
   useEffect(() => {
     switch (toastData?.type) {
       case TOAST_SUCCESS:
@@ -76,7 +76,6 @@ function App() {
               }}
             />
           </div>
-
           <Routes>
             <Route element={<RequireAdmin />}>
               <Route path="/admin" element={<AdminDashBoard />}>

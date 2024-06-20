@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const axios = require("axios");
+
 const isUser = async (req, res, next) => {
   if (
     !req.headers ||
@@ -26,8 +27,8 @@ const isUser = async (req, res, next) => {
       req._id = user._id;
     }
     next();
-  } catch (e) {
-    return res.status(401).send({ message: "Invalid access token" });
+  } catch (error) {
+    return res.status(401).send({ message: "Invalid Oauth Token" });
   }
 };
 

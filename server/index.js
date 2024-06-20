@@ -4,6 +4,7 @@ const connectdb = require("./dbconnect");
 const authRouter = require("./routes/authRouter");
 const adminRouter = require("./routes/adminRouter");
 const getRouter = require("./routes/getRouter");
+const cookieParser = require("cookie-parser");
 const cors = require("cors");
 
 const cloudinary = require("cloudinary").v2;
@@ -21,7 +22,7 @@ cloudinary.config({
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
-
+app.use(cookieParser());
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use("/auth", authRouter);

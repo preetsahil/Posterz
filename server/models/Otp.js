@@ -4,7 +4,6 @@ const otpSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
-    match: [/^[^\s@]+@[^\s@]+\.[^\s@]+$/],
   },
   otp: {
     type: String,
@@ -13,7 +12,7 @@ const otpSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now,
-    expires: "5m",
+    index: { expires: "5m" },
   },
 });
 

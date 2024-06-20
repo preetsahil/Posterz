@@ -5,9 +5,13 @@ import "./Navbar.scss";
 import { useDispatch, useSelector } from "react-redux";
 import Cart from "../cart/Cart";
 import { IoPersonOutline } from "react-icons/io5";
-import { KEY_ACCESS_TOKEN, removeItem } from "../../utils/localStorageManager";
-import { deleteProfile } from "../../redux/slices/cartSlice";
+import {
+  GOOGLE_ACCESS_TOKEN,
+  removeItem,
+} from "../../utils/localStorageManager";
+import { deleteProfile } from "../../redux/slices/profileSlice";
 import useClickOutside from "../useClickOutside";
+import { axiosClient } from "../../utils/axiosClient";
 
 function Navbar() {
   const [openCart, setOpenCart] = useState(false);
@@ -15,7 +19,7 @@ function Navbar() {
   const navigate = useNavigate();
   const [isClicked, setIsClicked] = useState(false);
   const dispatch = useDispatch();
-  const profile = useSelector((state) => state.cartReducer.profile);
+  const profile = useSelector((state) => state.profileReducer.profile);
   const originalCategories = useSelector(
     (state) => state.categoryReducer.originalCategories
   );
@@ -24,8 +28,9 @@ function Navbar() {
   cart.forEach((item) => {
     totalItems += item.quantity;
   });
-  const logOut = () => {
-    removeItem(KEY_ACCESS_TOKEN);
+  const logOut = async () => {
+    removeItem(GOOGLE_ACCESS_TOKEN);
+    await axiosClient.post("/auth/logout");
     dispatch(deleteProfile());
     setIsClicked(false);
     navigate("/");
