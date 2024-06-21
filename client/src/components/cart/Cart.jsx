@@ -97,7 +97,7 @@ function Cart({ onClose }) {
               <h3 className="total-message">Total:</h3>
               <h3 className="total-value">₹ {totalAmount}</h3>
             </div>
-            <div className="checkout btn-primary" onClick={handleCheckout}>
+            <div className="checkout btnn" onClick={handleCheckout}>
               Checkout now
             </div>
           </div>

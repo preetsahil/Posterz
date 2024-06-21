@@ -35,7 +35,7 @@ function Payments() {
       <div className="icon">{infoData[status].icon}</div>
       <h2 className="message">{infoData[status].message}</h2>
       <button
-        className="btn-primary"
+        className="btnn"
         onClick={() => {
           navigate("/");
         }}

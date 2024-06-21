@@ -7,6 +7,9 @@ import {
   setItem,
 } from "../../utils/localStorageManager";
 import { useNavigate } from "react-router-dom";
+import { AiOutlineGoogle } from "react-icons/ai";
+import { IoEyeOffOutline } from "react-icons/io5";
+import { IoEyeOutline } from "react-icons/io5";
 import { useDispatch } from "react-redux";
 import { useGoogleLogin } from "@react-oauth/google";
 import { setAdminProfile, setProfile } from "../../redux/slices/profileSlice";
@@ -14,8 +17,14 @@ import { showToast } from "../../redux/slices/appConfigSlice";
 import { TOAST_FAILURE } from "../../App";
 function AdminLogin() {
   const [email, setEmail] = useState("");
+  const [type, setType] = useState("password");
+  const [icon, setIcon] = useState(<IoEyeOffOutline />);
   const [password, setPassword] = useState("");
   const [authCode, setAuthCode] = useState([]);
+  const [isEmailFocused, setIsEmailFocused] = useState(false);
+  const [isPasswordFocused, setIsPasswordFocused] = useState(false);
+  const [placeholderEmail, setPlaceholderEmail] = useState("");
+  const [placeholderPassword, setPlaceholderPassword] = useState("");
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -66,46 +75,100 @@ function AdminLogin() {
       navigate("/admin");
     } catch (error) {}
   }
+  const handleToggle = () => {
+    setType(type === "password" ? "text" : "password");
+    setIcon(type === "password" ? <IoEyeOutline /> : <IoEyeOffOutline />);
+  };
   return (
     <div className="AdminLogin">
       <div className="page">
-        <h1 className="title">Log In</h1>
-        <form onSubmit={handleSubmit}>
-          <label htmlFor="email">Email Address</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            placeholder="me@example.com"
-            onChange={(e) => {
-              setEmail(e.target.value);
-            }}
+        <div className="img-container">
+          <img
+            src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
+            className="img"
+            alt="Sample image"
           />
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            placeholder="••••••••••"
-            onChange={(e) => {
-              setPassword(e.target.value);
-            }}
-          />
-          <input
-            type="submit"
-            className="submit btn-primary"
-            value="log in"
-            onClick={handleSubmit}
-          />
-        </form>
-        <button
-          onClick={() => {
-            login();
-          }}
-          className="login-with-google-btn"
-        >
-          <p style={{ paddingLeft: "30px" }}>Sign in with Google</p>
-        </button>
+        </div>
+        <div className="loginform">
+          <div className="signGoogle">
+            <p className="heading">Sign in with Google</p>
+            <div className="google-icon" onClick={() => login()}>
+              <AiOutlineGoogle className="icon" />
+            </div>
+          </div>
+
+          <div className="divider">
+            <p className="heading">Or</p>
+          </div>
+
+          <form onSubmit={handleSubmit}>
+            <div className="email">
+              <input
+                type="email"
+                id="email"
+                name="email"
+                className={isEmailFocused ? "focused" : "notfocused"}
+                placeholder={placeholderEmail}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                }}
+                onFocus={() => {
+                  setIsEmailFocused(true);
+                  setPlaceholderEmail("Enter a valid email address");
+                }}
+                onBlur={() => {
+                  setIsEmailFocused(false);
+                  setPlaceholderEmail("");
+                }}
+              />
+              <label
+                className={`${
+                  isEmailFocused ? "focusemail" : "notfocusemail"
+                } ${email.length > 0 && !isEmailFocused ? "has-value" : ""}`}
+              >
+                Email address
+              </label>
+            </div>
+            <div className="password">
+              <input
+                type={type}
+                id="password"
+                name="password"
+                className={isPasswordFocused ? "focused" : "notfocused"}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                }}
+                placeholder={placeholderPassword}
+                onFocus={() => {
+                  setIsPasswordFocused(true);
+                  setPlaceholderPassword("Enter password");
+                }}
+                onBlur={() => {
+                  setIsPasswordFocused(false);
+                  setPlaceholderPassword("");
+                }}
+              />
+              <span className="icon" onClick={handleToggle}>
+                {icon}
+              </span>
+              <label
+                className={`${
+                  isPasswordFocused ? "focuspassword" : "notfocuspassword"
+                } ${
+                  password.length > 0 && !isPasswordFocused ? "has-value" : ""
+                }`}
+              >
+                Password
+              </label>
+            </div>
+            <div className="forget">
+              <p>Forgot password ?</p>
+            </div>
+            <button className="submit" onClick={handleSubmit}>
+              LOGIN
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );

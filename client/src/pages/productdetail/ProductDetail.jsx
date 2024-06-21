@@ -57,7 +57,7 @@ function ProductDetail() {
                 </span>
               </div>
               <button
-                className="btn-primary add-to-cart"
+                className="btnn add-to-cart"
                 onClick={() => {
                   dispatch(addToCart(product));
                 }}

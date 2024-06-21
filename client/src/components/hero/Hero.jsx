@@ -11,7 +11,7 @@ function Hero() {
           Exclusive Art Pieces, for the Exclusive You.
         </p>
         <button
-          className="cta btn-primary"
+          className="cta btnn"
           onClick={() => {
             navigate("/category");
           }}
