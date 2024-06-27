@@ -1,11 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useGoogleLogin } from "@react-oauth/google";
 import { axiosClient } from "../../utils/axiosClient";
+import axios from "axios";
 import "./Login.scss";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { setProfile } from "../../redux/slices/profileSlice";
-import { GOOGLE_ACCESS_TOKEN, setItem } from "../../utils/localStorageManager";
+import { setAdminProfile, setProfile } from "../../redux/slices/profileSlice";
+import {
+  KEY_ADMIN_TOKEN,
+  OAUTH_ACCESS_TOKEN,
+  OAUTH_ADMIN_TOKEN,
+  getItem,
+  removeItem,
+  setItem,
+} from "../../utils/localStorageManager";
 
 function Login() {
   const [authCode, setAuthCode] = useState([]);
@@ -25,12 +33,23 @@ function Login() {
       const response = await axiosClient.post("/auth/oauth2callback", {
         code: authCode.code,
       });
-      setItem(GOOGLE_ACCESS_TOKEN, response.data.accessToken);
+      setItem(OAUTH_ACCESS_TOKEN, response.data.accessToken);
       dispatch(setProfile(response.data.user));
+      if (response.data.user.isAdmin) {
+        if (getItem(KEY_ADMIN_TOKEN)) {
+          removeItem(KEY_ADMIN_TOKEN);
+          await axios
+            .create({
+              baseURL: "http://localhost:4000",
+              withCredentials: true,
+            })
+            .post("/auth/revoke");
+        }
+        setItem(OAUTH_ADMIN_TOKEN, response.data.accessToken);
+        dispatch(setAdminProfile(response.data.user));
+      }
       navigate(-1);
-    } catch (error) {
-      console.log(error.message);
-    }
+    } catch (error) {}
   };
 
   useEffect(() => {

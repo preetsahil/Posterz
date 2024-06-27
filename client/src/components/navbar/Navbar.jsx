@@ -6,10 +6,14 @@ import { useDispatch, useSelector } from "react-redux";
 import Cart from "../cart/Cart";
 import { IoPersonOutline } from "react-icons/io5";
 import {
-  GOOGLE_ACCESS_TOKEN,
+  OAUTH_ACCESS_TOKEN,
+  OAUTH_ADMIN_TOKEN,
   removeItem,
 } from "../../utils/localStorageManager";
-import { deleteProfile } from "../../redux/slices/profileSlice";
+import {
+  deleteAdminProfile,
+  deleteProfile,
+} from "../../redux/slices/profileSlice";
 import useClickOutside from "../useClickOutside";
 import { axiosClient } from "../../utils/axiosClient";
 
@@ -23,14 +27,19 @@ function Navbar() {
   const originalCategories = useSelector(
     (state) => state.categoryReducer.originalCategories
   );
+  const cat = originalCategories.slice(0, 3);
   const cart = useSelector((state) => state.cartReducer.cart);
   let totalItems = 0;
   cart.forEach((item) => {
     totalItems += item.quantity;
   });
   const logOut = async () => {
-    removeItem(GOOGLE_ACCESS_TOKEN);
-    await axiosClient.post("/auth/logout");
+    await axiosClient.post("/auth/logout", { profile });
+    removeItem(OAUTH_ACCESS_TOKEN);
+    if (profile.isAdmin) {
+      dispatch(deleteAdminProfile());
+      removeItem(OAUTH_ADMIN_TOKEN);
+    }
     dispatch(deleteProfile());
     setIsClicked(false);
     navigate("/");
@@ -38,68 +47,76 @@ function Navbar() {
   useClickOutside(ref, () => {
     setIsClicked(false);
   });
+
   return (
-    <div>
-      <div className="Navbar" ref={ref}>
-        <div className="container nav-container">
-          <div className="nav-left">
+    <div ref={ref} className="Navbar">
+      <div className="nav-container container">
+        <div className="nav-left">
+          {originalCategories?.length !== 0 && (
             <ul className="link-group">
-              {originalCategories?.map((category) => (
+              {cat?.map((category) => (
                 <li className="hover-link" key={category._id}>
                   <Link className="link" to={`/category/${category._id}`}>
                     {category.title}
                   </Link>
                 </li>
               ))}
-            </ul>
-          </div>
-          <div className="nav-center">
-            <Link to="/">
-              <h1 className="banner">Posterz.</h1>
-            </Link>
-          </div>
-          <div className="nav-right">
-            <div className="nav-cart" onClick={() => setOpenCart(!openCart)}>
-              <BsCart2 className="icon" />
-              {totalItems > 0 && (
-                <span className="cart-count center">{totalItems}</span>
+              {originalCategories?.length >= 4 && (
+                <li className="hover-link">
+                  <Link className="link" to={`/category`}>
+                    Other Categories
+                  </Link>
+                </li>
               )}
-            </div>
-            {Object.keys(profile)?.length > 0 ? (
-              <div className="ava-log">
-                <div
-                  className="avatar"
-                  onClick={() => setIsClicked(!isClicked)}
-                  data-email={profile.email}
-                >
-                  <div className="avatar-cont">
-                    <img
-                      src={profile?.avatar?.url}
-                      alt="avatar"
-                      className="avatar-img"
-                    />
-                  </div>
-                </div>
-                <div className="logOutContainer" onClick={logOut}>
-                  {isClicked && (
-                    <div className="logOut">
-                      <p>log Out</p>
-                    </div>
-                  )}
-                </div>
-              </div>
-            ) : (
-              <div
-                className="signin"
-                onClick={() => {
-                  setIsClicked(false);
-                  navigate("/login");
-                }}
-              >
-                <IoPersonOutline className="icon1" />
-              </div>
+            </ul>
+          )}
+        </div>
+        <div className="nav-center">
+          <Link to="/">
+            <h1 className="banner">Posterz.</h1>
+          </Link>
+        </div>
+        <div className="nav-right">
+          <div className="nav-cart" onClick={() => setOpenCart(!openCart)}>
+            <BsCart2 className="icon" />
+            {totalItems > 0 && (
+              <span className="cart-count center">{totalItems}</span>
             )}
           </div>
+          {Object.keys(profile)?.length > 0 ? (
+            <div className="ava-log">
+              <div
+                className="avatar"
+                onClick={() => setIsClicked(!isClicked)}
+                data-email={profile.email}
+              >
+                <div className="avatar-cont">
+                  <img
+                    src={profile?.avatar?.url}
+                    alt="avatar"
+                    className="avatar-img"
+                  />
+                </div>
+              </div>
+              <div className="logOutContainer" onClick={logOut}>
+                {isClicked && (
+                  <div className="logOut">
+                    <p>log Out</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          ) : (
+            <div
+              className="signin"
+              onClick={() => {
+                setIsClicked(false);
+                navigate("/login");
+              }}
+            >
+              <IoPersonOutline className="icon1" />
+            </div>
+          )}
         </div>
       </div>
       {openCart && <Cart onClose={() => setOpenCart(false)} />}

@@ -303,7 +303,7 @@ function UpdateCategory() {
 
     if (inputDiv) {
       const { top } = inputDiv.getBoundingClientRect();
-      if (top < 15) {
+      if (top < 80) {
         setSticky(true);
       } else {
         setSticky(false);
@@ -346,10 +346,10 @@ function UpdateCategory() {
                   "Are you sure you want to leave this page? All your modifications will be lost"
                 )
               ) {
-                navigate("/admin/category");
+                navigate(-1);
               }
             } else {
-              navigate("/admin/category");
+              navigate(-1);
             }
           }}
         >
@@ -537,7 +537,12 @@ function UpdateCategory() {
                         <span>
                           <GoDotFill />
                         </span>
-                        <p>{product.title.toLowerCase()}</p>
+                        {product.title.length >= 25 && (
+                          <p>{product.title.toLowerCase().slice(0, 20)}...</p>
+                        )}
+                        {product.title.length < 25 && (
+                          <p>{product.title.toLowerCase()}</p>
+                        )}
                       </div>
                     ))}
                   </div>
@@ -547,16 +552,26 @@ function UpdateCategory() {
                 <div className="selected-prod">
                   {selectedProd.map((product) => (
                     <div key={product._id} className="sel-prod">
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "10px",
-                          marginLeft: "5px",
-                        }}
-                      >
+                      <div className="contentbox">
                         <TbGridDots className="dots" />
-                        <p>{product.title.toLowerCase()}</p>
+                        {product.title.length >= 25 && (
+                          <p
+                            onClick={() =>
+                              navigate(`/admin/product/${product._id}`)
+                            }
+                          >
+                            {product.title.toLowerCase().slice(0, 20)}...
+                          </p>
+                        )}
+                        {product.title.length < 25 && (
+                          <p
+                            onClick={() =>
+                              navigate(`/admin/product/${product._id}`)
+                            }
+                          >
+                            {product.title.toLowerCase()}
+                          </p>
+                        )}
                       </div>
 
                       <RxCross2
@@ -576,7 +591,7 @@ function UpdateCategory() {
             </div>
           </div>
         </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+        <div className="right-box">
           <div className="right">
             <div className="info">
               <p
@@ -584,6 +599,7 @@ function UpdateCategory() {
                   textAlign: "center",
                   borderBottom: "0.01em solid #474f7a",
                   paddingBottom: "8px",
+                  fontSize: "1.2rem",
                 }}
               >
                 INFORMATION
@@ -606,7 +622,7 @@ function UpdateCategory() {
               </div>
             </div>
           </div>
-          <div className="button" onClick={handleDelete}>
+          <div className="button-button" onClick={handleDelete}>
             <MdDelete />
             <p className="text">Delete this entry</p>
           </div>

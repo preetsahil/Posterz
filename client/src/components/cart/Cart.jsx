@@ -5,7 +5,7 @@ import CartItem from "../cartitem/CartItem";
 import { BsCartX } from "react-icons/bs";
 import "./Cart.scss";
 import { axiosClient } from "../../utils/axiosClient";
-import { GOOGLE_ACCESS_TOKEN, getItem } from "../../utils/localStorageManager";
+import { OAUTH_ACCESS_TOKEN, getItem } from "../../utils/localStorageManager";
 import { useNavigate } from "react-router-dom";
 import { deleteProfile } from "../../redux/slices/profileSlice";
 
@@ -21,7 +21,7 @@ function Cart({ onClose }) {
 
   async function handleCheckout() {
     try {
-      const token = getItem(GOOGLE_ACCESS_TOKEN);
+      const token = getItem(OAUTH_ACCESS_TOKEN);
       if (!token) {
         dispatch(deleteProfile());
         navigate("/login");

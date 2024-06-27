@@ -11,10 +11,10 @@ const isAdmin = async (req, res, next) => {
   }
   const accessToken = req.headers.authorization.split(" ")[1];
 
-  const Oauth_refresh_token = req.cookies.refresh_token;
+  const Oauth_refresh_token = req.cookies.oauth_admin_refresh;
   const Jwt_refresh_token = req.cookies.jwt_refresh_token;
 
-  if ((Oauth_refresh_token && Jwt_refresh_token) || Oauth_refresh_token) {
+  if (Oauth_refresh_token) {
     try {
       const response = await axios.get(
         `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${accessToken}`,
@@ -27,6 +27,7 @@ const isAdmin = async (req, res, next) => {
       );
       const { email } = response.data;
       const user = await User.findOne({ email });
+
       if (!user.isAdmin) {
         return res
           .status(403)
@@ -56,8 +57,6 @@ const isAdmin = async (req, res, next) => {
     } catch (e) {
       return res.status(401).send({ message: "Invalid JWT Token" });
     }
-  } else {
-    return res.status(401).send({ message: "Both cookies expire" });
   }
 };
 module.exports = isAdmin;

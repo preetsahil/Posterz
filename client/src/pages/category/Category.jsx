@@ -75,10 +75,10 @@ function Category() {
   };
 
   const calculateContentTop = () => {
-    const categoryElement = document.getElementById("categories");
-    if (categoryElement) {
-      const { top } = categoryElement.getBoundingClientRect();
-      if (top < 10) {
+    const searchElement = document.getElementById("searchDiv");
+    if (searchElement) {
+      const { top } = searchElement.getBoundingClientRect();
+      if (top < 15) {
         setSticky(true);
       } else {
         setSticky(false);
@@ -214,7 +214,7 @@ function Category() {
               </div>
             </div>
           </div>
-          <div className="searchDiv">
+          <div className="searchDiv" id="searchDiv">
             <input
               type="text"
               id="search"

@@ -43,7 +43,7 @@ const OAuthController = async (req, res) => {
       }
     );
 
-    res.cookie("refresh_token", response.data.refresh_token, {
+    res.cookie("oauth_access_refresh", response.data.refresh_token, {
       httpOnly: true,
       secure: true,
       maxAge: 31536000000,
@@ -52,8 +52,15 @@ const OAuthController = async (req, res) => {
     const userInfo = await getUserInfo(response.data.access_token);
     const { email, name, picture } = userInfo;
 
-    const user = await User.findOne({ email }).select("-password");
+    const user = await User.findOne({ email }).select("-password -_id");
     if (user) {
+      if (user.isAdmin) {
+        res.cookie("oauth_admin_refresh", response.data.refresh_token, {
+          httpOnly: true,
+          secure: true,
+          maxAge: 31536000000,
+        });
+      }
       return res
         .status(200)
         .send({ user, accessToken: response.data.access_token });
@@ -74,9 +81,10 @@ const OAuthController = async (req, res) => {
       },
     });
     await newUser.save();
+    const user1 = await User.findOne({ email }).select("-_id");
     return res
       .status(200)
-      .send({ user: newUser, accessToken: response.data.access_token });
+      .send({ user: user1, accessToken: response.data.access_token });
   } catch (error) {
     console.error(error.response ? error.response.data : error.message);
     return res
@@ -131,6 +139,12 @@ const verifyOtpController = async (req, res) => {
   try {
     const { otp, email, password } = req.body;
     const user = await User.findOne({ email });
+    const refreshToken = req.cookies.oauth_access_refresh;
+    res.cookie("oauth_admin_refresh", refreshToken, {
+      httpOnly: true,
+      secure: true,
+      maxAge: 31536000000,
+    });
     const response = await OTP.find({ email }).sort({ createdAt: -1 }).limit(1);
     if (response.length === 0 || otp !== response[0].otp) {
       return res.status(400).send("OTP expired, try again");
@@ -142,9 +156,11 @@ const verifyOtpController = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     user.password = hashedPassword;
     await user.save();
+    const { password: _, _id, ...userWithoutSensitiveInfo } = user._doc;
+
     return res.status(200).send({
       message: "OTP Verified And Password created for Admin Access",
-      user,
+      user: userWithoutSensitiveInfo,
     });
   } catch (error) {
     return res.status(500).json(error.message);
@@ -153,7 +169,15 @@ const verifyOtpController = async (req, res) => {
 
 const logoutController = async (req, res) => {
   try {
-    res.clearCookie("refresh_token", {
+    const user = req.body.profile;
+
+    if (user.isAdmin) {
+      res.clearCookie("oauth_admin_refresh", {
+        httpOnly: true,
+        secure: true,
+      });
+    }
+    res.clearCookie("oauth_access_refresh", {
       httpOnly: true,
       secure: true,
     });
@@ -162,10 +186,12 @@ const logoutController = async (req, res) => {
     return res.status(500).send(e.message);
   }
 };
+//logout in admin check if user has logged in through google if google delete profile both and admin and access token both and refresh token in backend call logout
+//if user is logged in through jwt then delete the jwt token and admin profile and its refresh token call revoke
 
 const refreshOAuthController = async (req, res) => {
   try {
-    const refreshToken = req.cookies.refresh_token;
+    const refreshToken = req.cookies.oauth_access_refresh;
     if (!refreshToken) {
       return res.status(401).send("refresh token is required");
     }
@@ -186,7 +212,6 @@ const refreshOAuthController = async (req, res) => {
     );
     return res.status(200).send({ accessToken: response.data.access_token });
   } catch (error) {
-    console.log(error.response.data);
     return res
       .status(error.response.status)
       .send({ error: error.response.data });
@@ -213,7 +238,6 @@ const refreshJWTController = async (req, res) => {
         expiresIn: "1d",
       }
     );
-    console.log("refresh access token");
     return res.status(200).send({ accessToken });
   } catch (error) {
     return res.status(401).send("Refresh Token Invalid");

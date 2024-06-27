@@ -1,70 +1,81 @@
 .Detail {
   display: flex;
-  flex-direction: column;
-  height: 100vh;
+  justify-content: center;
   flex: 1;
-  background-color: #0d122f;
+  overflow-y: auto;
 
   .left-content {
+    max-width: 1200px;   
     margin-top: 70px;
-    margin-left: 55px;
-    .heading {
-      color: rgb(244, 244, 244);
-      margin-bottom: 15px;
-    }
-    .subheading {
-      color: rgb(165, 165, 186);
-      margin-bottom: 5px;
-    }
-    .sub-content {
-      display: flex;
-      gap: 20px;
 
-      .insight {
+    .big-container {
+      display: flex;
+      gap: 50px;
+      align-items: center;
+
+      .sub-content {
         display: flex;
-        width: 500px;
-        color: rgb(180, 180, 181);
-        background-color: #0b0f26;
-        margin-top: 20px;
-        padding: 25px 50px;
-        li {
-          span {
-            font-size: larger;
-            padding-right: 10px;
+        flex-direction: column;
+        .heading-container {
+          .heading {
+            color: rgb(244, 244, 244);
+            margin-bottom: 15px;
           }
-          margin-bottom: 20px;
+          .subheading {
+            color: rgb(165, 165, 186);
+            margin-bottom: 5px;
+            font-size: 1.2rem;
+          }
+        }
+
+        .insight {
+          color: rgb(180, 180, 181);
+          background-color: #0b0f26;
+          margin-top: 20px;
+          padding: 25px 50px;
+          width: fit-content;
+          li {
+            font-size: 1.5rem;
+            span {
+              font-size: 1.6rem;
+              padding-right: 10px;
+            }
+            margin-bottom: 20px;
+          }
         }
       }
       .community {
         display: flex;
         background-color: #0b0f26;
-        justify-content: center;
         align-items: center;
         gap: 10px;
-        margin-top: 100px;
         height: 200px;
 
         .github {
           display: flex;
           gap: 5px;
+          font-size: 1.2rem;
           color: rgb(244, 244, 244);
           margin-bottom: 10px;
         }
         .linkedin {
           display: flex;
           gap: 5px;
+          align-items: center;
           margin-bottom: 10px;
-
+          font-size: 1.2rem;
           color: rgb(244, 244, 244);
         }
         .twitter {
           display: flex;
           gap: 5px;
+          font-size: 1.2rem;
           color: rgb(244, 244, 244);
         }
         .instagram {
           display: flex;
           gap: 5px;
+          font-size: 1.2rem;
           color: rgb(244, 244, 244);
         }
       }

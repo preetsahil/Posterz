@@ -21,7 +21,7 @@ function CartItem({ cart }) {
             >
               -
             </span>
-            <span className="quantity">{cart.quantity}</span>
+            <span className="quan">{cart.quantity}</span>
             <span
               className="btn increment"
               onClick={() => dispatch(addToCart(cart))}

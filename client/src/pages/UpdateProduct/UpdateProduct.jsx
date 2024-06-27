@@ -61,7 +61,7 @@ function UpdateProduct() {
     const inputDiv = document.getElementById("input-div");
     if (inputDiv) {
       const { top } = inputDiv.getBoundingClientRect();
-      if (top < 10) {
+      if (top < 80) {
         setSticky(true);
       } else {
         setSticky(false);
@@ -450,10 +450,10 @@ function UpdateProduct() {
                   "Are you sure you want to leave this page? All your modifications will be lost"
                 )
               ) {
-                navigate("/admin/product");
+                navigate(-1);
               }
             } else {
-              navigate("/admin/product");
+              navigate(-1);
             }
           }}
         >
@@ -685,7 +685,12 @@ function UpdateProduct() {
                         <span>
                           <GoDotFill />
                         </span>
-                        <p>{category.title.toLowerCase()}</p>
+                        {category.title.length >= 25 && (
+                          <p>{category.title.toLowerCase().slice(0, 20)}...</p>
+                        )}
+                        {category.title.length < 25 && (
+                          <p>{category.title.toLowerCase()}</p>
+                        )}
                       </div>
                     ))}
                   </div>
@@ -695,16 +700,26 @@ function UpdateProduct() {
               {selectedCat && Object.keys(selectedCat).length !== 0 && (
                 <div className="selected-cat">
                   <div key={selectedCat._id} className="sel-cat">
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "10px",
-                        marginLeft: "5px",
-                      }}
-                    >
+                    <div className="contentbox">
                       <TbGridDots className="dots" />
-                      <p>{selectedCat.title.toLowerCase()}</p>
+                      {selectedCat.title.length >= 25 && (
+                        <p
+                          onClick={() =>
+                            navigate(`/admin/category/${selectedCat._id}`)
+                          }
+                        >
+                          {selectedCat.title.toLowerCase().slice(0, 20)}...
+                        </p>
+                      )}
+                      {selectedCat.title.length < 25 && (
+                        <p
+                          onClick={() =>
+                            navigate(`/admin/category/${selectedCat._id}`)
+                          }
+                        >
+                          {selectedCat.title.toLowerCase()}
+                        </p>
+                      )}
                     </div>
 
                     <RxCross2
@@ -754,7 +769,7 @@ function UpdateProduct() {
             </div>
           </div>
         </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+        <div className="right-box">
           <div className="right">
             <div className="info">
               <p
@@ -762,6 +777,7 @@ function UpdateProduct() {
                   textAlign: "center",
                   borderBottom: "0.01em solid #474f7a",
                   paddingBottom: "8px",
+                  fontSize: "1.2rem",
                 }}
               >
                 INFORMATION

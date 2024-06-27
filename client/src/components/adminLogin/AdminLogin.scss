@@ -112,6 +112,7 @@
           min-height: auto;
           border: none;
           outline: 1px solid #ced4da;
+          background: transparent;
         }
         .focused {
           display: block;
@@ -124,6 +125,7 @@
           border: none;
           outline: 3px solid #3b71ca;
           transition: all 0.2s linear;
+          background: transparent;
         }
       }
       .password {
@@ -211,6 +213,19 @@
         box-shadow: 0 4px 9px -4px #3b71ca;
         &:hover {
           background-color: #386bc0;
+        }
+      }
+      .visit {
+        display: flex;
+        justify-content: center;
+        margin-top: 1.4rem;
+        .heading {
+          margin-bottom: 0;
+          font-size: 1.25rem;
+          color: #4f4f4f;
+          &:hover {
+            text-decoration: underline;
+          }
         }
       }
     }

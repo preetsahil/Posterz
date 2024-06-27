@@ -226,7 +226,7 @@ function CreateCategory() {
 
     if (inputDiv) {
       const { top } = inputDiv.getBoundingClientRect();
-      if (top < 15) {
+      if (top < 80) {
         setSticky(true);
       } else {
         setSticky(false);
@@ -261,10 +261,10 @@ function CreateCategory() {
                 setTitle("");
                 setKey("");
                 setSelectedProd([]);
-                navigate("/admin/category");
+                navigate(-1);
               }
             } else {
-              navigate("/admin/category");
+              navigate(-1);
             }
           }}
         >
@@ -435,7 +435,12 @@ function CreateCategory() {
                         <span>
                           <GoDotFill />
                         </span>
-                        <p>{product.title.toLowerCase()}</p>
+                        {product.title.length >= 25 && (
+                          <p>{product.title.toLowerCase().slice(0, 20)}...</p>
+                        )}
+                        {product.title.length < 25 && (
+                          <p>{product.title.toLowerCase()}</p>
+                        )}
                       </div>
                     ))}
                   </div>
@@ -445,16 +450,26 @@ function CreateCategory() {
                 <div className="selected-prod">
                   {selectedProd.map((product) => (
                     <div key={product._id} className="sel-prod">
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "10px",
-                          marginLeft: "5px",
-                        }}
-                      >
+                      <div className="contentbox">
                         <TbGridDots className="dots" />
-                        <p>{product.title.toLowerCase()}</p>
+                        {product.title.length >= 20 && (
+                          <p
+                            onClick={() =>
+                              navigate(`/admin/product/${product._id}`)
+                            }
+                          >
+                            {product.title.toLowerCase().slice(0, 14)}...
+                          </p>
+                        )}
+                        {product.title.length < 20 && (
+                          <p
+                            onClick={() =>
+                              navigate(`/admin/product/${product._id}`)
+                            }
+                          >
+                            {product.title.toLowerCase()}
+                          </p>
+                        )}
                       </div>
 
                       <RxCross2
@@ -481,6 +496,7 @@ function CreateCategory() {
                 textAlign: "center",
                 borderBottom: "0.01em solid #474f7a",
                 paddingBottom: "8px",
+                fontSize: "1.2rem",
               }}
             >
               INFORMATION

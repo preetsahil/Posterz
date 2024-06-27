@@ -9,11 +9,20 @@ import { IoEyeOutline } from "react-icons/io5";
 import { TOAST_FAILURE, TOAST_SUCCESS } from "../../App";
 import { useNavigate } from "react-router-dom";
 import OtpInput from "react-otp-input";
-import { deleteProfile, setProfile } from "../../redux/slices/profileSlice";
 import {
-  GOOGLE_ACCESS_TOKEN,
+  deleteProfile,
+  setAdminProfile,
+  setProfile,
+} from "../../redux/slices/profileSlice";
+import {
+  KEY_ADMIN_TOKEN,
+  OAUTH_ACCESS_TOKEN,
+  OAUTH_ADMIN_TOKEN,
+  getItem,
   removeItem,
+  setItem,
 } from "../../utils/localStorageManager";
+import axios from "axios"
 let timeoutId = null;
 function RequestAdmin() {
   const profile = useSelector((state) => state.profileReducer.profile);
@@ -78,7 +87,7 @@ function RequestAdmin() {
             message: error.response.data,
           })
         );
-        removeItem(GOOGLE_ACCESS_TOKEN);
+        removeItem(OAUTH_ACCESS_TOKEN);
         dispatch(deleteProfile());
         navigate("/login");
       }
@@ -107,6 +116,17 @@ function RequestAdmin() {
       setCode("");
       setPassword("");
       dispatch(setProfile(response.data.user));
+      setItem(OAUTH_ADMIN_TOKEN, getItem(OAUTH_ACCESS_TOKEN));
+      dispatch(setAdminProfile(response.data.user));
+      if (getItem(KEY_ADMIN_TOKEN)) {
+        removeItem(KEY_ADMIN_TOKEN);
+        await axios
+          .create({
+            baseURL: "http://localhost:4000",
+            withCredentials: true,
+          })
+          .post("/auth/revoke");
+      }
       navigate("/admin");
     } catch (error) {
       if (error.response.status === 400) {

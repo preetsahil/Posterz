@@ -89,7 +89,6 @@ const orderController = async (req, res) => {
     await o1.save();
     return res.status(200).send({ order });
   } catch (error) {
-    console.log(error.message);
     return res.status(500).send({ error: "failed to create order" });
   }
 };
@@ -133,7 +132,7 @@ const searchController = async (req, res) => {
     }
     return res.status(200).json({ products });
   } catch (error) {
-    return res.status(200).send(error.message);
+    return res.status(500).send(error.message);
   }
 };
 

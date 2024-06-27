@@ -9,7 +9,6 @@ const cartSlice = createSlice({
   reducers: {
     addToCart: (state, action) => {
       const product = action.payload;
-      console.log(product);
       const curItem = {
         title: product.title,
         key: product.key,

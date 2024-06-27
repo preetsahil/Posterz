@@ -4,7 +4,7 @@ import { RiTwitterXLine } from "react-icons/ri";
 import { PiLinkedinLogo } from "react-icons/pi";
 import "./Footer.scss";
 import creditCardImg from "../../assets/creditcardicons.png";
-import { GOOGLE_ACCESS_TOKEN, getItem } from "../../utils/localStorageManager";
+import { OAUTH_ACCESS_TOKEN, getItem } from "../../utils/localStorageManager";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteProfile } from "../../redux/slices/profileSlice";
@@ -14,7 +14,7 @@ function Footer() {
   const dispatch = useDispatch();
   const profile = useSelector((state) => state.profileReducer.profile);
   const handleSubmit = () => {
-    const token = getItem(GOOGLE_ACCESS_TOKEN);
+    const token = getItem(OAUTH_ACCESS_TOKEN);
     if (!token) {
       dispatch(deleteProfile());
       navigate("/login");

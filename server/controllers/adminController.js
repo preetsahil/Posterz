@@ -22,12 +22,21 @@ const loginController = async (req, res) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res.status(404).send("User is not registered");
+      return res
+        .status(404)
+        .send("User is not registered, use google Login to register");
     }
-    const matched = await bcrypt.compare(password, user.password);
-    if (!matched) {
-      return res.status(401).send("Incorrect Password");
+    if (user.password) {
+      const matched = await bcrypt.compare(password, user.password);
+      if (!matched) {
+        return res.status(401).send("Incorrect Password");
+      }
+    } else {
+      return res
+        .status(404)
+        .send("Password Doesn't exist, need to generate password via website");
     }
+    const { password: _, _id, ...userWithoutSensitiveInfo } = user._doc;
 
     if (user.isAdmin) {
       const adminToken = jwt.sign(
@@ -49,7 +58,7 @@ const loginController = async (req, res) => {
         secure: true,
         maxAge: 31536000000,
       });
-      return res.status(200).send({ adminToken, user });
+      return res.status(200).send({ adminToken, user: userWithoutSensitiveInfo });
     } else {
       return res
         .status(403)

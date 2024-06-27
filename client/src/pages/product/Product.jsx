@@ -49,10 +49,10 @@ function Product() {
   const recordsPerPageOptions = [10, 20, 30, 40, 50];
 
   const calculateContentTop = () => {
-    const productElement = document.getElementById("products");
-    if (productElement) {
-      const { top } = productElement.getBoundingClientRect();
-      if (top < 10) {
+    const searchElement = document.getElementById("searchDiv");
+    if (searchElement) {
+      const { top } = searchElement.getBoundingClientRect();
+      if (top < 15) {
         setSticky(true);
       } else {
         setSticky(false);
@@ -209,7 +209,7 @@ function Product() {
               </div>
             </div>
           </div>
-          <div className="searchDiv">
+          <div className="searchDiv" id="searchDiv">
             <input
               type="text"
               placeholder="Search"

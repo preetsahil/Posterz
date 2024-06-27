@@ -19,7 +19,11 @@ import {
 const persistConfig = {
   key: "root",
   storage,
-  blacklist: ["productReducer", "categoryReducer", "appConfigReducer"],
+  blacklist: [
+    "productReducer",
+    "categoryReducer",
+    "appConfigReducer",
+  ],
 };
 
 const rootReducer = combineReducers({

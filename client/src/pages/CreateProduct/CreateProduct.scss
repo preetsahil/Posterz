@@ -1,10 +1,7 @@
 .createprod {
-  display: flex;
-  flex-direction: column;
   flex: 1;
-  background-color: #0d122f;
   overflow-y: auto;
-
+  height: 100%;
   .sti {
     display: flex;
     align-items: center;
@@ -13,23 +10,22 @@
     top: 0;
     gap: 20px;
     position: sticky;
-    padding: 10px;
+    padding-inline: 30px;
+    padding-block: 15px;
     .backButton {
       display: flex;
       align-items: center;
       gap: 8px;
       color: #5143d0;
       cursor: pointer;
-
-      .icon {
-        font-size: 1.3rem;
-      }
+      font-size: 1.2rem;
     }
     .banner {
       display: flex;
       align-items: center;
-      gap: 600px;
+      justify-content: space-between;
       margin-top: 10px;
+      width: 750px;
       .heading {
         display: flex;
         flex-direction: column;
@@ -38,7 +34,7 @@
           font-size: 1.2rem;
         }
         .entry {
-          font-size: 0.875rem;
+          font-size: 1rem;
           color: rgb(165, 165, 186);
         }
       }
@@ -51,7 +47,7 @@
         padding: 4px 10px;
         border-radius: 4px;
         cursor: pointer;
-
+        font-size: 1.2rem;
         p {
           color: rgb(244, 244, 244);
         }
@@ -61,7 +57,6 @@
   .con {
     margin-top: 10px;
     margin-left: 50px;
-    width: 830px;
     padding: 10px;
 
     .backButton {
@@ -70,22 +65,22 @@
       gap: 8px;
       color: #5143d0;
       cursor: pointer;
-      .icon {
-        font-size: 1.3rem;
-      }
+      font-size: 1.4rem;
     }
     .banner {
       display: flex;
       align-items: center;
       margin-top: 10px;
-      margin-bottom: 40px;
+      margin-bottom: 70px;
+      width: 750px;
       justify-content: space-between;
       .heading {
         .title {
           color: rgb(244, 244, 244);
         }
         .entry {
-          margin-top: 3px;
+          margin-top: 4px;
+          font-size: 1.2rem;
           color: rgb(165, 165, 186);
         }
       }
@@ -98,6 +93,7 @@
         background-color: #435fff;
         padding: 8px 14px;
         border-radius: 4px;
+        font-size: 1.2rem;
         p {
           color: rgb(244, 244, 244);
         }
@@ -108,16 +104,14 @@
     display: flex;
     align-items: center;
     gap: 20px;
-    margin-bottom: 50px;
+    margin-bottom: 60px;
     .input-div {
       display: flex;
       flex-direction: column;
       background-color: #0b0f26;
       width: 650px;
-      margin-top: 15x;
       margin-left: 60px;
-      padding: 20px 40px;
-      padding-bottom: 40px;
+      padding: 30px 50px;
 
       .cont1 {
         display: flex;
@@ -128,6 +122,7 @@
           label {
             margin-bottom: 5px;
             font-weight: bolder;
+            font-size: 1.1rem;
             color: rgb(244, 244, 244);
             span {
               color: rgb(234, 17, 17);
@@ -141,7 +136,7 @@
             border-radius: 5px;
             width: 250px;
             padding: 12px 20px;
-            font-size: 0.875rem;
+            font-size: 1.1rem;
             &:focus {
               outline: 0.1em solid #435fff;
             }
@@ -153,12 +148,13 @@
             border-radius: 5px;
             width: 250px;
             padding: 12px 20px;
-            font-size: 0.875rem;
+            font-size: 1.1rem;
           }
           .error {
-            margin-top: 2px;
+            margin-top: 3px;
             color: rgb(191, 2, 2);
             padding-left: 2px;
+            font-size: 1.1rem;
           }
         }
         .input-desc {
@@ -167,6 +163,7 @@
           label {
             margin-bottom: 5px;
             font-weight: bolder;
+            font-size: 1.1rem;
             color: rgb(244, 244, 244);
           }
           .input-cont1 {
@@ -175,7 +172,7 @@
             border: 0.1em solid #474f7a;
             border-radius: 5px;
             padding: 12px 20px;
-            font-size: 0.875rem;
+            font-size: 1.1rem;
             width: 250px;
             &:focus {
               outline: 0.1em solid #435fff;
@@ -195,6 +192,7 @@
           label {
             margin-bottom: 5px;
             font-weight: bolder;
+            font-size: 1.1rem;
             color: rgb(244, 244, 244);
             span {
               color: rgb(234, 17, 17);
@@ -208,7 +206,7 @@
             border-radius: 5px;
             width: 200px;
             padding: 12px 20px;
-            font-size: 0.875rem;
+            font-size: 1.1rem;
             &:focus {
               outline: 0.1em solid #435fff;
             }
@@ -220,12 +218,13 @@
             border-radius: 5px;
             width: 250px;
             padding: 12px 20px;
-            font-size: 0.875rem;
+            font-size: 1.1rem;
           }
           .error {
-            margin-top: 2px;
+            margin-top: 3px;
             color: rgb(191, 2, 2);
             padding-left: 2px;
+            font-size: 1.1rem;
           }
         }
         .for-image {
@@ -235,15 +234,17 @@
             color: rgb(244, 244, 244);
             font-weight: bolder;
             margin-bottom: 5px;
+            font-size: 1.1rem;
             span {
               color: rgb(234, 17, 17);
               padding-left: 2px;
             }
           }
           .error {
-            margin-top: 2px;
+            margin-top: 3px;
             color: rgb(191, 2, 2);
             padding-left: 2px;
+            font-size: 1.1rem;
           }
           .del {
             display: flex;
@@ -330,6 +331,7 @@
           label {
             margin-bottom: 5px;
             font-weight: bolder;
+            font-size: 1.1rem;
             color: rgb(244, 244, 244);
             span {
               color: rgb(234, 17, 17);
@@ -343,7 +345,7 @@
             border-radius: 5px;
             width: 250px;
             padding: 12px 20px;
-            font-size: 0.875rem;
+            font-size: 1.1rem;
             &:focus {
               outline: 0.1em solid #435fff;
             }
@@ -355,12 +357,13 @@
             border-radius: 5px;
             width: 250px;
             padding: 12px 20px;
-            font-size: 0.875rem;
+            font-size: 1.1rem;
           }
           .error {
-            margin-top: 2px;
+            margin-top: 3px;
             color: rgb(191, 2, 2);
             padding-left: 2px;
+            font-size: 1.1rem;
           }
         }
         .for-select {
@@ -369,6 +372,7 @@
             color: rgb(244, 244, 244);
             font-weight: bolder;
             margin-bottom: 5px;
+            font-size: 1.1rem;
           }
           .dropdown {
             background-color: #0b0f26;
@@ -410,7 +414,6 @@
             border-radius: 5px;
             margin-top: 4px;
             width: 250px;
-            font-size: 0.875rem;
             z-index: 99;
             .category {
               margin-top: 5px;
@@ -422,12 +425,12 @@
                 border-radius: 5px;
                 gap: 10px;
                 span {
-                  font-size: 0.8rem;
+                  font-size: 1rem;
                   color: greenyellow;
                 }
                 p {
                   color: rgb(244, 244, 244);
-                  font-size: 1rem;
+                  font-size: 1.1rem;
                 }
                 &:hover {
                   background-color: #0d122f;
@@ -443,15 +446,22 @@
               justify-content: space-between;
               border: 0.1em solid #474f7a;
               border-radius: 5px;
-              padding: 10px 10px;
+              padding: 12px 18px;
               margin-bottom: 4px;
-              p {
-                color: #5143d0;
-                font-size: 1.2rem;
-              }
-              .dots {
-                color: rgb(244, 244, 244);
-                font-size: 1.2rem;
+              width: 250px;
+              .contentbox {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                p {
+                  color: #5143d0;
+                  font-size: 1.2rem;
+                  cursor: pointer;
+                }
+                .dots {
+                  color: rgb(244, 244, 244);
+                  font-size: 1.2rem;
+                }
               }
               .cross {
                 color: rgb(244, 244, 244);
@@ -470,14 +480,15 @@
           p {
             color: rgb(244, 244, 244);
             font-weight: bolder;
-            margin-bottom: 3px;
+            margin-bottom: 5px;
+            font-size: 1.1rem;
           }
           .border-select {
             display: flex;
             background-color: #0d122f;
             border-radius: 5px;
             padding: 4px;
-            border: 0.2rem solid #435fff;
+            outline: 0.2rem solid #435fff;
             align-items: center;
             .not-false {
               display: flex;
@@ -485,20 +496,20 @@
 
               p {
                 color: rgb(165, 165, 186);
-                font-size: 0.875rem;
+                font-size: 1.1rem;
                 font-weight: 900;
               }
             }
             .false {
               display: flex;
               padding: 5px 16px;
-              border: 0.1em solid #474f7a;
+              outline: 0.1em solid #474f7a;
               border-radius: 5px;
               background-color: #0b0f26;
 
               p {
                 color: rgb(165, 165, 186);
-                font-size: 0.875rem;
+                font-size: 1.1rem;
                 font-weight: 900;
                 color: rgb(234, 17, 17);
               }
@@ -506,12 +517,12 @@
             .true {
               display: flex;
               padding: 5px 16px;
-              border: 0.1em solid #474f7a;
+              outline: 0.1em solid #474f7a;
               border-radius: 5px;
               background-color: #0b0f26;
               p {
                 color: #435fff;
-                font-size: 0.875rem;
+                font-size: 1.1rem;
                 font-weight: 900;
               }
             }
@@ -520,7 +531,7 @@
               padding: 5px 16px;
               p {
                 color: rgb(165, 165, 186);
-                font-size: 0.875rem;
+                font-size: 1.1rem;
                 font-weight: 900;
               }
             }
@@ -530,7 +541,7 @@
             background-color: #0d122f;
             border-radius: 5px;
             padding: 4px;
-            border: 0.1em solid #474f7a;
+            outline: 0.1em solid #474f7a;
             align-items: center;
             .not-false {
               display: flex;
@@ -538,20 +549,20 @@
 
               p {
                 color: rgb(165, 165, 186);
-                font-size: 0.875rem;
+                font-size: 1.1rem;
                 font-weight: 900;
               }
             }
             .false {
               display: flex;
               padding: 5px 16px;
-              border: 0.1em solid #474f7a;
+              outline: 0.1em solid #474f7a;
               border-radius: 5px;
               background-color: #0b0f26;
 
               p {
                 color: rgb(165, 165, 186);
-                font-size: 0.875rem;
+                font-size: 1.1rem;
                 font-weight: 900;
                 color: rgb(234, 17, 17);
               }
@@ -559,12 +570,12 @@
             .true {
               display: flex;
               padding: 5px 16px;
-              border: 0.1em solid #474f7a;
+              outline: 0.1em solid #474f7a;
               border-radius: 5px;
               background-color: #0b0f26;
               p {
                 color: #435fff;
-                font-size: 0.875rem;
+                font-size: 1.1rem;
                 font-weight: 900;
               }
             }
@@ -573,7 +584,7 @@
               padding: 5px 16px;
               p {
                 color: rgb(165, 165, 186);
-                font-size: 0.875rem;
+                font-size: 1.1rem;
                 font-weight: 900;
               }
             }
@@ -582,10 +593,9 @@
       }
     }
     .right {
-      padding: 20px 8px;
+      padding: 20px 12px;
       border: 0.01em solid #474f7a;
-      width: 200px;
-      font-size: 0.875rem;
+      width: 250px;
       background-color: #0b0f26;
       .info {
         .createdAt {
@@ -596,9 +606,11 @@
           .white {
             color: rgb(244, 244, 244);
             font-weight: 700;
+            font-size: 1.1rem;
           }
           .grey {
             color: rgb(165, 165, 186);
+            font-size: 1.1rem;
           }
         }
         .by {
@@ -609,9 +621,11 @@
           .white {
             color: rgb(244, 244, 244);
             font-weight: 700;
+            font-size: 1.1rem;
           }
           .grey {
             color: rgb(165, 165, 186);
+            font-size: 1.1rem;
           }
         }
         .updatedAt {
@@ -621,9 +635,11 @@
           .white {
             color: rgb(244, 244, 244);
             font-weight: 700;
+            font-size: 1.1rem;
           }
           .grey {
             color: rgb(165, 165, 186);
+            font-size: 1.1rem;
           }
         }
       }

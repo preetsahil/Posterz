@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 import "./AdminLogin.scss";
 import { axiosClient } from "../../utils/axiosClient";
 import {
-  GOOGLE_ACCESS_TOKEN,
-  KEY_ACCESS_TOKEN,
+  OAUTH_ADMIN_TOKEN,
+  KEY_ADMIN_TOKEN,
   setItem,
+  OAUTH_ACCESS_TOKEN,
 } from "../../utils/localStorageManager";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineGoogle } from "react-icons/ai";
@@ -41,9 +42,11 @@ function AdminLogin() {
       const response = await axiosClient.post("/auth/oauth2callback", {
         code: authCode.code,
       });
-      setItem(GOOGLE_ACCESS_TOKEN, response.data.accessToken);
+      setItem(OAUTH_ACCESS_TOKEN, response.data.accessToken);
       dispatch(setProfile(response.data.user));
       if (response.data.user.isAdmin) {
+        setItem(OAUTH_ADMIN_TOKEN, response.data.accessToken);
+        dispatch(setAdminProfile(response.data.user));
         navigate("/admin");
       } else {
         dispatch(
@@ -69,7 +72,7 @@ function AdminLogin() {
         email,
         password,
       });
-      setItem(KEY_ACCESS_TOKEN, response.data.adminToken);
+      setItem(KEY_ADMIN_TOKEN, response.data.adminToken);
       dispatch(setAdminProfile(response.data.user));
       //delete when logout
       navigate("/admin");
@@ -122,6 +125,7 @@ function AdminLogin() {
                 }}
               />
               <label
+                htmlFor="email"
                 className={`${
                   isEmailFocused ? "focusemail" : "notfocusemail"
                 } ${email.length > 0 && !isEmailFocused ? "has-value" : ""}`}
@@ -152,6 +156,7 @@ function AdminLogin() {
                 {icon}
               </span>
               <label
+              htmlFor="password"
                 className={`${
                   isPasswordFocused ? "focuspassword" : "notfocuspassword"
                 } ${
@@ -168,6 +173,11 @@ function AdminLogin() {
               LOGIN
             </button>
           </form>
+          <div className="visit" onClick={() => navigate("/")}>
+            <p className="heading">
+              Visit the website to request admin permissions
+            </p>
+          </div>
         </div>
       </div>
     </div>
