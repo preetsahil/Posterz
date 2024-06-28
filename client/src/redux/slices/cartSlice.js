@@ -14,8 +14,9 @@ const cartSlice = createSlice({
         key: product.key,
         price: product.price,
         image: product.image.url,
-        category: product.categories?.key,
+        category: product.categories?.key || "productWithoutCategories",
       };
+      console.log(curItem)
       const index = state.cart.findIndex((item) => item.key === curItem.key);
       if (index === -1) {
         state.cart.push({ ...curItem, quantity: 1 });

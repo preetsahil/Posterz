@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const Category = require("../models/Category");
 const Product = require("../models/Product");
+const Order = require("../models/Order");
 const cloudinary = require("cloudinary").v2;
 
 function removeSpaces(str) {
@@ -58,7 +59,9 @@ const loginController = async (req, res) => {
         secure: true,
         maxAge: 31536000000,
       });
-      return res.status(200).send({ adminToken, user: userWithoutSensitiveInfo });
+      return res
+        .status(200)
+        .send({ adminToken, user: userWithoutSensitiveInfo });
     } else {
       return res
         .status(403)
@@ -400,6 +403,82 @@ const updateProductController = async (req, res) => {
     return res.status(500).send(error.message);
   }
 };
+
+const statsController = async (req, res) => {
+  try {
+    const orders = await Order.find({ order_status: "success" });
+    let totalOrders = 0;
+    let totalRevenue = 0;
+    let categoryStats = {};
+    let productStats = {};
+
+    orders.forEach((order) => {
+      totalOrders++;
+      order.item.forEach((product) => {
+        const quantity = product.quantity;
+        const price = product.price;
+        const revenue = quantity * price;
+
+        if (!categoryStats[product.category]) {
+          categoryStats[product.category] = {
+            totalQuantity: 0,
+            totalRevenue: 0,
+          };
+        }
+        categoryStats[product.category].totalQuantity += quantity;
+        categoryStats[product.category].totalRevenue += revenue;
+
+        if (!productStats[product.title]) {
+          productStats[product.title] = { totalQuantity: 0, totalRevenue: 0 };
+        }
+        productStats[product.title].totalQuantity += quantity;
+        productStats[product.title].totalRevenue += revenue;
+
+        totalRevenue += revenue;
+      });
+    });
+
+    const findMaxOrderedCategory_Product = (stats, key) => {
+      const max = Math.max(...Object.values(stats).map(stat => stat[key]));
+      return Object.keys(stats).filter(category => stats[category][key] === max);
+    };
+    
+    const findMinOrderedCategory_Product = (stats, key) => {
+      const min = Math.min(...Object.values(stats).map(stat => stat[key]));
+      return Object.keys(stats).filter(category => stats[category][key] === min);
+    };
+
+    const mostFrequentCategories = findMaxOrderedCategory_Product(
+      categoryStats,
+      "totalQuantity"
+    );
+    const leastFrequentCategories = findMinOrderedCategory_Product(
+      categoryStats,
+      "totalQuantity"
+    );
+    const mostFrequentProducts = findMaxOrderedCategory_Product(
+      productStats,
+      "totalQuantity"
+    );
+    const leastFrequentProducts = findMinOrderedCategory_Product(
+      productStats,
+      "totalQuantity"
+    );
+    return res.status(200).send({
+      categoryStats,
+      productStats,
+      mostFrequentCategories,
+      mostFrequentProducts,
+      leastFrequentCategories,
+      leastFrequentProducts,
+      totalRevenue,
+      totalOrders,
+    });
+  } catch (error) {
+    return res.status(500).send(error.message);
+  }
+};
+
 module.exports = {
   loginController,
   addCategoryController,
@@ -408,4 +487,5 @@ module.exports = {
   deleteProductController,
   updateCategoryController,
   updateProductController,
+  statsController,
 };

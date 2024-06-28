@@ -22,6 +22,8 @@ function Sidebar({ onSidebarClick }) {
       paths: ["/admin/product", "/admin/product/create", "/admin/product/:id"],
     },
     { key: "order", name: "Order", path: "/admin/order" },
+    { key: "statistics", name: "Statistics", path: "/admin/statistics" },
+
   ];
 
   const isPathActive = (paths) => {

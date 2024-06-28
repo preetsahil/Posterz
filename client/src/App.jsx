@@ -11,7 +11,7 @@ import OnlyIfNotLoggedIn from "./components/OnlyIfNotLoggedIn";
 import Category from "./pages/category/Category";
 import CreateCategory from "./pages/createCategory/CreateCategory";
 import UpdateCategory from "./pages/UpdateCategory/UpdateCategory";
-import Order from "./components/admindashboard/order/Order";
+import Order from "./pages/order/Order";
 import Payments from "./components/payments/Payments";
 import Product from "./pages/product/Product";
 import { useDispatch, useSelector } from "react-redux";
@@ -25,6 +25,7 @@ import Login from "./pages/login/Login";
 import OnlyIfNotLoggedInUser from "./components/OnlyIfNotLoggedInUser";
 import RequestAdmin from "./pages/requestAdmin/RequestAdmin";
 import RequireAcess from "./components/RequireAcess";
+import Statistics from "./pages/statistics/Statistics";
 
 export const TOAST_SUCCESS = "toast_success";
 export const TOAST_FAILURE = "toast_failure";
@@ -88,6 +89,7 @@ function App() {
                   <Route path=":productId" element={<UpdateProduct />} />
                 </Route>
                 <Route path="order" element={<Order />} />
+                <Route path="statistics" element={<Statistics />} />
               </Route>
             </Route>
             <Route element={<OnlyIfNotLoggedIn />}>
