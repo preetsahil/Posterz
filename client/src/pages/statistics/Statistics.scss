@@ -1,4 +1,123 @@
 .Statistics {
   flex: 1;
   overflow-y: auto;
+  margin-bottom: 30px;
+  .box {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+    margin-left: 20px;
+    .total-revenue {
+      font-size: 1.5rem;
+      color: rgb(244, 244, 244);
+      font-weight: 900;
+    }
+    .total-orders {
+      font-size: 1.5rem;
+      color: rgb(244, 244, 244);
+      font-weight: 900;
+    }
+  }
+  .bar1 {
+    margin-top: 30px;
+    .heading {
+      font-size: 1.5rem;
+      color: rgb(244, 244, 244);
+      text-align: center;
+      font-weight: 900;
+    }
+  }
+  .bar2 {
+    margin-top: 70px;
+    .heading {
+      font-size: 1.5rem;
+      color: rgb(244, 244, 244);
+      text-align: center;
+      font-weight: 900;
+    }
+  }
+  .pie {
+    margin-top: 70px;
+    .heading {
+      font-size: 1.5rem;
+      color: rgb(244, 244, 244);
+      text-align: center;
+      font-weight: 900;
+    }
+  }
+  .box2 {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+
+    .left {
+      display: flex;
+      gap: 40px;
+      .leftInfo {
+        margin-top: 40px;
+
+        .subheading {
+          font-size: 2.2rem;
+          color: rgb(244, 244, 244);
+          font-weight: 900;
+          width: 470px;
+        }
+        .listhead {
+          margin-left: 30px;
+          margin-top: 10px;
+
+          .list {
+            font-size: 1.4rem;
+            color: rgb(244, 244, 244);
+          }
+        }
+      }
+    }
+    .right {
+      display: flex;
+      gap: 40px;
+
+      .rightInfo {
+        margin-top: 40px;
+        .subheading {
+          font-size: 2.2rem;
+          color: rgb(244, 244, 244);
+          font-weight: 900;
+          width: 470px;
+        }
+        .listhead {
+          margin-left: 30px;
+          margin-top: 10px;
+
+          .list {
+            font-size: 1.4rem;
+            color: rgb(244, 244, 244);
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 1300px) {
+  .Statistics {
+    .box2 {
+      justify-content: start;
+      flex-direction: column;
+      align-items: flex-start;
+      .left {
+        margin-left: 15px;
+        flex-direction: column;
+        gap: 0px;
+      }
+
+      .right {
+        margin-left: 15px;
+        flex-direction: column;
+        gap: 0px;
+      }
+    }
+  }
 }

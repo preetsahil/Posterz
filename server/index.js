@@ -6,6 +6,9 @@ const adminRouter = require("./routes/adminRouter");
 const getRouter = require("./routes/getRouter");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
+const cron = require("node-cron");
+const removeOrdersWithPendingStatus = require("./utils/removeOrdersWithPendingStatus");
+const updateForTopPick = require("./utils/updateForTopPick");
 
 const cloudinary = require("cloudinary").v2;
 const app = express();
@@ -22,6 +25,14 @@ cloudinary.config({
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
+cron.schedule("0 0 * * *", () => {
+  updateForTopPick();
+});
+
+cron.schedule("0 1 * * 0", () => {
+  removeOrdersWithPendingStatus();
+});
+
 app.use(cookieParser());
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));

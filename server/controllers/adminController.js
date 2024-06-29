@@ -412,40 +412,53 @@ const statsController = async (req, res) => {
     let categoryStats = {};
     let productStats = {};
 
-    orders.forEach((order) => {
-      totalOrders++;
-      order.item.forEach((product) => {
-        const quantity = product.quantity;
-        const price = product.price;
-        const revenue = quantity * price;
+    await Promise.all(
+      orders.map(async (order) => {
+        totalOrders++;
+        await Promise.all(
+          order.item.map(async (product) => {
+            const quantity = product.quantity;
+            const price = product.price;
+            const revenue = quantity * price;
+            totalRevenue += revenue;
 
-        if (!categoryStats[product.category]) {
-          categoryStats[product.category] = {
-            totalQuantity: 0,
-            totalRevenue: 0,
-          };
-        }
-        categoryStats[product.category].totalQuantity += quantity;
-        categoryStats[product.category].totalRevenue += revenue;
+            const prod = await Product.findOne({ title: product.title });
+            if (prod) {
+              if (!categoryStats[product.category]) {
+                categoryStats[product.category] = {
+                  totalQuantity: 0,
+                  totalRevenue: 0,
+                };
+              }
+              categoryStats[product.category].totalQuantity += quantity;
+              categoryStats[product.category].totalRevenue += revenue;
 
-        if (!productStats[product.title]) {
-          productStats[product.title] = { totalQuantity: 0, totalRevenue: 0 };
-        }
-        productStats[product.title].totalQuantity += quantity;
-        productStats[product.title].totalRevenue += revenue;
-
-        totalRevenue += revenue;
-      });
-    });
+              if (!productStats[product.title]) {
+                productStats[product.title] = {
+                  totalQuantity: 0,
+                  totalRevenue: 0,
+                };
+              }
+              productStats[product.title].totalQuantity += quantity;
+              productStats[product.title].totalRevenue += revenue;
+            }
+          })
+        );
+      })
+    );
 
     const findMaxOrderedCategory_Product = (stats, key) => {
-      const max = Math.max(...Object.values(stats).map(stat => stat[key]));
-      return Object.keys(stats).filter(category => stats[category][key] === max);
+      const max = Math.max(...Object.values(stats).map((stat) => stat[key]));
+      return Object.keys(stats).filter(
+        (category) => stats[category][key] === max
+      );
     };
-    
+
     const findMinOrderedCategory_Product = (stats, key) => {
-      const min = Math.min(...Object.values(stats).map(stat => stat[key]));
-      return Object.keys(stats).filter(category => stats[category][key] === min);
+      const min = Math.min(...Object.values(stats).map((stat) => stat[key]));
+      return Object.keys(stats).filter(
+        (category) => stats[category][key] === min
+      );
     };
 
     const mostFrequentCategories = findMaxOrderedCategory_Product(
