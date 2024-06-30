@@ -51,8 +51,7 @@ function UpdateCategory() {
   const [createdTime, setCreatedTime] = useState("");
   const [updatedTime, setUpdatedTime] = useState("");
   const [modifyName, setModifyName] = useState("");
-  const [reqTitleLen, setReqTitleLen] = useState(false);
-  const [reqKeyLen, setReqKeyLen] = useState(false);
+
 
   const handleDrop = (e) => {
     let dt = e.dataTransfer;
@@ -396,18 +395,12 @@ function UpdateCategory() {
                 onClick={() => {
                   setTitleReq(false);
                   setDupTitle(false);
-                  setReqTitleLen(false);
                 }}
               />
               {reqTitle && (
                 <div className="error">This attribute is required!</div>
               )}
               {dupTitle && <div className="error">Title already exist</div>}
-              {reqTitleLen && (
-                <div className="error">
-                  Title should have length less than 20
-                </div>
-              )}
             </div>
             <div className="col">
               <label htmlFor="key">
@@ -429,16 +422,12 @@ function UpdateCategory() {
                 onClick={() => {
                   setKeyReq(false);
                   setDupKey(false);
-                  setReqKeyLen(false);
                 }}
               />
               {reqKey && (
                 <div className="error">This attribute is required!</div>
               )}
               {dupKey && <div className="error">Key already exist</div>}
-              {reqKeyLen && (
-                <div className="error">Key should have length less than 20</div>
-              )}
             </div>
           </div>
           <div className="cont2">

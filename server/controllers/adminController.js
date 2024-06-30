@@ -492,6 +492,39 @@ const statsController = async (req, res) => {
   }
 };
 
+const userController = async (req, res) => {
+  const id = req._id;
+  const { name, isAdmin, currentPassword, password, confirmPassword } =
+    req.body;
+  try {
+    const user = await User.findOne({ _id: id });
+    if (!isAdmin) {
+      user.isAdmin = false;
+    }
+    if (user.name !== name) {
+      user.name = name;
+    }
+    if (
+      currentPassword.length !== 0 &&
+      confirmPassword.length !== 0 &&
+      password.length !== 0
+    ) {
+      const matched = await bcrypt.compare(currentPassword, user.password);
+      if (!matched) {
+        return res.status(400).send("current password incorrect");
+      }
+      const hashedPassword = await bcrypt.hash(password, 10);
+      user.password = hashedPassword;
+    }
+    await user.save();
+
+    const { password: _, _id, ...userWithoutSensitiveInfo } = user._doc;
+    return res.status(200).send({ user: userWithoutSensitiveInfo });
+  } catch (error) {
+    return res.status(500).send(error.message);
+  }
+};
+
 module.exports = {
   loginController,
   addCategoryController,
@@ -501,4 +534,5 @@ module.exports = {
   updateCategoryController,
   updateProductController,
   statsController,
+  userController,
 };

@@ -26,7 +26,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        width: 850px;
+        width: 900px;
         margin-top: 10px;
         .heading {
           display: flex;
@@ -74,7 +74,7 @@
         align-items: center;
         margin-top: 10px;
         justify-content: space-between;
-        width: 850px;
+        width: 900px;
         .heading {
           .title {
             color: rgb(244, 244, 244);
@@ -167,7 +167,7 @@
     }
     .products {
       margin-left: 60px;
-      width: 780px;
+      width: 900px;
       background-color: #0b0f26;
       padding-inline: 25px;
       padding-bottom: 30px;
@@ -223,7 +223,7 @@
           .id {
             display: flex;
             position: relative;
-            width: 50px;
+            width: 60px;
 
             p {
               color: rgb(165, 165, 186);
@@ -245,13 +245,13 @@
               color: black;
               padding: 5px 10px;
               border-radius: 4px;
-              font-size: 12px;
+              font-size: 15px;
               white-space: nowrap;
             }
           }
           .title {
             display: flex;
-            width: 140px;
+            width: 200px;
             position: relative;
 
             p {
@@ -274,13 +274,13 @@
               color: black;
               padding: 5px 10px;
               border-radius: 4px;
-              font-size: 12px;
+              font-size: 15px;
               white-space: nowrap;
             }
           }
           .key {
             display: flex;
-            width: 95px;
+            width: 140px;
             position: relative;
             p {
               color: rgb(165, 165, 186);
@@ -302,13 +302,13 @@
               color: black;
               padding: 5px 10px;
               border-radius: 4px;
-              font-size: 12px;
+              font-size: 15px;
               white-space: nowrap;
             }
           }
           .price {
             display: flex;
-            width: 60px;
+            width: 70px;
             position: relative;
 
             p {
@@ -328,7 +328,7 @@
               color: black;
               padding: 5px 10px;
               border-radius: 4px;
-              font-size: 12px;
+              font-size: 15px;
               white-space: nowrap;
             }
             .none {
@@ -336,7 +336,7 @@
             }
           }
           .image {
-            width: 120px;
+            width: 100px;
 
             p {
               color: rgb(165, 165, 186);
@@ -395,7 +395,7 @@
             gap: 10px;
             .id {
               display: flex;
-              width: 50px;
+              width: 60px;
 
               p {
                 color: rgb(244, 244, 244);
@@ -404,7 +404,7 @@
             }
             .title {
               display: flex;
-              width: 140px;
+              width: 200px;
               overflow: hidden;
               p {
                 color: rgb(244, 244, 244);
@@ -413,7 +413,7 @@
             }
             .key {
               display: flex;
-              width: 95px;
+              width: 140px;
               overflow: hidden;
               p {
                 color: rgb(244, 244, 244);
@@ -422,7 +422,7 @@
             }
 
             .price {
-              width: 60px;
+              width: 70px;
               p {
                 color: rgb(244, 244, 244);
                 font-size: 1.1rem;
@@ -430,7 +430,7 @@
             }
 
             .image {
-              width: 120px;
+              width: 100px;
               display: flex;
 
               img {
@@ -462,7 +462,7 @@
             .icons {
               display: flex;
               gap: 20px;
-              margin-left: 15px;
+              margin-left: 25px;
               position: relative;
               .edit {
                 position: relative;
@@ -524,7 +524,7 @@
       margin-bottom: 40px;
       margin-left: 60px;
       display: flex;
-      width: 780px;
+      width: 900px;
       align-items: center;
       justify-content: space-between;
       .select {

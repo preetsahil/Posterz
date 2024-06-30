@@ -7,6 +7,7 @@ import {
   setItem,
   OAUTH_ACCESS_TOKEN,
 } from "../../utils/localStorageManager";
+import logo from "../../../src/assets/logo.svg";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineGoogle } from "react-icons/ai";
 import { IoEyeOffOutline } from "react-icons/io5";
@@ -93,6 +94,10 @@ function AdminLogin() {
           />
         </div>
         <div className="loginform">
+          <div className="welcome">
+            <img src={logo} alt="" />
+            <p className="heading">Welcome to Posterz. DashBoard</p>
+          </div>
           <div className="signGoogle">
             <p className="heading">Sign in with Google</p>
             <div className="google-icon" onClick={() => login()}>
@@ -156,7 +161,7 @@ function AdminLogin() {
                 {icon}
               </span>
               <label
-              htmlFor="password"
+                htmlFor="password"
                 className={`${
                   isPasswordFocused ? "focuspassword" : "notfocuspassword"
                 } ${

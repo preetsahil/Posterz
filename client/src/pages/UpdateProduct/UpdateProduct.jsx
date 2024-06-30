@@ -54,8 +54,6 @@ function UpdateProduct() {
   const [change, setChange] = useState(false);
   const [originalPrice, setOriginalPrice] = useState(0);
   const [originalDesc, setOriginalDesc] = useState("");
-  const [reqTitleLen, setReqTitleLen] = useState(false);
-  const [reqKeyLen, setReqKeyLen] = useState(false);
 
   const calculateContentTop = () => {
     const inputDiv = document.getElementById("input-div");
@@ -500,18 +498,12 @@ function UpdateProduct() {
                 onClick={() => {
                   setTitleReq(false);
                   setDupTitle(false);
-                  setReqTitleLen(false);
                 }}
               />
               {reqTitle && (
                 <div className="error">This attribute is required!</div>
               )}
               {dupTitle && <div className="error">Title already exist</div>}
-              {reqTitleLen && (
-                <div className="error">
-                  Title should have length less than 20
-                </div>
-              )}
             </div>
             <div className="input-desc">
               <label htmlFor="desc">desc</label>
@@ -642,16 +634,12 @@ function UpdateProduct() {
                 onClick={() => {
                   setKeyReq(false);
                   setDupKey(false);
-                  setReqKeyLen(false);
                 }}
               />
               {reqKey && (
                 <div className="error">This attribute is required!</div>
               )}
               {dupKey && <div className="error">Key already exist</div>}
-              {reqKeyLen && (
-                <div className="error">Key should have length less than 20</div>
-              )}
             </div>
             <div className="for-select">
               <p className="text">

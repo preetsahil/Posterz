@@ -26,6 +26,7 @@ import OnlyIfNotLoggedInUser from "./components/OnlyIfNotLoggedInUser";
 import RequestAdmin from "./pages/requestAdmin/RequestAdmin";
 import RequireAcess from "./components/RequireAcess";
 import Statistics from "./pages/statistics/Statistics";
+import Profile from "./pages/profile/Profile";
 
 export const TOAST_SUCCESS = "toast_success";
 export const TOAST_FAILURE = "toast_failure";
@@ -90,6 +91,7 @@ function App() {
                 </Route>
                 <Route path="order" element={<Order />} />
                 <Route path="statistics" element={<Statistics />} />
+                <Route path="profile" element={<Profile />} />
               </Route>
             </Route>
             <Route element={<OnlyIfNotLoggedIn />}>

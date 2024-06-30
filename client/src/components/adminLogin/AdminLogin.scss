@@ -13,6 +13,20 @@
         height: auto;
       }
     }
+    .welcome {
+      display: flex;
+      align-items: center;
+      margin-bottom: 30px;
+      gap: 10px;
+      .heading {
+        color: #4f4f4f;
+        font-size: 1.4rem;
+        font-weight: 700;
+      }
+      img {
+        width: 70px;
+      }
+    }
     .loginform {
       flex: 1;
       display: flex;

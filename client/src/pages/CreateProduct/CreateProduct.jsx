@@ -39,8 +39,7 @@ function CreateProduct() {
   const [dupTitle, setDupTitle] = useState(false);
   const [borderTopPick, setBorderTopPick] = useState(false);
   const [isTopPick, setIsTopPick] = useState(false);
-  const [reqTitleLen, setReqTitleLen] = useState(false);
-  const [reqKeyLen, setReqKeyLen] = useState(false);
+
 
   const calculateContentTop = () => {
     const inputDiv = document.getElementById("input-div");
@@ -416,18 +415,12 @@ function CreateProduct() {
                 onClick={() => {
                   setTitleReq(false);
                   setDupTitle(false);
-                  setReqTitleLen(false);
                 }}
               />
               {reqTitle && (
                 <div className="error">This attribute is required!</div>
               )}
               {dupTitle && <div className="error">Title already exist</div>}
-              {reqTitleLen && (
-                <div className="error">
-                  Title should have length less than 20
-                </div>
-              )}
             </div>
             <div className="input-desc">
               <label htmlFor="desc">desc</label>
@@ -542,16 +535,12 @@ function CreateProduct() {
                 onClick={() => {
                   setKeyReq(false);
                   setDupKey(false);
-                  setReqKeyLen(false);
                 }}
               />
               {reqKey && (
                 <div className="error">This attribute is required!</div>
               )}
               {dupKey && <div className="error">Key already exist</div>}
-              {reqKeyLen && (
-                <div className="error">Key should have length less than 20</div>
-              )}
             </div>
             <div className="for-select">
               <p className="text">

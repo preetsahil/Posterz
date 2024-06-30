@@ -12,5 +12,7 @@ router.delete(
 router.delete("/product/:id", isAdmin, adminController.deleteProductController);
 router.put("/category", isAdmin, adminController.updateCategoryController);
 router.put("/product", isAdmin, adminController.updateProductController);
-router.get("/statistics",isAdmin,adminController.statsController)
+router.get("/statistics", isAdmin, adminController.statsController);
+router.put("/profile", isAdmin, adminController.userController);
+
 module.exports = router;
