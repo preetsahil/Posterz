@@ -227,6 +227,7 @@
             display: flex;
             position: relative;
             width: 60px;
+            align-items: center;
 
             p {
               color: rgb(165, 165, 186);
@@ -256,6 +257,7 @@
             display: flex;
             width: 120px;
             position: relative;
+            align-items: center;
             p {
               color: rgb(165, 165, 186);
               font-weight: 600;
@@ -284,6 +286,7 @@
             display: flex;
             width: 100px;
             position: relative;
+            align-items: center;
             p {
               color: rgb(165, 165, 186);
               font-weight: 600;

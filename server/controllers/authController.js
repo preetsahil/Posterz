@@ -186,8 +186,6 @@ const logoutController = async (req, res) => {
     return res.status(500).send(e.message);
   }
 };
-//logout in admin check if user has logged in through google if google delete profile both and admin and access token both and refresh token in backend call logout
-//if user is logged in through jwt then delete the jwt token and admin profile and its refresh token call revoke
 
 const refreshOAuthController = async (req, res) => {
   try {
@@ -243,6 +241,53 @@ const refreshJWTController = async (req, res) => {
     return res.status(401).send("Refresh Token Invalid");
   }
 };
+const generateResetToken = (data) => {
+  try {
+    const token = jwt.sign(data, process.env.RESET_TOKEN_PRIVATE_KEY, {
+      expiresIn: "1d",
+    });
+    return token;
+  } catch (error) {}
+};
+
+const forgetPasswordController = async (req, res) => {
+  const { email } = req.body;
+  const user = await User.findOne({ email });
+  if (!user) {
+    return res
+      .status(400)
+      .send("This email is not registered on the platform!");
+  }
+  let url = "http://localhost:5173";
+  // if (process.env.NODE_ENV === "production") {
+  //   url = process.env.CORS_ORIGIN;
+  // }
+  mailSender(
+    email,
+    "Password Reset",
+    `<h1>Password Reset Link</h1>
+    <a href='${url}/reset' style='border-radius: 5px;padding: 10px 25px;font-size: 20px;text-decoration: none;margin: 20px;color: #fff;position: relative;display: inline-block;  background-color: #55acee;'>Click here to reset your password</a>`
+  );
+
+  const resetToken = generateResetToken({
+    email,
+  });
+  res.status(200).send({ resetToken });
+};
+
+const resetController = async (req, res) => {
+  try {
+    const email = req.email;
+    const { password } = req.body;
+    const user = await User.findOne({ email });
+    const hashedPassword = await bcrypt.hash(password, 10);
+    user.password = hashedPassword;
+    await user.save();
+    return res.status(200).send("password updated successfully");
+  } catch (e) {
+    return res.status(500).send("internal server error try again!");
+  }
+};
 
 module.exports = {
   OAuthController,
@@ -251,4 +296,6 @@ module.exports = {
   verifyOtpController,
   refreshOAuthController,
   refreshJWTController,
+  forgetPasswordController,
+  resetController,
 };

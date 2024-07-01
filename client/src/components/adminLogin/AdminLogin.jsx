@@ -171,7 +171,9 @@ function AdminLogin() {
                 Password
               </label>
             </div>
-            <div className="forget">
+            <div className="forget" onClick={()=>{
+              navigate("/forget")
+            }}>
               <p>Forgot password ?</p>
             </div>
             <button className="submit" onClick={handleSubmit}>

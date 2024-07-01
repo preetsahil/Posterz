@@ -27,6 +27,8 @@ import RequestAdmin from "./pages/requestAdmin/RequestAdmin";
 import RequireAcess from "./components/RequireAcess";
 import Statistics from "./pages/statistics/Statistics";
 import Profile from "./pages/profile/Profile";
+import ForgetPassword from "./pages/forgetpassword/ForgetPassword";
+import ResetPassword from "./pages/resetpassword/ResetPassword";
 
 export const TOAST_SUCCESS = "toast_success";
 export const TOAST_FAILURE = "toast_failure";
@@ -34,6 +36,9 @@ export const TOAST_FAILURE = "toast_failure";
 function App() {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith("/admin");
+  const isForgetRoute = location.pathname.startsWith("/forget");
+  const isResetRoute = location.pathname.startsWith("/reset");
+
   const toastData = useSelector((state) => state.appConfigReducer.toastData);
   const dispatch = useDispatch();
 
@@ -54,7 +59,7 @@ function App() {
 
   return (
     <div>
-      {isAdminRoute ? (
+      {isAdminRoute || isForgetRoute || isResetRoute ? (
         <div>
           <div>
             <Toaster
@@ -79,6 +84,8 @@ function App() {
             />
           </div>
           <Routes>
+            <Route path="/forget" element={<ForgetPassword />} />
+            <Route path="/reset" element={<ResetPassword />} />
             <Route element={<RequireAdmin />}>
               <Route path="/admin" element={<AdminDashBoard />}>
                 <Route path="category" element={<Category />}>
@@ -94,6 +101,7 @@ function App() {
                 <Route path="profile" element={<Profile />} />
               </Route>
             </Route>
+
             <Route element={<OnlyIfNotLoggedIn />}>
               <Route path="/adminlogin" element={<AdminLogin />} />
             </Route>
