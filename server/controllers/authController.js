@@ -259,9 +259,9 @@ const forgetPasswordController = async (req, res) => {
       .send("This email is not registered on the platform!");
   }
   let url = "http://localhost:5173";
-  // if (process.env.NODE_ENV === "production") {
-  //   url = process.env.CORS_ORIGIN;
-  // }
+  if (process.env.NODE_ENV === "production") {
+    url = process.env.CORS_ORIGIN;
+  }
   mailSender(
     email,
     "Password Reset",
