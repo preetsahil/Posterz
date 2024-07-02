@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import { showToast } from "../../redux/slices/appConfigSlice";
 import { TOAST_FAILURE, TOAST_SUCCESS } from "../../App";
 
+
 function ResetPassword() {
   const [password, setPassword] = useState("");
   const [confirmpassword, setConfirmPassword] = useState("");
@@ -20,12 +21,12 @@ function ResetPassword() {
       setPassword("");
     } else {
       let url = "http://localhost:4000";
-      //   if (process.env.NODE_ENV === "production") {
-      //     url = process.env.REACT_APP_SERVER_BASE_URL;
-      //   }
+      if (import.meta.env.PROD) {
+        url = import.meta.env.VITE_REACT_APP_SERVER_BASE_URL;
+      }
       const token = localStorage.getItem("RESET_TOKEN");
       try {
-         await axios.post(
+        await axios.post(
           `${url}/auth/reset`,
           {
             password,
@@ -38,12 +39,13 @@ function ResetPassword() {
           }
         );
         dispatch(
-            showToast({
-              type: TOAST_SUCCESS,
-              message: "Password Reset Successfully!"
-            }))
-          navigate("/adminlogin");
-          localStorage.removeItem("RESET_TOKEN");
+          showToast({
+            type: TOAST_SUCCESS,
+            message: "Password Reset Successfully!",
+          })
+        );
+        navigate("/adminlogin");
+        localStorage.removeItem("RESET_TOKEN");
       } catch (error) {
         if (error.response.status === 401) {
           dispatch(

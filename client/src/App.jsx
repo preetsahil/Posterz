@@ -41,6 +41,7 @@ function App() {
 
   const toastData = useSelector((state) => state.appConfigReducer.toastData);
   const dispatch = useDispatch();
+ 
 
   useEffect(() => {
     dispatch(fetchCategories());

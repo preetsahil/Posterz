@@ -21,6 +21,12 @@ import {
   removeItem,
 } from "../../utils/localStorageManager";
 import axios from "axios";
+
+let baseURL = "http://localhost:4000";
+if (import.meta.env.PROD) {
+  baseURL = import.meta.env.VITE_REACT_APP_SERVER_BASE_URL;
+}
+
 function Profile() {
   const adminProfile = useSelector(
     (state) => state.profileReducer.adminProfile
@@ -134,7 +140,7 @@ function Profile() {
           dispatch(deleteAdminProfile());
           await axios
             .create({
-              baseURL: "http://localhost:4000",
+              baseURL,
               withCredentials: true,
             })
             .post("/auth/revoke");

@@ -24,6 +24,11 @@ import {
 } from "../../utils/localStorageManager";
 import axios from "axios"
 let timeoutId = null;
+let baseURL = "http://localhost:4000";
+if (import.meta.env.PROD) {
+  baseURL = import.meta.env.VITE_REACT_APP_SERVER_BASE_URL;
+}
+
 function RequestAdmin() {
   const profile = useSelector((state) => state.profileReducer.profile);
   const dispatch = useDispatch();
@@ -122,7 +127,7 @@ function RequestAdmin() {
         removeItem(KEY_ADMIN_TOKEN);
         await axios
           .create({
-            baseURL: "http://localhost:4000",
+            baseURL,
             withCredentials: true,
           })
           .post("/auth/revoke");

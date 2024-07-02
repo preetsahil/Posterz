@@ -18,6 +18,11 @@ import {
 } from "../../redux/slices/profileSlice";
 import axios from "axios";
 
+let baseURL = "http://localhost:4000";
+if (import.meta.env.PROD) {
+  baseURL = import.meta.env.VITE_REACT_APP_SERVER_BASE_URL;
+}
+
 function Sidebar({ onSidebarClick }) {
   const navigate = useNavigate();
   const location = useLocation();
@@ -73,7 +78,7 @@ function Sidebar({ onSidebarClick }) {
       dispatch(deleteAdminProfile());
       await axios
         .create({
-          baseURL: "http://localhost:4000",
+          baseURL,
           withCredentials: true,
         })
         .post("/auth/revoke");
