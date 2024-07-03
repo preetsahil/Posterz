@@ -51,7 +51,8 @@ const productController = async (req, res) => {
 };
 const categoryController = async (req, res) => {
   try {
-    const categories = await Category.find({})      .populate("products")
+    const categories = await Category.find({})
+      .populate("products")
       .populate("createdBy")
       .populate("lastModifyBy");
     return res.status(200).send({ categories });
@@ -104,16 +105,20 @@ const paymentController = async (req, res) => {
     .digest("hex");
 
   const isAuthentic = expectedSignature === razorpay_signature;
+  let url = "http://localhost:5173";
+  if (process.env.NODE_ENV === "production") {
+    url = process.env.CORS_ORIGIN;
+  }
 
   if (!isAuthentic) {
-    res.redirect(" http://localhost:5173/payment/failed");
+    res.redirect(` ${url}/payment/failed`);
   }
 
   const order = await Order.findOne({ orderId: razorpay_order_id });
   order.order_status = "success";
   await order.save();
 
-  res.redirect("http://localhost:5173/payment/success");
+  res.redirect(`${url}/payment/success`);
 };
 
 const searchController = async (req, res) => {

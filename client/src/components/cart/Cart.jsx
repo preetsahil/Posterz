@@ -40,10 +40,10 @@ function Cart({ onClose }) {
         products: cart,
       });
 
-      // let baseURL = "http://localhost:4000";
-      // if (import.meta.env.PROD) {
-      //   baseURL = import.meta.env.VITE_REACT_APP_SERVER_BASE_URL;
-      // }
+      let baseURL = "http://localhost:4000";
+      if (import.meta.env.PROD) {
+        baseURL = import.meta.env.VITE_REACT_APP_SERVER_BASE_URL;
+      }
 
       const options = {
         key,
@@ -54,7 +54,7 @@ function Cart({ onClose }) {
         image:
           "https://assets.super.so/e7c0f16c-8bd3-4c76-8075-4c86f986e1b2/uploads/favicon/9c68ae10-0a8a-4e3f-9084-3625b19df9cb.png",
         order_id: order.id,
-        callback_url: "http://localhost:4000/api/payment",
+        callback_url: `${baseURL}/api/payment`,
         //logged in user
         prefill: {
           name: "test",
