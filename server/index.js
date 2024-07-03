@@ -31,22 +31,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/auth", authRouter);
 app.use("/admin", adminRouter);
 app.use("/api", getRouter);
-app.get("/cron/toppick", async (req, res) => {
-  try {
-    await updateForTopPick();
-    res.status(200).send("Update for top pick completed");
-  } catch (error) {
-    res.status(500).send("Error updating top pick");
-  }
-});
-app.get("/cron/removependingorder", async (req, res) => {
-  try {
-    await removeOrdersWithPendingStatus();
-    res.status(200).send("Removed pending orders");
-  } catch (error) {
-    res.status(500).send("Error removing pending orders");
-  }
-});
+app.use("/cron/toppick", updateForTopPick);
+app.use("/cron/removependingorder", removeOrdersWithPendingStatus);
 
 app.get("/", (req, res) => {
   res.json({ server: "started" });
