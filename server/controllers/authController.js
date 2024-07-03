@@ -263,28 +263,36 @@ const generateResetToken = (data) => {
 };
 
 const forgetPasswordController = async (req, res) => {
-  const { email } = req.body;
-  const user = await User.findOne({ email });
-  if (!user) {
-    return res
-      .status(400)
-      .send("This email is not registered on the platform!");
-  }
-  let url = "http://localhost:5173";
-  if (process.env.NODE_ENV === "production") {
-    url = process.env.CORS_ORIGIN;
-  }
-  mailSender(
-    email,
-    "Password Reset",
-    `<h1>Password Reset Link</h1>
-    <a href='${url}/reset' style='border-radius: 5px;padding: 10px 25px;font-size: 20px;text-decoration: none;margin: 20px;color: #fff;position: relative;display: inline-block;  background-color: #55acee;'>Click here to reset your password</a>`
-  );
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res
+        .status(400)
+        .send("This email is not registered on the platform!");
+    }
 
-  const resetToken = generateResetToken({
-    email,
-  });
-  res.status(200).send({ resetToken });
+    let url = "http://localhost:5173";
+    if (process.env.NODE_ENV === "production") {
+      url = process.env.CORS_ORIGIN;
+    }
+
+    try {
+      await mailSender(
+        email,
+        "Password Reset",
+        `<h1>Password Reset Link</h1>
+        <a href='${url}/reset' style='border-radius: 5px;padding: 10px 25px;font-size: 20px;text-decoration: none;margin: 20px;color: #fff;position: relative;display: inline-block;  background-color: #55acee;'>Click here to reset your password</a>`
+      );
+    } catch (mailError) {
+      return res.status(500).send("Error sending email");
+    }
+
+    const resetToken = generateResetToken({ email });
+    res.status(200).send({ resetToken });
+  } catch (error) {
+    res.status(500).json(error.message);
+  }
 };
 
 const resetController = async (req, res) => {
