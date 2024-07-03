@@ -39,6 +39,12 @@ function Cart({ onClose }) {
         amount: totalAmount,
         products: cart,
       });
+
+      // let baseURL = "http://localhost:4000";
+      // if (import.meta.env.PROD) {
+      //   baseURL = import.meta.env.VITE_REACT_APP_SERVER_BASE_URL;
+      // }
+
       const options = {
         key,
         amount: order.amount,
