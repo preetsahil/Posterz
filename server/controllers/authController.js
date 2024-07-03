@@ -36,7 +36,7 @@ const OAuthController = async (req, res) => {
     params.append("code", code);
     params.append("client_id", process.env.GOOGLE_CLIENT_ID);
     params.append("client_secret", process.env.GOOGLE_CLIENT_SECRET),
-    params.append("redirect_uri", uri);
+      params.append("redirect_uri", uri);
 
     const response = await axios.post(
       `https://oauth2.googleapis.com/token`,
@@ -52,6 +52,7 @@ const OAuthController = async (req, res) => {
       httpOnly: true,
       secure: true,
       maxAge: 31536000000,
+      sameSite: "None",
     });
 
     const userInfo = await getUserInfo(response.data.access_token);
@@ -64,6 +65,7 @@ const OAuthController = async (req, res) => {
           httpOnly: true,
           secure: true,
           maxAge: 31536000000,
+          sameSite: "None",
         });
       }
       return res
@@ -149,6 +151,7 @@ const verifyOtpController = async (req, res) => {
       httpOnly: true,
       secure: true,
       maxAge: 31536000000,
+      sameSite: "None",
     });
     const response = await OTP.find({ email }).sort({ createdAt: -1 }).limit(1);
     if (response.length === 0 || otp !== response[0].otp) {
