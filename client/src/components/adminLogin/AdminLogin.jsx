@@ -31,11 +31,16 @@ function AdminLogin() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  let uri = "http://localhost:5173";
+  if (import.meta.env.PROD) {
+    uri = import.meta.env.VITE_REDIRECT_URI;
+  }
+
   const login = useGoogleLogin({
     onSuccess: (codeResponse) => setAuthCode(codeResponse),
     onError: (error) => console.log(error),
     flow: "auth-code",
-    redirect_uri: "http://localhost:5173",
+    redirect_uri: uri,
   });
 
   const fetchProfile = async () => {
@@ -171,9 +176,12 @@ function AdminLogin() {
                 Password
               </label>
             </div>
-            <div className="forget" onClick={()=>{
-              navigate("/forget")
-            }}>
+            <div
+              className="forget"
+              onClick={() => {
+                navigate("/forget");
+              }}
+            >
               <p>Forgot password ?</p>
             </div>
             <button className="submit" onClick={handleSubmit}>

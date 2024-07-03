@@ -26,6 +26,11 @@ const OAuthController = async (req, res) => {
       return res.status(400).send("Authorization code not found");
     }
 
+    let uri = "http://localhost:5173";
+    if (process.env.NODE_ENV === "production") {
+      uri = process.env.REDIRECT_URL;
+    }
+
     const params = new URLSearchParams();
     params.append("grant_type", "authorization_code");
     params.append("code", code);
