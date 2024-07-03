@@ -29,6 +29,9 @@ import Statistics from "./pages/statistics/Statistics";
 import Profile from "./pages/profile/Profile";
 import ForgetPassword from "./pages/forgetpassword/ForgetPassword";
 import ResetPassword from "./pages/resetpassword/ResetPassword";
+import Termsandconditions from "./components/Termsandconditions";
+import PrivacyPolicy from "./components/PrivacyPolicy";
+import ContactUs from "./components/ContactUs";
 
 export const TOAST_SUCCESS = "toast_success";
 export const TOAST_FAILURE = "toast_failure";
@@ -41,7 +44,6 @@ function App() {
 
   const toastData = useSelector((state) => state.appConfigReducer.toastData);
   const dispatch = useDispatch();
- 
 
   useEffect(() => {
     dispatch(fetchCategories());
@@ -138,6 +140,11 @@ function App() {
             <Route path="/category/:categoryId?" element={<Collection />} />
             <Route path="/product/:productId" element={<ProductDetail />} />
             <Route path="/payment/:status" element={<Payments />} />
+            <Route path="/termsandcondition" element={<Termsandconditions />} />
+            <Route path="/privacy" element={<PrivacyPolicy />} />
+            <Route path="/contact" element={<ContactUs />} />
+
+
             <Route element={<RequireAcess />}>
               <Route path="/requestAdmin" element={<RequestAdmin />} />
             </Route>

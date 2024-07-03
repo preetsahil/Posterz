@@ -79,11 +79,32 @@ function Footer() {
                   To become the Admin
                 </li>
               )}
-              <li className="hover-link">Contact Us</li>
-              <li className="hover-link">Privacy Policy</li>
+              <li
+                className="hover-link"
+                onClick={() => {
+                  navigate("/contact");
+                }}
+              >
+                Contact Us
+              </li>
+              <li
+                className="hover-link"
+                onClick={() => {
+                  navigate("/privacy");
+                }}
+              >
+                Privacy Policy
+              </li>
               <li className="hover-link">Returns And Exchange Policy</li>
               <li className="hover-link">Shipping Policy</li>
-              <li className="hover-link">Terms & Conditions</li>
+              <li
+                className="hover-link"
+                onClick={() => {
+                  navigate("/termsandcondition");
+                }}
+              >
+                Terms & Conditions
+              </li>
               {!profile.isAdmin && (
                 <li
                   className="hover-link"
