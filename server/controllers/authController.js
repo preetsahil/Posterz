@@ -36,7 +36,7 @@ const OAuthController = async (req, res) => {
     params.append("code", code);
     params.append("client_id", process.env.GOOGLE_CLIENT_ID);
     params.append("client_secret", process.env.GOOGLE_CLIENT_SECRET),
-      params.append("redirect_uri", process.env.REDIRECT_URL);
+    params.append("redirect_uri", uri);
 
     const response = await axios.post(
       `https://oauth2.googleapis.com/token`,
