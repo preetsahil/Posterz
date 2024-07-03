@@ -6,7 +6,6 @@ const adminRouter = require("./routes/adminRouter");
 const getRouter = require("./routes/getRouter");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
-const cron = require("node-cron");
 const removeOrdersWithPendingStatus = require("./utils/removeOrdersWithPendingStatus");
 const updateForTopPick = require("./utils/updateForTopPick");
 
