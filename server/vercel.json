@@ -21,11 +21,11 @@
   "crons": [
     {
       "path": "/cron/toppick",
-      "schedule": "0 0  * * 0"
+      "schedule": "10 17 * * 0"
     },
     {
       "path": "/cron/removependingorder",
-      "schedule": "0 1 * * 0"
+      "schedule": "11 18 * * 0"
     }
   ]
 }
