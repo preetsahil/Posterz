@@ -12,15 +12,24 @@ const updateForTopPick = require("./utils/updateForTopPick");
 
 const cloudinary = require("cloudinary").v2;
 const app = express();
-
+const allowedOrigins = [process.env.CORS_ORIGIN, "http://localhost:5173"];
 dotenv.config("./env");
 app.use(
   cors({
-    origin:  true ,//[process.env.CORS_ORIGIN, "http://localhost:5173"],
+    origin: [process.env.CORS_ORIGIN, "http://localhost:5173"],
     credentials: true,
   })
 );
-
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+  }
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.header("Access-Control-Allow-Credentials", true);
+  next();
+});
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
