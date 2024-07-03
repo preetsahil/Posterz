@@ -183,11 +183,13 @@ const logoutController = async (req, res) => {
       res.clearCookie("oauth_admin_refresh", {
         httpOnly: true,
         secure: true,
+        sameSite: "None",
       });
     }
     res.clearCookie("oauth_access_refresh", {
       httpOnly: true,
       secure: true,
+      sameSite: "None",
     });
     return res.status(200).send("user logged out");
   } catch (e) {

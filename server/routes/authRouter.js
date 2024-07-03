@@ -6,6 +6,7 @@ router.post("/revoke", (req, res) => {
   res.clearCookie("jwt_refresh_token", {
     httpOnly: true,
     secure: true,
+    sameSite: "None",
   });
   res.json({});
 });
