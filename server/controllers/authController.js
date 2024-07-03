@@ -126,17 +126,19 @@ const sendOtpController = async (req, res) => {
       email,
       otp,
     });
-
-    mailSender(
-      email,
-      "Request Admin Access",
-      `<h1>Please confirm your OTP</h1>
+    try {
+      await mailSender(
+        email,
+        "Request Admin Access",
+        `<h1>Please confirm your OTP</h1>
        <p>Here is your OTP code: ${otp}</p>`
-    );
-
-    return res
-      .status(200)
-      .send({ message: "OTP sent Successfully, Check your gmail", otp });
+      );
+      return res
+        .status(200)
+        .send({ message: "OTP sent successfully, check your email", otp });
+    } catch (mailError) {
+      return res.status(500).send("Error sending email");
+    }
   } catch (error) {
     return res.status(500).json(error.message);
   }

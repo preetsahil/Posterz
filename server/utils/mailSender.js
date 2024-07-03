@@ -1,24 +1,31 @@
 const nodemailer = require("nodemailer");
 
-const mailSender = (email, title, body) => {
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false,
+  auth: {
+    user: process.env.MAIL_USER,
+    pass: process.env.MAIL_PASS,
+  },
+  pool: true,
+  rateLimit: true,
+  maxConnections: 5,
+  maxMessages: 10,
+});
+
+const mailSender = async (email, title, body) => {
   try {
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      host: "smtp.gmail.com",
-      port:587,
-      auth: {
-        user: process.env.MAIL_USER,
-        pass: process.env.MAIL_PASS,
-      },
-    });
-    transporter.sendMail({
+    const info = await transporter.sendMail({
       from: '"Sahil 👻" <sahilcloud56@gmail.com>',
       to: email,
       subject: title,
       html: body,
     });
+    return info;
   } catch (error) {
-    return res.status(500).send("Error in email server");
+    throw new Error("Error in email server");
   }
 };
 
