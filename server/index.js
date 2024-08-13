@@ -8,17 +8,17 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const removeOrdersWithPendingStatus = require("./utils/removeOrdersWithPendingStatus");
 const updateForTopPick = require("./utils/updateForTopPick");
-
+dotenv.config("./env");
 const cloudinary = require("cloudinary").v2;
 const app = express();
 const allowedOrigins = [process.env.CORS_ORIGIN, "http://localhost:5173"];
-dotenv.config("./env");
 app.use(
   cors({
     origin: [process.env.CORS_ORIGIN, "http://localhost:5173"],
     credentials: true,
   })
 );
+
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -58,6 +58,5 @@ connectdb();
 app.listen(PORT, () => {
   console.log(`Server is listening at ${PORT}`);
 });
-
 
 module.exports = app;

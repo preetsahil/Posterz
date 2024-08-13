@@ -137,6 +137,7 @@ const sendOtpController = async (req, res) => {
         .status(200)
         .send({ message: "OTP sent successfully, check your email", otp });
     } catch (mailError) {
+       console.error("Mail error: ", mailError);
       return res.status(500).send("Error sending email");
     }
   } catch (error) {

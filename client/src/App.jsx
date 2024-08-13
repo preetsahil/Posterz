@@ -143,8 +143,6 @@ function App() {
             <Route path="/termsandcondition" element={<Termsandconditions />} />
             <Route path="/privacy" element={<PrivacyPolicy />} />
             <Route path="/contact" element={<ContactUs />} />
-
-
             <Route element={<RequireAcess />}>
               <Route path="/requestAdmin" element={<RequestAdmin />} />
             </Route>
