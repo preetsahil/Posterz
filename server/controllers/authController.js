@@ -137,7 +137,7 @@ const sendOtpController = async (req, res) => {
         .status(200)
         .send({ message: "OTP sent successfully, check your email", otp });
     } catch (mailError) {
-       console.error("Mail error: ", mailError);
+      console.error("Mail error: ", mailError);
       return res.status(500).send("Error sending email");
     }
   } catch (error) {
@@ -164,8 +164,10 @@ const verifyOtpController = async (req, res) => {
       return res.status(409).send("you already have Admin Access");
     }
     user.isAdmin = true;
-    const hashedPassword = await bcrypt.hash(password, 10);
-    user.password = hashedPassword;
+    if (password) {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      user.password = hashedPassword;
+    }
     await user.save();
     const { password: _, _id, ...userWithoutSensitiveInfo } = user._doc;
 
