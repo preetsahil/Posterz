@@ -375,7 +375,10 @@ const updateProductController = async (req, res) => {
         { _id: prod.categories },
         { $pull: { products: prod._id } }
       );
-      prod.categories = undefined;
+      await Product.updateOne(
+        { _id: prod._id },
+        { $unset: { categories: "" } }
+      );
     }
 
     await prod.save();
@@ -406,86 +409,100 @@ const updateProductController = async (req, res) => {
 
 const statsController = async (req, res) => {
   try {
-    const orders = await Order.find({ order_status: "success" });
-    let totalOrders = 0;
-    let totalRevenue = 0;
-    let categoryStats = {};
-    let productStats = {};
+    const stats = await Order.aggregate([
+      { $match: { order_status: "success" } },
+      { $unwind: "$item" },
+      {
+        $group: {
+          _id: null,
+          totalRevenue: {
+            $sum: { $multiply: ["$item.price", "$item.quantity"] },
+          },
+          categoryStats: {
+            $push: {
+              category: "$item.category",
+              quantity: "$item.quantity",
+              revenue: { $multiply: ["$item.price", "$item.quantity"] },
+            },
+          },
+          productStats: {
+            $push: {
+              title: "$item.title",
+              quantity: "$item.quantity",
+              revenue: { $multiply: ["$item.price", "$item.quantity"] },
+            },
+          },
+        },
+      },
+    ]);
+    const totalOrders=await Order.aggregate([
+      { $match: { order_status: "success" } },
+      {
+        $count: "totalOrdersCount"
+      },
+    ])
 
-    await Promise.all(
-      orders.map(async (order) => {
-        totalOrders++;
-        await Promise.all(
-          order.item.map(async (product) => {
-            const quantity = product.quantity;
-            const price = product.price;
-            const revenue = quantity * price;
-            totalRevenue += revenue;
+    const categoryStats = {};
+    const productStats = {};
 
-            const prod = await Product.findOne({ title: product.title });
-            if (prod) {
-              if (!categoryStats[product.category]) {
-                categoryStats[product.category] = {
-                  totalQuantity: 0,
-                  totalRevenue: 0,
-                };
-              }
-              categoryStats[product.category].totalQuantity += quantity;
-              categoryStats[product.category].totalRevenue += revenue;
+    stats[0].categoryStats.forEach(({ category, quantity, revenue }) => {
+      if (!categoryStats[category]) {
+        categoryStats[category] = { totalQuantity: 0, totalRevenue: 0 };
+      }
+      categoryStats[category].totalQuantity += quantity;
+      categoryStats[category].totalRevenue += revenue;
+    });
+    stats[0].productStats.forEach(({ title, quantity, revenue }) => {
+      if (!productStats[title]) {
+        productStats[title] = { totalQuantity: 0, totalRevenue: 0 };
+      }
+      productStats[title].totalQuantity += quantity;
+      productStats[title].totalRevenue += revenue;
+    });
 
-              if (!productStats[product.title]) {
-                productStats[product.title] = {
-                  totalQuantity: 0,
-                  totalRevenue: 0,
-                };
-              }
-              productStats[product.title].totalQuantity += quantity;
-              productStats[product.title].totalRevenue += revenue;
-            }
-          })
-        );
-      })
-    );
+    const findMostAndLeastFrequent = (map, key) => {
+      let maxValue = -Infinity,
+        minValue = Infinity;
+      let mostFrequent = [],
+        leastFrequent = [];
 
-    const findMaxOrderedCategory_Product = (stats, key) => {
-      const max = Math.max(...Object.values(stats).map((stat) => stat[key]));
-      return Object.keys(stats).filter(
-        (category) => stats[category][key] === max
-      );
+      for (const stat in map) {
+        if (map[stat][key] > maxValue) {
+          maxValue = map[stat][key];
+          mostFrequent = [stat];
+        } else if (map[stat][key] === maxValue) {
+          mostFrequent.push(stat);
+        }
+
+        if (map[stat][key] < minValue) {
+          minValue = map[stat][key];
+          leastFrequent = [stat];
+        } else if (map[stat][key] === minValue) {
+          leastFrequent.push(stat);
+        }
+      }
+
+      return { mostFrequent, leastFrequent };
     };
 
-    const findMinOrderedCategory_Product = (stats, key) => {
-      const min = Math.min(...Object.values(stats).map((stat) => stat[key]));
-      return Object.keys(stats).filter(
-        (category) => stats[category][key] === min
-      );
-    };
-
-    const mostFrequentCategories = findMaxOrderedCategory_Product(
+    const categoryFrequency = findMostAndLeastFrequent(
       categoryStats,
       "totalQuantity"
     );
-    const leastFrequentCategories = findMinOrderedCategory_Product(
-      categoryStats,
-      "totalQuantity"
-    );
-    const mostFrequentProducts = findMaxOrderedCategory_Product(
+    const productFrequency = findMostAndLeastFrequent(
       productStats,
       "totalQuantity"
     );
-    const leastFrequentProducts = findMinOrderedCategory_Product(
-      productStats,
-      "totalQuantity"
-    );
+
     return res.status(200).send({
+      totalOrders: totalOrders[0].totalOrdersCount,
+      totalRevenue: stats[0].totalRevenue,
       categoryStats,
       productStats,
-      mostFrequentCategories,
-      mostFrequentProducts,
-      leastFrequentCategories,
-      leastFrequentProducts,
-      totalRevenue,
-      totalOrders,
+      mostFrequentCategories: categoryFrequency.mostFrequent,
+      leastFrequentCategories: categoryFrequency.leastFrequent,
+      mostFrequentProducts: productFrequency.mostFrequent,
+      leastFrequentProducts: productFrequency.leastFrequent,
     });
   } catch (error) {
     return res.status(500).send(error.message);

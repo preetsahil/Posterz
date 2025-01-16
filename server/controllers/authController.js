@@ -36,7 +36,7 @@ const OAuthController = async (req, res) => {
     params.append("code", code);
     params.append("client_id", process.env.GOOGLE_CLIENT_ID);
     params.append("client_secret", process.env.GOOGLE_CLIENT_SECRET),
-      params.append("redirect_uri", uri);
+    params.append("redirect_uri", uri);
 
     const response = await axios.post(
       `https://oauth2.googleapis.com/token`,
@@ -93,7 +93,6 @@ const OAuthController = async (req, res) => {
       .status(200)
       .send({ user: user1, accessToken: response.data.access_token });
   } catch (error) {
-    console.error(error.response ? error.response.data : error.message);
     return res
       .status(500)
       .send(error.response ? error.response.data : error.message);
@@ -150,12 +149,6 @@ const verifyOtpController = async (req, res) => {
     const { otp, email, password } = req.body;
     const user = await User.findOne({ email });
     const refreshToken = req.cookies.oauth_access_refresh;
-    res.cookie("oauth_admin_refresh", refreshToken, {
-      httpOnly: true,
-      secure: true,
-      maxAge: 31536000000,
-      sameSite: "None",
-    });
     const response = await OTP.find({ email }).sort({ createdAt: -1 }).limit(1);
     if (response.length === 0 || otp !== response[0].otp) {
       return res.status(400).send("OTP expired, try again");
@@ -170,6 +163,13 @@ const verifyOtpController = async (req, res) => {
     }
     await user.save();
     const { password: _, _id, ...userWithoutSensitiveInfo } = user._doc;
+    
+    res.cookie("oauth_admin_refresh", refreshToken, {
+      httpOnly: true,
+      secure: true,
+      maxAge: 31536000000,
+      sameSite: "None",
+    });
 
     return res.status(200).send({
       message: "OTP Verified And Password created for Admin Access",
@@ -302,7 +302,13 @@ const resetController = async (req, res) => {
   try {
     const email = req.email;
     const { password } = req.body;
+   
     const user = await User.findOne({ email });
+    if (!user) {
+      return res
+        .status(400)
+        .send("This email is not registered on the platform!");
+    }
     const hashedPassword = await bcrypt.hash(password, 10);
     user.password = hashedPassword;
     await user.save();

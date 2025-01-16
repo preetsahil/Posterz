@@ -17,13 +17,12 @@ const transporter = nodemailer.createTransport({
 
 const mailSender = async (email, title, body) => {
   try {
-    const info = await transporter.sendMail({
+    await transporter.sendMail({
       from: '"Sahil 👻" <sahilcloud56@gmail.com>',
       to: email,
       subject: title,
       html: body,
     });
-    return info;
   } catch (error) {
     throw new Error("Error in email server");
   }

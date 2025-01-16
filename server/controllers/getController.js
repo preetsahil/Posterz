@@ -117,7 +117,6 @@ const paymentController = async (req, res) => {
   const order = await Order.findOne({ orderId: razorpay_order_id });
   order.order_status = "success";
   await order.save();
-
   res.redirect(`${url}/payment/success`);
 };
 
