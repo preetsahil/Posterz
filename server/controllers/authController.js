@@ -213,7 +213,7 @@ const refreshOAuthController = async (req, res) => {
     params.append("grant_type", "refresh_token");
     params.append("client_id", process.env.GOOGLE_CLIENT_ID);
     params.append("client_secret", process.env.GOOGLE_CLIENT_SECRET),
-      params.append("refresh_token", refreshToken);
+    params.append("refresh_token", refreshToken);
     const response = await axios.post(
       `https://oauth2.googleapis.com/token`,
       params,

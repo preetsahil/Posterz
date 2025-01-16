@@ -184,7 +184,6 @@ const addProductController = async (req, res) => {
     if (Object.keys(selectedCat).length !== 0) {
       try {
         const category = await Category.findOne({ _id: selectedCat._id });
-
         await Category.updateOne(
           { _id: selectedCat._id },
           { $push: { products: product._id } }

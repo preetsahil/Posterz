@@ -11,7 +11,6 @@ const updateForTopPick = require("./utils/updateForTopPick");
 dotenv.config("./env");
 const cloudinary = require("cloudinary").v2;
 const app = express();
-const allowedOrigins = [process.env.CORS_ORIGIN, "http://localhost:5173"];
 app.use(
   cors({
     origin: [process.env.CORS_ORIGIN, "http://localhost:5173"],
