@@ -117,7 +117,7 @@ function Statistics() {
                 value.length > 15 ? `${value.substring(0, 15)}...` : value
               }
             />
-            <YAxis domain={[0, "auto"]} tick={{ fontSize: 22 }} tickSize={10} />
+            <YAxis domaicategoryDatan={[0, "auto"]} tick={{ fontSize: 22 }} tickSize={10} />
             <Tooltip />
             <Legend />
             <Bar dataKey="totalRevenue" fill="#82ca9d" />

@@ -13,7 +13,7 @@ router.delete(
 router.delete("/product/:id", isAdmin, adminController.deleteProductController);
 router.put("/category", isAdmin, adminController.updateCategoryController);
 router.put("/product", isAdmin, adminController.updateProductController);
-router.get("/statistics", adminController.statsController);
+router.get("/statistics",isAdmin, adminController.statsController);
 router.put("/profile", isAdmin, adminController.userController);
 router.get("/getOrders", isAdmin, async (req, res) => {
   const orders = await Order.find({});

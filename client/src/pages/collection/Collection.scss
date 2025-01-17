@@ -176,6 +176,13 @@
     .content {
       flex-direction: column;
       gap: 20px;
+      .page-number{
+        flex-direction: row;
+        .page{
+          flex-direction: row;
+
+        }
+      }
     }
   }
 }

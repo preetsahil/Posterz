@@ -56,14 +56,14 @@ function ProductDetail() {
                   +
                 </span>
               </div>
-              <button
+              {/* <button
                 className="btnn add-to-cart"
                 onClick={() => {
                   dispatch(addToCart(product));
                 }}
               >
                 Add to Cart
-              </button>
+              </button> */}
               <div className="category">
                 <p>Category : {product?.categories?.title.toLowerCase()} </p>
               </div>
