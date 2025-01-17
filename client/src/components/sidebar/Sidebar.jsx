@@ -23,7 +23,7 @@ if (import.meta.env.PROD) {
   baseURL = import.meta.env.VITE_REACT_APP_SERVER_BASE_URL;
 }
 
-function Sidebar({ onSidebarClick }) {
+function Sidebar() {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
@@ -171,7 +171,6 @@ function Sidebar({ onSidebarClick }) {
               <p className="heading">{name}</p>
             </div>
             <p className="name">{adminProfile?.name}</p>
-            <p className="email">&#40;{adminProfile?.email}&#41;</p>
           </div>
         </div>
       </div>

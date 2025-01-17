@@ -46,7 +46,6 @@ const productSlice = createSlice({
   reducers: {
     updateProductsWithCategoryZero: (state, action) => {
       const product = action.payload;
-      //push this inside state.productsWithZeroCategory
       state.productsWithZeroCategory.push(product);
     },
     sortOnTitleIncreasing: (state) => {
